@@ -9,7 +9,27 @@
 /* Begin PBXBuildFile section */
 		090AF01B1CAB6CB16E7D018B /* Pods_Search.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CF241697903D8E1D695871 /* Pods_Search.framework */; };
 		B792814A268F2C13000ED84A /* Search.h in Headers */ = {isa = PBXBuildFile; fileRef = B7928148268F2C13000ED84A /* Search.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B79281AF26945594000ED84A /* Search.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B79281AE26945594000ED84A /* Search.storyboard */; };
+		B79281B1269455A9000ED84A /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79281B0269455A9000ED84A /* SearchViewController.swift */; };
+		B79281BD269456C9000ED84A /* SearchNibVars.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79281BC269456C9000ED84A /* SearchNibVars.swift */; };
+		B79281C1269456F9000ED84A /* SearchOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79281C0269456F9000ED84A /* SearchOpener.swift */; };
+		B79281CE26959A7A000ED84A /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B79281CD26959A7A000ED84A /* Core.framework */; };
+		B79281CF26959A7A000ED84A /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B79281CD26959A7A000ED84A /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B79281D026959A7A000ED84A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				B79281CF26959A7A000ED84A /* Core.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0697F1BC178A050DF8D57A89 /* Pods-Search.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Search.release.xcconfig"; path = "Target Support Files/Pods-Search/Pods-Search.release.xcconfig"; sourceTree = "<group>"; };
@@ -17,6 +37,11 @@
 		B7928145268F2C13000ED84A /* Search.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Search.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7928148268F2C13000ED84A /* Search.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Search.h; sourceTree = "<group>"; };
 		B7928149268F2C13000ED84A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B79281AE26945594000ED84A /* Search.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Search.storyboard; sourceTree = "<group>"; };
+		B79281B0269455A9000ED84A /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		B79281BC269456C9000ED84A /* SearchNibVars.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNibVars.swift; sourceTree = "<group>"; };
+		B79281C0269456F9000ED84A /* SearchOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchOpener.swift; sourceTree = "<group>"; };
+		B79281CD26959A7A000ED84A /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9CF241697903D8E1D695871 /* Pods_Search.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Search.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -26,6 +51,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				090AF01B1CAB6CB16E7D018B /* Pods_Search.framework in Frameworks */,
+				B79281CE26959A7A000ED84A /* Core.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,6 +71,7 @@
 		ACC3D8772D4B5269CD4B1DAD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B79281CD26959A7A000ED84A /* Core.framework */,
 				B9CF241697903D8E1D695871 /* Pods_Search.framework */,
 			);
 			name = Frameworks;
@@ -73,8 +100,20 @@
 			children = (
 				B7928148268F2C13000ED84A /* Search.h */,
 				B7928149268F2C13000ED84A /* Info.plist */,
+				B79281BA2694569A000ED84A /* Utilities */,
+				B79281AE26945594000ED84A /* Search.storyboard */,
+				B79281B0269455A9000ED84A /* SearchViewController.swift */,
 			);
 			path = Search;
+			sourceTree = "<group>";
+		};
+		B79281BA2694569A000ED84A /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				B79281BC269456C9000ED84A /* SearchNibVars.swift */,
+				B79281C0269456F9000ED84A /* SearchOpener.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -100,6 +139,7 @@
 				B7928141268F2C13000ED84A /* Sources */,
 				B7928142268F2C13000ED84A /* Frameworks */,
 				B7928143268F2C13000ED84A /* Resources */,
+				B79281D026959A7A000ED84A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -120,6 +160,7 @@
 				TargetAttributes = {
 					B7928144268F2C13000ED84A = {
 						CreatedOnToolsVersion = 12.5.1;
+						LastSwiftMigration = 1250;
 					};
 				};
 			};
@@ -146,6 +187,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B79281AF26945594000ED84A /* Search.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,6 +223,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B79281B1269455A9000ED84A /* SearchViewController.swift in Sources */,
+				B79281BD269456C9000ED84A /* SearchNibVars.swift in Sources */,
+				B79281C1269456F9000ED84A /* SearchOpener.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,6 +358,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 734551B02FF67A7221A4DF1A /* Pods-Search.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -328,6 +374,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.castcle.Search;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -337,6 +384,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0697F1BC178A050DF8D57A89 /* Pods-Search.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
