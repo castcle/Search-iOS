@@ -28,16 +28,11 @@
 import UIKit
 import Component
 
-class SearchViewController: UIViewController, CastcleTabbarDeleDelegate {
+class SearchViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.customNavigationBar(.secondary, title: "For You", rightBarButton: [.menu])
-        SearchViewController.castcleTabbarDelegate = self
-    }
-    
-    func castcleTabbar(didSelectButtonBar button: BarButtonActionType) {
-        print(button)
     }
 }
