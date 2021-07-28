@@ -32,7 +32,23 @@ class SearchViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.setupNavBar()
+    }
+    
+    func setupNavBar() {
+        self.customNavigationBar(.secondary, title: "For You")
+        
+        var rightButton: [UIBarButtonItem] = []
+        
+        let icon = NavBarButtonType.menu.barButton
+        icon.addTarget(self, action: #selector(menuAction), for: .touchUpInside)
+        rightButton.append(UIBarButtonItem(customView: icon))
 
-        self.customNavigationBar(.secondary, title: "For You", rightBarButton: [.menu])
+        navigationItem.rightBarButtonItems = rightButton
+    }
+    
+    @objc private func menuAction() {
+        print("Menu")
     }
 }
