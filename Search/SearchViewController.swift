@@ -26,7 +26,7 @@
 //
 
 import UIKit
-import Component
+import Core
 
 class SearchViewController: UIViewController {
 
