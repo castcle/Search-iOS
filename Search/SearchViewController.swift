@@ -27,13 +27,18 @@
 
 import UIKit
 import Core
+import Defaults
 
 class SearchViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.setupNavBar()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Defaults[.screenId] = ""
     }
     
     func setupNavBar() {
