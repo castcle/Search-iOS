@@ -9,30 +9,13 @@
 /* Begin PBXBuildFile section */
 		090AF01B1CAB6CB16E7D018B /* Pods_Search.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CF241697903D8E1D695871 /* Pods_Search.framework */; };
 		B75E62B426972E7A003E1ADA /* Component.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B75E62B326972E7A003E1ADA /* Component.framework */; };
-		B75E62B526972E7A003E1ADA /* Component.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B75E62B326972E7A003E1ADA /* Component.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B792814A268F2C13000ED84A /* Search.h in Headers */ = {isa = PBXBuildFile; fileRef = B7928148268F2C13000ED84A /* Search.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B79281AF26945594000ED84A /* Search.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B79281AE26945594000ED84A /* Search.storyboard */; };
 		B79281B1269455A9000ED84A /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79281B0269455A9000ED84A /* SearchViewController.swift */; };
 		B79281BD269456C9000ED84A /* SearchNibVars.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79281BC269456C9000ED84A /* SearchNibVars.swift */; };
 		B79281C1269456F9000ED84A /* SearchOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79281C0269456F9000ED84A /* SearchOpener.swift */; };
 		B79281CE26959A7A000ED84A /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B79281CD26959A7A000ED84A /* Core.framework */; };
-		B79281CF26959A7A000ED84A /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B79281CD26959A7A000ED84A /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		B79281D026959A7A000ED84A /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				B75E62B526972E7A003E1ADA /* Component.framework in Embed Frameworks */,
-				B79281CF26959A7A000ED84A /* Core.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0369E27A4859B952A1FED1F1 /* Pods-Search.debug (production).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Search.debug (production).xcconfig"; path = "Target Support Files/Pods-Search/Pods-Search.debug (production).xcconfig"; sourceTree = "<group>"; };
@@ -157,7 +140,6 @@
 				B7928141268F2C13000ED84A /* Sources */,
 				B7928142268F2C13000ED84A /* Frameworks */,
 				B7928143268F2C13000ED84A /* Resources */,
-				B79281D026959A7A000ED84A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
