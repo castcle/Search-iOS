@@ -30,6 +30,8 @@ import Core
 
 public enum SearchScene {
     case search
+    case searchResult
+    case searchFeed
 }
 
 public struct SearchOpener {
@@ -40,6 +42,14 @@ public struct SearchOpener {
             let storyboard: UIStoryboard = UIStoryboard(name: SearchNibVars.Storyboard.search, bundle: ConfigBundle.search)
             let vc = storyboard.instantiateViewController(withIdentifier: SearchNibVars.ViewController.search)
             return vc
+        case .searchResult:
+            let storyboard: UIStoryboard = UIStoryboard(name: SearchNibVars.Storyboard.search, bundle: ConfigBundle.search)
+            let vc = storyboard.instantiateViewController(withIdentifier: SearchNibVars.ViewController.searchResult)
+            return vc
+        case .searchFeed:
+            let storyboard: UIStoryboard = UIStoryboard(name: SearchNibVars.Storyboard.search, bundle: ConfigBundle.search)
+            let vc = storyboard.instantiateViewController(withIdentifier: SearchNibVars.ViewController.searchFeed) as? SearchFeedViewController
+            return vc ?? SearchFeedViewController()
         }
     }
 }

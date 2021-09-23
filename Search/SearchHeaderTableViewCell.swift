@@ -19,33 +19,28 @@
 //  Thailand 10160, or visit www.castcle.com if you need additional information
 //  or have any questions.
 //
-//  SearchNibVars.swift
+//  SearchHeaderTableViewCell.swift
 //  Search
 //
-//  Created by Tanakorn Phoochaliaw on 6/7/2564 BE.
+//  Created by Tanakorn Phoochaliaw on 23/9/2564 BE.
 //
 
-public struct SearchNibVars {
-    // MARK: - View Controller
-    public struct ViewController {
-        public static let search = "SearchViewController"
-        public static let searchResult = "SearchResultViewController"
-        public static let searchFeed = "SearchFeedViewController"
+import UIKit
+import Core
+
+class SearchHeaderTableViewCell: UITableViewCell {
+
+    @IBOutlet var iconImage: UIImageView!
+    @IBOutlet var titleLabel: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.iconImage.image = UIImage.init(icon: .castcle(.head), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.white)
+        self.titleLabel.font = UIFont.asset(.medium, fontSize: .h4)
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
     }
     
-    // MARK: - View
-    public struct Storyboard {
-        public static let search = "Search"
-    }
-    
-    // MARK: - TableViewCell
-    public struct TableViewCell {
-        public static let searchTextField = "SearchTextFieldTableViewCell"
-        public static let searchTitle = "SearchHeaderTableViewCell"
-        public static let searchTrend = "SearchTrendTableViewCell"
-    }
-    
-    // MARK: - CollectionViewCell
-    public struct CollectionViewCell {
-    }
 }
