@@ -24,6 +24,7 @@
 		B7A71D1526FC93000092F318 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A71D1426FC93000092F318 /* SearchResultViewController.swift */; };
 		B7A71D1826FCACE80092F318 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B7A71D1726FCACE80092F318 /* Assets.xcassets */; };
 		B7A71D1B26FCB3000092F318 /* SearchFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A71D1A26FCB3000092F318 /* SearchFeedViewController.swift */; };
+		B7A71D5B26FF61E90092F318 /* SearchFeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A71D5A26FF61E90092F318 /* SearchFeedViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		B7A71D1426FC93000092F318 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
 		B7A71D1726FCACE80092F318 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B7A71D1A26FCB3000092F318 /* SearchFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFeedViewController.swift; sourceTree = "<group>"; };
+		B7A71D5A26FF61E90092F318 /* SearchFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFeedViewModel.swift; sourceTree = "<group>"; };
 		B9CF241697903D8E1D695871 /* Pods_Search.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Search.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB75CCEA6F7421E8BD06D677 /* Pods-Search.debug (staging).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Search.debug (staging).xcconfig"; path = "Target Support Files/Pods-Search/Pods-Search.debug (staging).xcconfig"; sourceTree = "<group>"; };
 		CCF74D737B0141EF415675EB /* Pods-Search.release (development).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Search.release (development).xcconfig"; path = "Target Support Files/Pods-Search/Pods-Search.release (development).xcconfig"; sourceTree = "<group>"; };
@@ -119,18 +121,12 @@
 			children = (
 				B7928148268F2C13000ED84A /* Search.h */,
 				B7928149268F2C13000ED84A /* Info.plist */,
+				B7A71D5E26FF650B0092F318 /* ViewController */,
+				B7A71D5D26FF65040092F318 /* ViewModel */,
+				B7A71D5C26FF64FD0092F318 /* Cell */,
 				B7A71D1626FCACCD0092F318 /* Assets */,
 				B79281BA2694569A000ED84A /* Utilities */,
 				B79281AE26945594000ED84A /* Search.storyboard */,
-				B79281B0269455A9000ED84A /* SearchViewController.swift */,
-				B7A71D1426FC93000092F318 /* SearchResultViewController.swift */,
-				B7A71D1A26FCB3000092F318 /* SearchFeedViewController.swift */,
-				B7A71D0826FC73DA0092F318 /* SearchTextFieldTableViewCell.swift */,
-				B7A71D0926FC73DA0092F318 /* SearchTextFieldTableViewCell.xib */,
-				B7A71D0C26FC7DFA0092F318 /* SearchHeaderTableViewCell.swift */,
-				B7A71D0D26FC7DFA0092F318 /* SearchHeaderTableViewCell.xib */,
-				B7A71D1026FC87A90092F318 /* SearchTrendTableViewCell.swift */,
-				B7A71D1126FC87A90092F318 /* SearchTrendTableViewCell.xib */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -150,6 +146,37 @@
 				B7A71D1726FCACE80092F318 /* Assets.xcassets */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		B7A71D5C26FF64FD0092F318 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				B7A71D0826FC73DA0092F318 /* SearchTextFieldTableViewCell.swift */,
+				B7A71D0926FC73DA0092F318 /* SearchTextFieldTableViewCell.xib */,
+				B7A71D0C26FC7DFA0092F318 /* SearchHeaderTableViewCell.swift */,
+				B7A71D0D26FC7DFA0092F318 /* SearchHeaderTableViewCell.xib */,
+				B7A71D1026FC87A90092F318 /* SearchTrendTableViewCell.swift */,
+				B7A71D1126FC87A90092F318 /* SearchTrendTableViewCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		B7A71D5D26FF65040092F318 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				B7A71D5A26FF61E90092F318 /* SearchFeedViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		B7A71D5E26FF650B0092F318 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B79281B0269455A9000ED84A /* SearchViewController.swift */,
+				B7A71D1426FC93000092F318 /* SearchResultViewController.swift */,
+				B7A71D1A26FCB3000092F318 /* SearchFeedViewController.swift */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,6 +296,7 @@
 				B7A71D0E26FC7DFA0092F318 /* SearchHeaderTableViewCell.swift in Sources */,
 				B79281BD269456C9000ED84A /* SearchNibVars.swift in Sources */,
 				B79281C1269456F9000ED84A /* SearchOpener.swift in Sources */,
+				B7A71D5B26FF61E90092F318 /* SearchFeedViewModel.swift in Sources */,
 				B7A71D0A26FC73DA0092F318 /* SearchTextFieldTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

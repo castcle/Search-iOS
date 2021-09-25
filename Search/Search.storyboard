@@ -194,9 +194,24 @@
                     <view key="view" contentMode="scaleToFill" id="tCl-O8-wQS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Gzf-Px-5dp">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="ZUd-0f-Wn5"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Gzf-Px-5dp" firstAttribute="top" secondItem="ZUd-0f-Wn5" secondAttribute="top" id="DYB-fm-yRh"/>
+                            <constraint firstAttribute="bottom" secondItem="Gzf-Px-5dp" secondAttribute="bottom" id="Jk3-vO-vdb"/>
+                            <constraint firstItem="ZUd-0f-Wn5" firstAttribute="trailing" secondItem="Gzf-Px-5dp" secondAttribute="trailing" id="Xof-7z-Ypw"/>
+                            <constraint firstItem="Gzf-Px-5dp" firstAttribute="leading" secondItem="ZUd-0f-Wn5" secondAttribute="leading" id="g30-2J-Cm1"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="Gzf-Px-5dp" id="VYt-xf-xqd"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jiB-w4-XE4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
