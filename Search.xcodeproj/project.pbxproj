@@ -25,6 +25,9 @@
 		B7A71D1826FCACE80092F318 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B7A71D1726FCACE80092F318 /* Assets.xcassets */; };
 		B7A71D1B26FCB3000092F318 /* SearchFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A71D1A26FCB3000092F318 /* SearchFeedViewController.swift */; };
 		B7A71D5B26FF61E90092F318 /* SearchFeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A71D5A26FF61E90092F318 /* SearchFeedViewModel.swift */; };
+		B7A71D692701E0270092F318 /* Profile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7A71D682701E0270092F318 /* Profile.framework */; };
+		B7A71D6D2701E0590092F318 /* Networking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7A71D6C2701E0590092F318 /* Networking.framework */; };
+		B7A71D702701E0600092F318 /* Authen.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7A71D6F2701E0600092F318 /* Authen.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +55,9 @@
 		B7A71D1726FCACE80092F318 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B7A71D1A26FCB3000092F318 /* SearchFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFeedViewController.swift; sourceTree = "<group>"; };
 		B7A71D5A26FF61E90092F318 /* SearchFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFeedViewModel.swift; sourceTree = "<group>"; };
+		B7A71D682701E0270092F318 /* Profile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Profile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7A71D6C2701E0590092F318 /* Networking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Networking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7A71D6F2701E0600092F318 /* Authen.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Authen.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9CF241697903D8E1D695871 /* Pods_Search.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Search.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB75CCEA6F7421E8BD06D677 /* Pods-Search.debug (staging).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Search.debug (staging).xcconfig"; path = "Target Support Files/Pods-Search/Pods-Search.debug (staging).xcconfig"; sourceTree = "<group>"; };
 		CCF74D737B0141EF415675EB /* Pods-Search.release (development).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Search.release (development).xcconfig"; path = "Target Support Files/Pods-Search/Pods-Search.release (development).xcconfig"; sourceTree = "<group>"; };
@@ -65,7 +71,10 @@
 			files = (
 				B75E62B426972E7A003E1ADA /* Component.framework in Frameworks */,
 				090AF01B1CAB6CB16E7D018B /* Pods_Search.framework in Frameworks */,
+				B7A71D692701E0270092F318 /* Profile.framework in Frameworks */,
+				B7A71D6D2701E0590092F318 /* Networking.framework in Frameworks */,
 				B79281CE26959A7A000ED84A /* Core.framework in Frameworks */,
+				B7A71D702701E0600092F318 /* Authen.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +100,9 @@
 		ACC3D8772D4B5269CD4B1DAD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B7A71D6F2701E0600092F318 /* Authen.framework */,
+				B7A71D6C2701E0590092F318 /* Networking.framework */,
+				B7A71D682701E0270092F318 /* Profile.framework */,
 				B75E62B326972E7A003E1ADA /* Component.framework */,
 				B79281CD26959A7A000ED84A /* Core.framework */,
 				B9CF241697903D8E1D695871 /* Pods_Search.framework */,
