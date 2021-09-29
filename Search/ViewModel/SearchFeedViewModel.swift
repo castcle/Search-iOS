@@ -35,7 +35,7 @@ final class SearchFeedViewModel {
 
     //MARK: Input
     public func getFeeds() {
-        self.feedRepository.getFeeds(featureSlug: "Test", circleSlug: "Test") { (success, feedShelf) in
+        self.feedRepository.getFeedsMock(featureSlug: "Test", circleSlug: "Test") { (success, feedShelf) in
             if success {
                 self.feedShelf = feedShelf
             }

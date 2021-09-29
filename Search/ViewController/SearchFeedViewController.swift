@@ -95,14 +95,14 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let feed = self.viewModel.feedShelf.feeds[indexPath.section]
+        let content = self.viewModel.feedShelf.feeds[indexPath.section].feedPayload
         switch indexPath.row {
         case FeedSection.header.rawValue:
-            return self.renderFeedCell(feed: feed, cellType: .header, tableView: tableView, indexPath: indexPath)
+            return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
         case FeedSection.footer.rawValue:
-            return self.renderFeedCell(feed: feed, cellType: .footer, tableView: tableView, indexPath: indexPath)
+            return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
         default:
-            return self.renderFeedCell(feed: feed, cellType: .content, tableView: tableView, indexPath: indexPath)
+            return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
         }
     }
     
@@ -116,22 +116,22 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
         return footerView
     }
     
-    func renderFeedCell(feed: Feed, cellType: FeedCellType, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+    func renderFeedCell(content: Content, cellType: FeedCellType, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         switch cellType {
         case .header:
             let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.headerFeed, for: indexPath as IndexPath) as? HeaderTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGray
             cell?.delegate = self
-            cell?.feed = feed
+            cell?.content = content
             return cell ?? HeaderTableViewCell()
         case .footer:
             let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.footerFeed, for: indexPath as IndexPath) as? FooterTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGray
             cell?.delegate = self
-            cell?.feed = feed
+            cell?.content = content
             return cell ?? FooterTableViewCell()
         default:
-            return FeedCellHelper().renderFeedCell(feed: feed, tableView: self.tableView, indexPath: indexPath)
+            return FeedCellHelper().renderFeedCell(content: content, tableView: self.tableView, indexPath: indexPath)
         }
     }
 }
@@ -147,15 +147,15 @@ extension SearchFeedViewController: HeaderTableViewCellDelegate {
 }
 
 extension SearchFeedViewController: FooterTableViewCellDelegate {
-    func didTabComment(_ footerTableViewCell: FooterTableViewCell, feed: Feed) {
-        let commentNavi: UINavigationController = UINavigationController(rootViewController: ComponentOpener.open(.comment(CommentViewModel(feed: feed))))
+    func didTabComment(_ footerTableViewCell: FooterTableViewCell, content: Content) {
+        let commentNavi: UINavigationController = UINavigationController(rootViewController: ComponentOpener.open(.comment(CommentViewModel(content: content))))
         commentNavi.modalPresentationStyle = .fullScreen
         commentNavi.modalTransitionStyle = .crossDissolve
         Utility.currentViewController().present(commentNavi, animated: true)
     }
     
-    func didTabQuoteCast(_ footerTableViewCell: FooterTableViewCell, feed: Feed, page: Page) {
-        let vc = PostOpener.open(.post(PostViewModel(postType: .quoteCast, feed: feed, page: page)))
+    func didTabQuoteCast(_ footerTableViewCell: FooterTableViewCell, content: Content, page: Page) {
+        let vc = PostOpener.open(.post(PostViewModel(postType: .quoteCast, content: content, page: page)))
         vc.modalPresentationStyle = .fullScreen
         Utility.currentViewController().present(vc, animated: true, completion: nil)
     }
