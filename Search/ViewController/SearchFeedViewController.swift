@@ -137,6 +137,10 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension SearchFeedViewController: HeaderTableViewCellDelegate {
+    func didRemoveSuccess(_ headerTableViewCell: HeaderTableViewCell) {
+        // Remove success
+    }
+    
     func didTabProfile(_ headerTableViewCell: HeaderTableViewCell) {
         Utility.currentViewController().navigationController?.pushViewController(ProfileOpener.open(.userDetail(UserDetailViewModel(isMe: false))), animated: true)
     }
