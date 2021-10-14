@@ -19,33 +19,22 @@
 //  Thailand 10160, or visit www.castcle.com if you need additional information
 //  or have any questions.
 //
-//  SearchFeedViewModel.swift
+//  SearchViewModel.swift
 //  Search
 //
-//  Created by Tanakorn Phoochaliaw on 25/9/2564 BE.
+//  Created by Tanakorn Phoochaliaw on 12/10/2564 BE.
 //
 
 import Foundation
 import Networking
 import SwiftyJSON
 
-final class SearchFeedViewModel {
+final class SearchViewModel {
    
     private var searchRepository: SearchRepository = SearchRepositoryImpl()
-    private var feedRepository: FeedRepository = FeedRepositoryImpl()
-    var feedShelf: FeedShelf = FeedShelf()
     var searchRequest: SearchRequest = SearchRequest()
     let tokenHelper: TokenHelper = TokenHelper()
-
-    //MARK: Input
-    public func getFeeds() {
-        self.feedRepository.getFeedsMock(featureSlug: "Test", circleSlug: "Test") { (success, feedShelf) in
-            if success {
-                self.feedShelf = feedShelf
-            }
-            self.didLoadFeedsFinish?()
-        }
-    }
+    var topTrend: TopTrend = TopTrend()
     
     public func getTopTrends() {
         self.searchRepository.getTopTrends(searchRequest: self.searchRequest)  { (success, response, isRefreshToken) in
@@ -53,8 +42,8 @@ final class SearchFeedViewModel {
                 do {
                     let rawJson = try response.mapJSON()
                     let json = JSON(rawJson)
-                    
-                    print(json)
+                    self.topTrend = TopTrend(json: json)
+                    self.didLoadTopTrendFinish?()
                 } catch {
                     
                 }
@@ -67,16 +56,16 @@ final class SearchFeedViewModel {
     }
     
     //MARK: Output
-    var didLoadFeedsFinish: (() -> ())?
+    var didLoadTopTrendFinish: (() -> ())?
     
     public init() {
-        self.getFeeds()
+        self.getTopTrends()
         self.tokenHelper.delegate = self
     }
 }
 
-extension SearchFeedViewModel: TokenHelperDelegate {
+extension SearchViewModel: TokenHelperDelegate {
     public func didRefreshTokenFinish() {
-        self.getFeeds()
+        self.getTopTrends()
     }
 }

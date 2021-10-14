@@ -33,6 +33,8 @@ class SearchViewController: UIViewController {
 
     @IBOutlet var tableView: UITableView!
     
+    var viewModel = SearchViewModel()
+    
     enum SearchViewControllerSection: Int, CaseIterable {
         case search = 0
         case trendingHeader
@@ -44,6 +46,10 @@ class SearchViewController: UIViewController {
         self.view.backgroundColor = UIColor.Asset.darkGraphiteBlue
         self.setupNavBar()
         self.configureTableView()
+        
+        self.viewModel.didLoadTopTrendFinish = {
+            self.tableView.reloadData()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -75,7 +81,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == SearchViewControllerSection.trending.rawValue {
-            return 10
+            return self.viewModel.topTrend.hashtags.count
         } else {
             return 1
         }
@@ -94,8 +100,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         case SearchViewControllerSection.trending.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTrend, for: indexPath as IndexPath) as? SearchTrendTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGray
-            cell?.titleLabel.text = "\(indexPath.row + 1). Trending"
-            cell?.configCell(isTrendingUp: !((indexPath.row + 1) % 3 == 0))
+            cell?.configCell(hastag: self.viewModel.topTrend.hashtags[indexPath.row])
             return cell ?? SearchTrendTableViewCell()
         default:
             return UITableViewCell()

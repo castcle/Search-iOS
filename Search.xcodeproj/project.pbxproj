@@ -28,6 +28,7 @@
 		B7A71D692701E0270092F318 /* Profile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7A71D682701E0270092F318 /* Profile.framework */; };
 		B7A71D6D2701E0590092F318 /* Networking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7A71D6C2701E0590092F318 /* Networking.framework */; };
 		B7A71D702701E0600092F318 /* Authen.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7A71D6F2701E0600092F318 /* Authen.framework */; };
+		B7AC1E3C271590DF002FC176 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AC1E3B271590DE002FC176 /* SearchViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		B7A71D682701E0270092F318 /* Profile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Profile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7A71D6C2701E0590092F318 /* Networking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Networking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7A71D6F2701E0600092F318 /* Authen.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Authen.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7AC1E3B271590DE002FC176 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		B9CF241697903D8E1D695871 /* Pods_Search.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Search.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB75CCEA6F7421E8BD06D677 /* Pods-Search.debug (staging).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Search.debug (staging).xcconfig"; path = "Target Support Files/Pods-Search/Pods-Search.debug (staging).xcconfig"; sourceTree = "<group>"; };
 		CCF74D737B0141EF415675EB /* Pods-Search.release (development).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Search.release (development).xcconfig"; path = "Target Support Files/Pods-Search/Pods-Search.release (development).xcconfig"; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 		B7A71D5D26FF65040092F318 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				B7AC1E3B271590DE002FC176 /* SearchViewModel.swift */,
 				B7A71D5A26FF61E90092F318 /* SearchFeedViewModel.swift */,
 			);
 			path = ViewModel;
@@ -307,6 +310,7 @@
 				B7A71D1226FC87A90092F318 /* SearchTrendTableViewCell.swift in Sources */,
 				B7A71D0E26FC7DFA0092F318 /* SearchHeaderTableViewCell.swift in Sources */,
 				B79281BD269456C9000ED84A /* SearchNibVars.swift in Sources */,
+				B7AC1E3C271590DF002FC176 /* SearchViewModel.swift in Sources */,
 				B79281C1269456F9000ED84A /* SearchOpener.swift in Sources */,
 				B7A71D5B26FF61E90092F318 /* SearchFeedViewModel.swift in Sources */,
 				B7A71D0A26FC73DA0092F318 /* SearchTextFieldTableViewCell.swift in Sources */,

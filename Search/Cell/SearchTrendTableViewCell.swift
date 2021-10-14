@@ -27,13 +27,13 @@
 
 import UIKit
 import Core
+import Networking
 
 class SearchTrendTableViewCell: UITableViewCell {
 
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var trendLabel: UILabel!
     @IBOutlet var countLabel: UILabel!
-    @IBOutlet var trendingIcon: UIImageView!
     @IBOutlet var nextIcon: UIImageView!
     @IBOutlet var lineView: UIView!
     
@@ -54,11 +54,9 @@ class SearchTrendTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    func configCell(isTrendingUp: Bool) {
-        if isTrendingUp {
-            self.trendingIcon.image = UIImage.init(icon: .castcle(.arowUp), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.trendUp)
-        } else {
-            self.trendingIcon.image = UIImage.init(icon: .castcle(.arowDown), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.trendDown)
-        }
+    func configCell(hastag: Hashtag) {
+        self.titleLabel.text = "\(hastag.rank). Trending"
+        self.trendLabel.text = hastag.name
+        self.countLabel.text = "\(String.displayCount(count: hastag.count)) Cast"
     }
 }
