@@ -32,6 +32,7 @@ import XLPagerTabStrip
 
 class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFieldDelegate {
 
+    @IBOutlet var tableView: UITableView!
     @IBOutlet var searchView: UIView!
     @IBOutlet var searchImage: UIImageView!
     @IBOutlet var searchTextField: UITextField!
@@ -41,14 +42,16 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     @IBOutlet var emptyDetailLabel: UILabel!
     @IBOutlet var clearButton: UIButton!
     
-    enum SearchViewControllerSection: Int, CaseIterable {
-        case search = 0
-        case trendingHeader
-        case trending
+    enum SearchResultViewControllerSection: Int, CaseIterable {
+        case recentHeader = 0
+        case recent
+        case keyword
+        case follow
+        case hastag
     }
     
-    var isSearch: Bool = true
-    var searchText: String = ""
+    var viewModel = SearchResualViewModel()
+    var timer: Timer?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -66,6 +69,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         self.view.backgroundColor = UIColor.Asset.darkGraphiteBlue
         self.hideKeyboardWhenTapped()
         self.setupNavBar()
+        self.configureTableView()
         self.searchView.custom(color: UIColor.Asset.darkGray, cornerRadius: 18, borderWidth: 1, borderColor: UIColor.Asset.darkGraphiteBlue)
         self.searchImage.image = UIImage.init(icon: .castcle(.search), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.white)
         self.searchTextField.font = UIFont.asset(.regular, fontSize: .overline)
@@ -85,17 +89,28 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
             newCell?.label.textColor = UIColor.Asset.white
         }
         
-        if isSearch {
+        if self.viewModel.searchResualState == .initial {
+            self.tableView.isHidden = false
             self.buttonBarView.isHidden = true
             self.containerView.isHidden = true
             self.clearButton.isHidden = true
             self.emptyView.isHidden = true
         } else {
+            self.tableView.isHidden = true
             self.buttonBarView.isHidden = false
             self.containerView.isHidden = false
             self.clearButton.isHidden = false
             self.emptyView.isHidden = true
-            self.searchTextField.text = self.searchText
+            self.searchTextField.text = self.viewModel.searchText
+        }
+        
+        self.viewModel.didGetSuggestionFinish = {
+            if self.viewModel.searchText.hasPrefix("#") {
+                self.viewModel.searchResualState = .hastag
+            } else {
+                self.viewModel.searchResualState = .suggest
+            }
+            self.tableView.reloadData()
         }
     }
     
@@ -106,18 +121,42 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if self.isSearch {
+        if self.viewModel.searchResualState == .initial {
+            self.viewModel.isShowRecent = true
             self.searchTextField.becomeFirstResponder()
         }
     }
     
     func setupNavBar() {
-        self.customNavigationBar(.secondary, title: "Search", animated: !self.isSearch)
+        if self.viewModel.searchResualState == .initial {
+            self.customNavigationBar(.secondary, title: "Search", animated: false)
+        } else {
+            self.customNavigationBar(.secondary, title: "Search", animated: true)
+        }
+    }
+    
+    func configureTableView() {
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        
+        self.tableView.register(UINib(nibName: SearchNibVars.TableViewCell.recentSearchHeader, bundle: ConfigBundle.search), forCellReuseIdentifier: SearchNibVars.TableViewCell.recentSearchHeader)
+        self.tableView.register(UINib(nibName: SearchNibVars.TableViewCell.recentSearch, bundle: ConfigBundle.search), forCellReuseIdentifier: SearchNibVars.TableViewCell.recentSearch)
+        self.tableView.register(UINib(nibName: SearchNibVars.TableViewCell.suggestionUser, bundle: ConfigBundle.search), forCellReuseIdentifier: SearchNibVars.TableViewCell.suggestionUser)
+        
+        self.tableView.rowHeight = UITableView.automaticDimension
+        self.tableView.estimatedRowHeight = 100
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if self.isSearch {
+        self.timer?.invalidate()
+        
+        if self.viewModel.searchResualState == .initial {
+            self.tableView.isHidden = true
             self.emptyView.isHidden = false
+            let searchValue = textField.text ?? ""
+            if !(searchValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
+                self.viewModel.addRecentSearch(value: searchValue.trimmingCharacters(in: .whitespacesAndNewlines))
+            }
         }
         textField.resignFirstResponder()
         return true
@@ -129,6 +168,23 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         } else {
             self.clearButton.isHidden = false
         }
+    }
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+
+        self.timer?.invalidate()
+
+        let currentText = textField.text ?? ""
+        if (currentText as NSString).replacingCharacters(in: range, with: string).count >= 1 {
+            self.viewModel.searchText = currentText
+            self.timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(self.performSearch), userInfo: nil, repeats: false)
+        }
+        
+        return true
+    }
+
+    @objc func performSearch() {
+        self.viewModel.getSuggestion()
     }
     
     // MARK: - PagerTabStripDataSource
@@ -159,5 +215,96 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     @IBAction func clearAction(_ sender: Any) {
         self.clearButton.isHidden = true
         self.searchTextField.text = ""
+    }
+}
+
+extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return SearchResultViewControllerSection.allCases.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case SearchResultViewControllerSection.recentHeader.rawValue:
+            if self.viewModel.searchResualState == .initial && self.viewModel.recentSearch.count != 0 {
+                return 1
+            } else {
+                return 0
+            }
+        case SearchResultViewControllerSection.recent.rawValue:
+            if self.viewModel.searchResualState == .initial && self.viewModel.recentSearch.count != 0 {
+                return self.viewModel.recentSearch.count
+            } else {
+                return 0
+            }
+            
+        case SearchResultViewControllerSection.keyword.rawValue:
+            if self.viewModel.searchResualState == .suggest {
+                return self.viewModel.suggestions.keyword.count
+            } else {
+                return 0
+            }
+        case SearchResultViewControllerSection.follow.rawValue:
+            if self.viewModel.searchResualState == .suggest {
+                return self.viewModel.suggestions.follows.count
+            } else {
+                return 0
+            }
+        case SearchResultViewControllerSection.hastag.rawValue:
+            if self.viewModel.searchResualState == .hastag {
+                return self.viewModel.suggestions.hashtags.count
+            } else {
+                return 0
+            }
+        default:
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.section {
+        case SearchResultViewControllerSection.recentHeader.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.recentSearchHeader, for: indexPath as IndexPath) as? RecentHeaderSearchTableViewCell
+            cell?.backgroundColor = UIColor.Asset.darkGraphiteBlue
+            cell?.configCell(display: "การค้นหาล่าสุด")
+            return cell ?? RecentHeaderSearchTableViewCell()
+        case SearchResultViewControllerSection.recent.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.recentSearch, for: indexPath as IndexPath) as? RecentSearchTableViewCell
+            let recentSearch = self.viewModel.recentSearch[indexPath.row]
+            cell?.backgroundColor = UIColor.Asset.darkGray
+            cell?.configCell(display: recentSearch.value)
+            return cell ?? RecentSearchTableViewCell()
+        case SearchResultViewControllerSection.keyword.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.recentSearch, for: indexPath as IndexPath) as? RecentSearchTableViewCell
+            let keyword = self.viewModel.suggestions.keyword[indexPath.row]
+            cell?.backgroundColor = UIColor.Asset.darkGray
+            cell?.configCell(display: keyword.text)
+            return cell ?? RecentSearchTableViewCell()
+        case SearchResultViewControllerSection.follow.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.suggestionUser, for: indexPath as IndexPath) as? SuggestionUserTableViewCell
+            let follow = self.viewModel.suggestions.follows[indexPath.row]
+            cell?.backgroundColor = UIColor.Asset.darkGraphiteBlue
+            cell?.configCell(follow: follow)
+            return cell ?? SuggestionUserTableViewCell()
+        case SearchResultViewControllerSection.hastag.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.recentSearch, for: indexPath as IndexPath) as? RecentSearchTableViewCell
+            let hashtag = self.viewModel.suggestions.hashtags[indexPath.row]
+            cell?.backgroundColor = UIColor.Asset.darkGray
+            cell?.configCell(display: hashtag.name)
+            return cell ?? RecentSearchTableViewCell()
+        default:
+            return UITableViewCell()
+        }
+        
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        switch section {
+//        case SearchResultViewControllerSection.keyword.rawValue:
+//        case SearchResultViewControllerSection.follow.rawValue:
+//        case SearchResultViewControllerSection.hastag.rawValue:
+//        default:
+//            return 0
+//        }
     }
 }

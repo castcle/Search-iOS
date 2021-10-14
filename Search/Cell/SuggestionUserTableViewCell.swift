@@ -19,35 +19,38 @@
 //  Thailand 10160, or visit www.castcle.com if you need additional information
 //  or have any questions.
 //
-//  SearchTextFieldTableViewCell.swift
+//  SuggestionUserTableViewCell.swift
 //  Search
 //
-//  Created by Tanakorn Phoochaliaw on 23/9/2564 BE.
+//  Created by Tanakorn Phoochaliaw on 14/10/2564 BE.
 //
 
 import UIKit
-import Core
+import Networking
 
-class SearchTextFieldTableViewCell: UITableViewCell {
+class SuggestionUserTableViewCell: UITableViewCell {
 
-    @IBOutlet var searchView: UIView!
-    @IBOutlet var searchImage: UIImageView!
-    @IBOutlet var searchTextField: UITextField!
+    @IBOutlet var avatar: UIImageView!
+    @IBOutlet var displayNameLabel: UILabel!
+    @IBOutlet var castcleIdLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.searchView.custom(color: UIColor.Asset.darkGray, cornerRadius: 18, borderWidth: 1, borderColor: UIColor.Asset.darkGraphiteBlue)
-        self.searchImage.image = UIImage.init(icon: .castcle(.search), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.white)
-        self.searchTextField.font = UIFont.asset(.regular, fontSize: .overline)
-        self.searchTextField.textColor = UIColor.Asset.white
+        self.displayNameLabel.font = UIFont.asset(.regular, fontSize: .overline)
+        self.displayNameLabel.textColor = UIColor.Asset.white
+        self.castcleIdLabel.font = UIFont.asset(.regular, fontSize: .small)
+        self.castcleIdLabel.textColor = UIColor.Asset.lightGray
+        self.avatar.circle(color: UIColor.Asset.white)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
     
-    @IBAction func searchAction(_ sender: Any) {
-        let vc = SearchOpener.open(.searchResult(SearchResualViewModel(state: .initial)))
-        Utility.currentViewController().navigationController?.pushViewController(vc, animated: false)
+    func configCell(follow: Follow) {
+        let url = URL(string: follow.avatar)
+        self.avatar.kf.setImage(with: url, placeholder: UIImage.Asset.userPlaceholder, options: [.transition(.fade(0.5))])
+        self.displayNameLabel.text = follow.displayName
+        self.castcleIdLabel.text = "@\(follow.castcleId)"
     }
 }

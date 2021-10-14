@@ -19,36 +19,18 @@
 //  Thailand 10160, or visit www.castcle.com if you need additional information
 //  or have any questions.
 //
-//  SearchNibVars.swift
+//  RecentSearch.swift
 //  Search
 //
-//  Created by Tanakorn Phoochaliaw on 6/7/2564 BE.
+//  Created by Tanakorn Phoochaliaw on 14/10/2564 BE.
 //
 
-public struct SearchNibVars {
-    // MARK: - View Controller
-    public struct ViewController {
-        public static let search = "SearchViewController"
-        public static let searchResult = "SearchResultViewController"
-        public static let searchFeed = "SearchFeedViewController"
-    }
+import RealmSwift
+
+class RecentSearch: Object {
+    @objc dynamic var value = ""
     
-    // MARK: - View
-    public struct Storyboard {
-        public static let search = "Search"
-    }
-    
-    // MARK: - TableViewCell
-    public struct TableViewCell {
-        public static let searchTextField = "SearchTextFieldTableViewCell"
-        public static let searchTitle = "SearchHeaderTableViewCell"
-        public static let searchTrend = "SearchTrendTableViewCell"
-        public static let recentSearchHeader = "RecentHeaderSearchTableViewCell"
-        public static let recentSearch = "RecentSearchTableViewCell"
-        public static let suggestionUser = "SuggestionUserTableViewCell"
-    }
-    
-    // MARK: - CollectionViewCell
-    public struct CollectionViewCell {
+    override static func primaryKey() -> String? {
+        return "value"
     }
 }

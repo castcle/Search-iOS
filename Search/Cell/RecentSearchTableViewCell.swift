@@ -19,35 +19,37 @@
 //  Thailand 10160, or visit www.castcle.com if you need additional information
 //  or have any questions.
 //
-//  SearchTextFieldTableViewCell.swift
+//  RecentSearchTableViewCell.swift
 //  Search
 //
-//  Created by Tanakorn Phoochaliaw on 23/9/2564 BE.
+//  Created by Tanakorn Phoochaliaw on 14/10/2564 BE.
 //
 
 import UIKit
 import Core
 
-class SearchTextFieldTableViewCell: UITableViewCell {
+class RecentSearchTableViewCell: UITableViewCell {
 
-    @IBOutlet var searchView: UIView!
-    @IBOutlet var searchImage: UIImageView!
-    @IBOutlet var searchTextField: UITextField!
+    @IBOutlet var displayLabel: UILabel!
+    @IBOutlet var actionButton: UIButton!
+    @IBOutlet var lineView: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.searchView.custom(color: UIColor.Asset.darkGray, cornerRadius: 18, borderWidth: 1, borderColor: UIColor.Asset.darkGraphiteBlue)
-        self.searchImage.image = UIImage.init(icon: .castcle(.search), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.white)
-        self.searchTextField.font = UIFont.asset(.regular, fontSize: .overline)
-        self.searchTextField.textColor = UIColor.Asset.white
+        self.displayLabel.font = UIFont.asset(.regular, fontSize: .overline)
+        self.displayLabel.textColor = UIColor.Asset.white
+        self.lineView.backgroundColor = UIColor.Asset.darkGraphiteBlue
+        self.actionButton.setImage(UIImage.init(icon: .castcle(.arrowObliqueLeft), size: CGSize(width: 15, height: 15), textColor: UIColor.Asset.lightBlue).withRenderingMode(.alwaysOriginal), for: .normal)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
     
-    @IBAction func searchAction(_ sender: Any) {
-        let vc = SearchOpener.open(.searchResult(SearchResualViewModel(state: .initial)))
-        Utility.currentViewController().navigationController?.pushViewController(vc, animated: false)
+    func configCell(display: String) {
+        self.displayLabel.text = display
+    }
+    
+    @IBAction func cellAction(_ sender: Any) {
     }
 }

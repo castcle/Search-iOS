@@ -109,10 +109,8 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == SearchViewControllerSection.trending.rawValue {
-            let vc = SearchOpener.open(.searchResult) as? SearchResultViewController
-            vc?.isSearch = false
-            vc?.searchText = "#Bitcoin"
-            Utility.currentViewController().navigationController?.pushViewController(vc ?? SearchResultViewController(), animated: true)
+            let vc = SearchOpener.open(.searchResult(SearchResualViewModel(state: .resualt, textSearch: self.viewModel.topTrend.hashtags[indexPath.row].slug)))
+            Utility.currentViewController().navigationController?.pushViewController(vc, animated: true)
         }
     }
 }
