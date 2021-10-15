@@ -176,7 +176,6 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
 
         let currentText = textField.text ?? ""
         if (currentText as NSString).replacingCharacters(in: range, with: string).count >= 1 {
-            self.viewModel.searchText = currentText
             self.timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(self.performSearch), userInfo: nil, repeats: false)
         }
         
@@ -184,6 +183,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     }
 
     @objc func performSearch() {
+        self.viewModel.searchText = self.searchTextField.text ?? ""
         self.viewModel.getSuggestion()
     }
     
@@ -215,6 +215,8 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     @IBAction func clearAction(_ sender: Any) {
         self.clearButton.isHidden = true
         self.searchTextField.text = ""
+        self.viewModel.searchResualState = .initial
+        self.tableView.reloadData()
     }
 }
 
@@ -299,12 +301,15 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        switch section {
+        switch indexPath.section {
+        case SearchResultViewControllerSection.recent.rawValue:
+            let recentSearch = self.viewModel.recentSearch[indexPath.row]
+            self.searchTextField.text = recentSearch.value
 //        case SearchResultViewControllerSection.keyword.rawValue:
 //        case SearchResultViewControllerSection.follow.rawValue:
 //        case SearchResultViewControllerSection.hastag.rawValue:
-//        default:
-//            return 0
-//        }
+        default:
+            return
+        }
     }
 }

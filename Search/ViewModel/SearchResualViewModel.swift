@@ -62,7 +62,7 @@ final public class SearchResualViewModel {
     
     func getSuggestion() {
         self.searchRequest.keyword = self.searchText
-        self.searchRepository.getTopTrends(searchRequest: self.searchRequest)  { (success, response, isRefreshToken) in
+        self.searchRepository.getSuggestion(searchRequest: self.searchRequest)  { (success, response, isRefreshToken) in
             if success {
                 do {
                     let rawJson = try response.mapJSON()
