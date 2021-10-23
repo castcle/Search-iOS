@@ -22,7 +22,7 @@
 //  SearchFeedViewModel.swift
 //  Search
 //
-//  Created by Tanakorn Phoochaliaw on 25/9/2564 BE.
+//  Created by Castcle Co., Ltd. on 25/9/2564 BE.
 //
 
 import Foundation
