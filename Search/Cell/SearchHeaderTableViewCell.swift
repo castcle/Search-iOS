@@ -35,7 +35,7 @@ class SearchHeaderTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.iconImage.image = UIImage.init(icon: .castcle(.head), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.white)
+        self.iconImage.image = UIImage.init(icon: .castcle(.toptrend), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.white)
         self.titleLabel.font = UIFont.asset(.medium, fontSize: .h4)
     }
 
