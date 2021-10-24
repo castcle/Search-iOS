@@ -60,7 +60,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         settings.style.selectedBarBackgroundColor = UIColor.Asset.white
         settings.style.buttonBarItemTitleColor = UIColor.Asset.white
         settings.style.selectedBarHeight = 4
-        settings.style.buttonBarItemFont = UIFont.asset(.medium, fontSize: .body)
+        settings.style.buttonBarItemFont = UIFont.asset(.bold, fontSize: .body)
         settings.style.buttonBarHeight = 60.0
     }
     

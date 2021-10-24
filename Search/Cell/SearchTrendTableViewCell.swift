@@ -39,11 +39,11 @@ class SearchTrendTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.titleLabel.font = UIFont.asset(.medium, fontSize: .overline)
+        self.titleLabel.font = UIFont.asset(.bold, fontSize: .overline)
         self.titleLabel.textColor = UIColor.Asset.lightGray
-        self.trendLabel.font = UIFont.asset(.medium, fontSize: .body)
+        self.trendLabel.font = UIFont.asset(.bold, fontSize: .body)
         self.trendLabel.textColor = UIColor.Asset.white
-        self.countLabel.font = UIFont.asset(.medium, fontSize: .overline)
+        self.countLabel.font = UIFont.asset(.bold, fontSize: .overline)
         self.countLabel.textColor = UIColor.Asset.lightGray
         
         self.nextIcon.image = UIImage.init(icon: .castcle(.next), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.lightGray)
