@@ -239,7 +239,6 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             } else {
                 return 0
             }
-            
         case SearchResultViewControllerSection.keyword.rawValue:
             if self.viewModel.searchResualState == .suggest {
                 return self.viewModel.suggestions.keyword.count

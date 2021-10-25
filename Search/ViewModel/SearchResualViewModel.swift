@@ -84,7 +84,6 @@ final public class SearchResualViewModel {
         try! self.realm.write {
             let valueSearch = RecentSearch()
             valueSearch.value = value
-            
             self.realm.add(valueSearch, update: .modified)
         }
     }
