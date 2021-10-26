@@ -46,6 +46,7 @@ class SearchViewController: UIViewController {
         self.view.backgroundColor = UIColor.Asset.darkGraphiteBlue
         self.setupNavBar()
         self.configureTableView()
+        self.viewModel.getTopTrends()
         
         self.viewModel.didLoadTopTrendFinish = {
             self.tableView.reloadData()

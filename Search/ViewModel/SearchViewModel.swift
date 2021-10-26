@@ -59,7 +59,6 @@ final class SearchViewModel {
     var didLoadTopTrendFinish: (() -> ())?
     
     public init() {
-        self.getTopTrends()
         self.tokenHelper.delegate = self
     }
 }
