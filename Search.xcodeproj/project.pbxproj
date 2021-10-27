@@ -33,7 +33,6 @@
 		B7A71D6D2701E0590092F318 /* Networking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7A71D6C2701E0590092F318 /* Networking.framework */; };
 		B7A71D702701E0600092F318 /* Authen.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7A71D6F2701E0600092F318 /* Authen.framework */; };
 		B7AC1E3C271590DF002FC176 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AC1E3B271590DE002FC176 /* SearchViewModel.swift */; };
-		B7AC1E552718175E002FC176 /* RecentSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AC1E542718175E002FC176 /* RecentSearch.swift */; };
 		B7AC1E57271820BE002FC176 /* SearchResualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AC1E56271820BE002FC176 /* SearchResualViewModel.swift */; };
 		B7AC1E5A27182F54002FC176 /* RecentSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AC1E5827182F54002FC176 /* RecentSearchTableViewCell.swift */; };
 		B7AC1E5B27182F54002FC176 /* RecentSearchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7AC1E5927182F54002FC176 /* RecentSearchTableViewCell.xib */; };
@@ -72,7 +71,6 @@
 		B7A71D6C2701E0590092F318 /* Networking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Networking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7A71D6F2701E0600092F318 /* Authen.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Authen.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7AC1E3B271590DE002FC176 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
-		B7AC1E542718175E002FC176 /* RecentSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecentSearch.swift; sourceTree = "<group>"; };
 		B7AC1E56271820BE002FC176 /* SearchResualViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResualViewModel.swift; sourceTree = "<group>"; };
 		B7AC1E5827182F54002FC176 /* RecentSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchTableViewCell.swift; sourceTree = "<group>"; };
 		B7AC1E5927182F54002FC176 /* RecentSearchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecentSearchTableViewCell.xib; sourceTree = "<group>"; };
@@ -151,7 +149,6 @@
 			children = (
 				B7928148268F2C13000ED84A /* Search.h */,
 				B7928149268F2C13000ED84A /* Info.plist */,
-				B7AC1E532718175E002FC176 /* RealmModel */,
 				B7A71D5E26FF650B0092F318 /* ViewController */,
 				B7A71D5D26FF65040092F318 /* ViewModel */,
 				B7A71D5C26FF64FD0092F318 /* Cell */,
@@ -216,14 +213,6 @@
 				B7A71D1A26FCB3000092F318 /* SearchFeedViewController.swift */,
 			);
 			path = ViewController;
-			sourceTree = "<group>";
-		};
-		B7AC1E532718175E002FC176 /* RealmModel */ = {
-			isa = PBXGroup;
-			children = (
-				B7AC1E542718175E002FC176 /* RecentSearch.swift */,
-			);
-			path = RealmModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -350,7 +339,6 @@
 				B710692E271887FD00D53527 /* RecentHeaderSearchTableViewCell.swift in Sources */,
 				B79281BD269456C9000ED84A /* SearchNibVars.swift in Sources */,
 				B7AC1E3C271590DF002FC176 /* SearchViewModel.swift in Sources */,
-				B7AC1E552718175E002FC176 /* RecentSearch.swift in Sources */,
 				B79281C1269456F9000ED84A /* SearchOpener.swift in Sources */,
 				B7A71D5B26FF61E90092F318 /* SearchFeedViewModel.swift in Sources */,
 				B7A71D0A26FC73DA0092F318 /* SearchTextFieldTableViewCell.swift in Sources */,

@@ -26,6 +26,7 @@
 //
 
 import Foundation
+import Core
 import Networking
 import RealmSwift
 import SwiftyJSON

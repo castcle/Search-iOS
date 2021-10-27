@@ -159,7 +159,7 @@ extension SearchFeedViewController: FooterTableViewCellDelegate {
         Utility.currentViewController().present(commentNavi, animated: true)
     }
     
-    func didTabQuoteCast(_ footerTableViewCell: FooterTableViewCell, content: Content, page: Page) {
+    func didTabQuoteCast(_ footerTableViewCell: FooterTableViewCell, content: Content, page: PageLocal) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
             let vc = PostOpener.open(.post(PostViewModel(postType: .quoteCast, content: content, page: page)))
             vc.modalPresentationStyle = .fullScreen
