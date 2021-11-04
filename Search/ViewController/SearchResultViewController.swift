@@ -27,6 +27,7 @@
 
 import UIKit
 import Core
+import Profile
 import Defaults
 import XLPagerTabStrip
 
@@ -305,7 +306,13 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             let recentSearch = self.viewModel.recentSearch[indexPath.row]
             self.searchTextField.text = recentSearch.value
 //        case SearchResultViewControllerSection.keyword.rawValue:
-//        case SearchResultViewControllerSection.follow.rawValue:
+        case SearchResultViewControllerSection.follow.rawValue:
+            let follow = self.viewModel.suggestions.follows[indexPath.row]
+            if follow.type == .page {
+                ProfileOpener.openProfileDetail(follow.type, castcleId: nil, displayName: "", page: Page().initCustom(displayName: follow.displayName, image: follow.avatar.thumbnail, castcleId: follow.castcleId))
+            } else {
+                ProfileOpener.openProfileDetail(follow.type, castcleId: follow.castcleId, displayName: follow.displayName, page: nil)
+            }
 //        case SearchResultViewControllerSection.hastag.rawValue:
         default:
             return

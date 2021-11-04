@@ -142,8 +142,12 @@ extension SearchFeedViewController: HeaderTableViewCellDelegate {
         // Remove success
     }
     
-    func didTabProfile(_ headerTableViewCell: HeaderTableViewCell) {
-//        Utility.currentViewController().navigationController?.pushViewController(ProfileOpener.open(.userDetail(UserDetailViewModel(isMe: false))), animated: true)
+    func didTabProfile(_ headerTableViewCell: HeaderTableViewCell, author: Author) {
+        if author.type == .page {
+            ProfileOpener.openProfileDetail(author.type, castcleId: nil, displayName: "", page: Page().initCustom(displayName: author.displayName, image: author.avatar.thumbnail, castcleId: author.castcleId))
+        } else {
+            ProfileOpener.openProfileDetail(author.type, castcleId: author.castcleId, displayName: author.displayName, page: nil)
+        }
     }
     
     func didAuthen(_ headerTableViewCell: HeaderTableViewCell) {
@@ -159,7 +163,7 @@ extension SearchFeedViewController: FooterTableViewCellDelegate {
         Utility.currentViewController().present(commentNavi, animated: true)
     }
     
-    func didTabQuoteCast(_ footerTableViewCell: FooterTableViewCell, content: Content, page: PageLocal) {
+    func didTabQuoteCast(_ footerTableViewCell: FooterTableViewCell, content: Content, page: Page) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
             let vc = PostOpener.open(.post(PostViewModel(postType: .quoteCast, content: content, page: page)))
             vc.modalPresentationStyle = .fullScreen
