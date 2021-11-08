@@ -309,7 +309,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         case SearchResultViewControllerSection.follow.rawValue:
             let follow = self.viewModel.suggestions.follows[indexPath.row]
             if follow.type == .page {
-                ProfileOpener.openProfileDetail(follow.type, castcleId: nil, displayName: "", page: Page().initCustom(displayName: follow.displayName, image: follow.avatar.thumbnail, castcleId: follow.castcleId))
+                ProfileOpener.openProfileDetail(follow.type, castcleId: nil, displayName: "", page: Page().initCustom(displayName: follow.displayName, pageImage: follow.avatar.thumbnail, castcleId: follow.castcleId))
             } else {
                 ProfileOpener.openProfileDetail(follow.type, castcleId: follow.castcleId, displayName: follow.displayName, page: nil)
             }
