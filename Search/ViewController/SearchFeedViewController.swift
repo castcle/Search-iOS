@@ -43,13 +43,8 @@ class SearchFeedViewController: UIViewController {
     
     var viewModel = SearchFeedViewModel()
     
-    enum FeedSection: Int, CaseIterable {
-        case header = 0
-        case content
-        case footer
-    }
-    
     enum FeedCellType {
+        case activity
         case header
         case content
         case footer
@@ -80,6 +75,7 @@ class SearchFeedViewController: UIViewController {
         self.tableView.register(UINib(nibName: ComponentNibVars.TableViewCell.imageXMore, bundle: ConfigBundle.component), forCellReuseIdentifier: ComponentNibVars.TableViewCell.imageXMore)
         self.tableView.register(UINib(nibName: ComponentNibVars.TableViewCell.blog, bundle: ConfigBundle.component), forCellReuseIdentifier: ComponentNibVars.TableViewCell.blog)
         self.tableView.register(UINib(nibName: ComponentNibVars.TableViewCell.blogNoImage, bundle: ConfigBundle.component), forCellReuseIdentifier: ComponentNibVars.TableViewCell.blogNoImage)
+        self.tableView.register(UINib(nibName: ComponentNibVars.TableViewCell.activityHeader, bundle: ConfigBundle.component), forCellReuseIdentifier: ComponentNibVars.TableViewCell.activityHeader)
         
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight = 100
@@ -92,18 +88,34 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return FeedSection.allCases.count
+        let content = self.viewModel.feedShelf.feeds[section].feedPayload
+        if content.isRecast {
+            return 4
+        } else {
+            return 3
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let content = self.viewModel.feedShelf.feeds[indexPath.section].feedPayload
-        switch indexPath.row {
-        case FeedSection.header.rawValue:
-            return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
-        case FeedSection.footer.rawValue:
-            return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
-        default:
-            return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
+        if content.isRecast {
+            if indexPath.row == 0 {
+                return self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath)
+            } else if indexPath.row == 1 {
+                return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
+            } else if indexPath.row == 2 {
+                return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
+            } else {
+                return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+            }
+        } else {
+            if indexPath.row == 0 {
+                return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
+            } else if indexPath.row == 1 {
+                return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
+            } else {
+                return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+            }
         }
     }
     
@@ -118,21 +130,33 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func renderFeedCell(content: Content, cellType: FeedCellType, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        var contentTemp = Content()
+        if content.isRecast {
+            contentTemp = ContentHelper().originalPostToContent(originalPost: content.originalPost)
+        } else {
+            contentTemp = content
+        }
+        
         switch cellType {
+        case .activity:
+            let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.activityHeader, for: indexPath as IndexPath) as? ActivityHeaderTableViewCell
+            cell?.backgroundColor = UIColor.Asset.darkGray
+            cell?.cellConfig(content: content)
+            return cell ?? ActivityHeaderTableViewCell()
         case .header:
             let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.headerFeed, for: indexPath as IndexPath) as? HeaderTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGray
             cell?.delegate = self
-            cell?.content = content
+            cell?.content = contentTemp
             return cell ?? HeaderTableViewCell()
         case .footer:
             let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.footerFeed, for: indexPath as IndexPath) as? FooterTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGray
             cell?.delegate = self
-            cell?.content = content
+            cell?.content = contentTemp
             return cell ?? FooterTableViewCell()
         default:
-            return FeedCellHelper().renderFeedCell(content: content, tableView: self.tableView, indexPath: indexPath)
+            return FeedCellHelper().renderFeedCell(content: contentTemp, tableView: self.tableView, indexPath: indexPath)
         }
     }
 }
