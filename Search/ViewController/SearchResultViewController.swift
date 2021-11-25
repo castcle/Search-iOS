@@ -192,7 +192,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
         let vc1 = SearchOpener.open(.searchFeed) as? SearchFeedViewController
         vc1?.pageIndex = 0
-        vc1?.pageTitle = "Treand"
+        vc1?.pageTitle = "Trend"
         let child_1 = vc1 ?? SearchFeedViewController()
         
         let vc2 = SearchOpener.open(.searchFeed) as? SearchFeedViewController
