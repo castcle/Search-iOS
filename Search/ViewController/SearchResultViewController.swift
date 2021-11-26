@@ -151,14 +151,20 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.timer?.invalidate()
         
+        let searchValue = textField.text ?? ""
         if self.viewModel.searchResualState == .initial {
             self.tableView.isHidden = true
             self.emptyView.isHidden = false
-            let searchValue = textField.text ?? ""
             if !(searchValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
                 self.viewModel.addRecentSearch(value: searchValue.trimmingCharacters(in: .whitespacesAndNewlines))
             }
         }
+        
+        if !(searchValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
+            let searchDataDict: [String: String] = ["searchText": searchValue.trimmingCharacters(in: .whitespacesAndNewlines)]
+            NotificationCenter.default.post(name: .getSearchFeed, object: nil, userInfo: searchDataDict)
+        }
+        
         textField.resignFirstResponder()
         return true
     }
@@ -190,22 +196,24 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     
     // MARK: - PagerTabStripDataSource
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
-        let vc1 = SearchOpener.open(.searchFeed) as? SearchFeedViewController
+        let vc1 = SearchOpener.open(.searchFeed(SearchFeedViewModel(stage: self.viewModel.searchFeedStage, feedRequest: self.viewModel.feedRequest))) as? SearchFeedViewController
         vc1?.pageIndex = 0
         vc1?.pageTitle = "Trend"
         let child_1 = vc1 ?? SearchFeedViewController()
         
-        let vc2 = SearchOpener.open(.searchFeed) as? SearchFeedViewController
+        let vc2 = SearchOpener.open(.searchFeed(SearchFeedViewModel(stage: self.viewModel.searchFeedStage, feedRequest: self.viewModel.feedRequest))) as? SearchFeedViewController
         vc2?.pageIndex = 1
         vc2?.pageTitle = "Lastest"
         let child_2 = vc2 ?? SearchFeedViewController()
         
-        let vc3 = SearchOpener.open(.searchFeed) as? SearchFeedViewController
+        var feedfeedRequestPhoto = self.viewModel.feedRequest
+        feedfeedRequestPhoto.type = .image
+        let vc3 = SearchOpener.open(.searchFeed(SearchFeedViewModel(stage: self.viewModel.searchFeedStage, feedRequest: feedfeedRequestPhoto))) as? SearchFeedViewController
         vc3?.pageIndex = 2
         vc3?.pageTitle = "Photo"
         let child_3 = vc3 ?? SearchFeedViewController()
         
-        let vc4 = SearchOpener.open(.searchFeed) as? SearchFeedViewController
+        let vc4 = SearchOpener.open(.searchFeed(SearchFeedViewModel(stage: self.viewModel.searchFeedStage, feedRequest: self.viewModel.feedRequest))) as? SearchFeedViewController
         vc4?.pageIndex = 3
         vc4?.pageTitle = "People"
         let child_4 = vc4 ?? SearchFeedViewController()

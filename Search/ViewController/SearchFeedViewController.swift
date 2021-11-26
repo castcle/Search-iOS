@@ -41,7 +41,7 @@ class SearchFeedViewController: UIViewController {
     var pageIndex: Int = 0
     var pageTitle: String?
     
-    var viewModel = SearchFeedViewModel()
+    var viewModel = SearchFeedViewModel(stage: .unknow, feedRequest: FeedRequest())
     
     enum FeedCellType {
         case activity
@@ -60,15 +60,35 @@ class SearchFeedViewController: UIViewController {
             self.tableView.reloadData()
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getSearchFeed(notification:)), name: .getSearchFeed, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: .getSearchFeed, object: nil)
+    }
+    
+    @objc func getSearchFeed(notification: NSNotification) {
+        print("Search")
+        print(notification.userInfo ?? "")
+        if let dict = notification.userInfo as NSDictionary? {
+            if let searchText = dict["searchText"] as? String {
+                print(searchText)
+            }
+        }
+    }
 }
 
 extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.viewModel.feedShelf.feeds.count
+        return self.viewModel.feeds.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let content = self.viewModel.feedShelf.feeds[section].feedPayload
+        let content = self.viewModel.feeds[section].feedPayload
         if content.isRecast || content.isQuote {
             return 4
         } else {
@@ -77,7 +97,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let content = self.viewModel.feedShelf.feeds[indexPath.section].feedPayload
+        let content = self.viewModel.feeds[indexPath.section].feedPayload
         if content.isRecast {
             if indexPath.row == 0 {
                 return self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath)

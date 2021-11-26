@@ -28,22 +28,45 @@
 import Foundation
 import Networking
 import SwiftyJSON
+import XCTest
 
-final class SearchFeedViewModel {
+public enum SearchFeedStage {
+    case getFeed
+    case unknow
+}
+
+public final class SearchFeedViewModel {
    
     private var searchRepository: SearchRepository = SearchRepositoryImpl()
     private var feedRepository: FeedRepository = FeedRepositoryImpl()
-    var feedShelf: FeedShelf = FeedShelf()
     var searchRequest: SearchRequest = SearchRequest()
+    var feedRequest: FeedRequest = FeedRequest()
     let tokenHelper: TokenHelper = TokenHelper()
+    var pagination: Pagination = Pagination()
+    var feeds: [Feed] = []
+    private var featureSlug: String = "feed"
+    private var circleSlug: String = "forYou"
+    var stage: SearchFeedStage = .unknow
 
     //MARK: Input
     public func getFeeds() {
-        self.feedRepository.getFeedsMock(featureSlug: "Test", circleSlug: "Test") { (success, feedShelf) in
+        self.feedRepository.getFeeds(featureSlug: self.featureSlug, circleSlug: self.circleSlug, feedRequest: self.feedRequest) { (success, response, isRefreshToken) in
             if success {
-                self.feedShelf = feedShelf
+                do {
+                    let rawJson = try response.mapJSON()
+                    let json = JSON(rawJson)
+                    let shelf = FeedShelf(json: json)
+                    
+                    self.feeds.append(contentsOf: shelf.feeds)
+                    
+                    self.pagination = shelf.pagination
+                    self.didLoadFeedsFinish?()
+                } catch {}
+            } else {
+                if isRefreshToken {
+                    self.tokenHelper.refreshToken()
+                }
             }
-            self.didLoadFeedsFinish?()
         }
     }
     
@@ -69,8 +92,13 @@ final class SearchFeedViewModel {
     //MARK: Output
     var didLoadFeedsFinish: (() -> ())?
     
-    public init() {
-        self.getFeeds()
+    public init(stage: SearchFeedStage, feedRequest: FeedRequest) {
+        self.stage = stage
+        self.feedRequest = feedRequest
+        self.feedRequest.limit = 100
+        if self.stage != .unknow {
+            self.getFeeds()
+        }
         self.tokenHelper.delegate = self
     }
 }
