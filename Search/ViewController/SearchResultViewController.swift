@@ -190,22 +190,24 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     
     // MARK: - PagerTabStripDataSource
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
-        let vc1 = SearchOpener.open(.searchFeed) as? SearchFeedViewController
+        let vc1 = SearchOpener.open(.searchFeed(SearchFeedViewModel(stage: self.viewModel.searchFeedStage, feedRequest: self.viewModel.feedRequest))) as? SearchFeedViewController
         vc1?.pageIndex = 0
         vc1?.pageTitle = "Trend"
         let child_1 = vc1 ?? SearchFeedViewController()
         
-        let vc2 = SearchOpener.open(.searchFeed) as? SearchFeedViewController
+        let vc2 = SearchOpener.open(.searchFeed(SearchFeedViewModel(stage: self.viewModel.searchFeedStage, feedRequest: self.viewModel.feedRequest))) as? SearchFeedViewController
         vc2?.pageIndex = 1
         vc2?.pageTitle = "Lastest"
         let child_2 = vc2 ?? SearchFeedViewController()
         
-        let vc3 = SearchOpener.open(.searchFeed) as? SearchFeedViewController
+        var feedfeedRequestPhoto = self.viewModel.feedRequest
+        feedfeedRequestPhoto.type = .image
+        let vc3 = SearchOpener.open(.searchFeed(SearchFeedViewModel(stage: self.viewModel.searchFeedStage, feedRequest: feedfeedRequestPhoto))) as? SearchFeedViewController
         vc3?.pageIndex = 2
         vc3?.pageTitle = "Photo"
         let child_3 = vc3 ?? SearchFeedViewController()
         
-        let vc4 = SearchOpener.open(.searchFeed) as? SearchFeedViewController
+        let vc4 = SearchOpener.open(.searchFeed(SearchFeedViewModel(stage: self.viewModel.searchFeedStage, feedRequest: self.viewModel.feedRequest))) as? SearchFeedViewController
         vc4?.pageIndex = 3
         vc4?.pageTitle = "People"
         let child_4 = vc4 ?? SearchFeedViewController()

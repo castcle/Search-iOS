@@ -29,35 +29,37 @@ import Foundation
 import Networking
 import SwiftyJSON
 
-final class SearchFeedViewModel {
+public enum SearchFeedStage {
+    case getFeed
+    case unknow
+}
+
+final public class SearchFeedViewModel {
    
-    private var searchRepository: SearchRepository = SearchRepositoryImpl()
+//    private var searchRepository: SearchRepository = SearchRepositoryImpl()
     private var feedRepository: FeedRepository = FeedRepositoryImpl()
-    var feedShelf: FeedShelf = FeedShelf()
-    var searchRequest: SearchRequest = SearchRequest()
+//    var feedShelf: FeedShelf = FeedShelf()
+//    var searchRequest: SearchRequest = SearchRequest()
+    var feedRequest: FeedRequest = FeedRequest()
     let tokenHelper: TokenHelper = TokenHelper()
+    var pagination: Pagination = Pagination()
+    var feeds: [Feed] = []
+    private var featureSlug: String = "feed"
+    private var circleSlug: String = "forYou"
+    var stage: SearchFeedStage = .unknow
 
     //MARK: Input
     public func getFeeds() {
-        self.feedRepository.getFeedsMock(featureSlug: "Test", circleSlug: "Test") { (success, feedShelf) in
-            if success {
-                self.feedShelf = feedShelf
-            }
-            self.didLoadFeedsFinish?()
-        }
-    }
-    
-    public func getTopTrends() {
-        self.searchRepository.getTopTrends(searchRequest: self.searchRequest)  { (success, response, isRefreshToken) in
+        self.feedRepository.getFeeds(featureSlug: self.featureSlug, circleSlug: self.circleSlug, feedRequest: self.feedRequest) { (success, response, isRefreshToken) in
             if success {
                 do {
                     let rawJson = try response.mapJSON()
                     let json = JSON(rawJson)
-                    
-                    print(json)
-                } catch {
-                    
-                }
+                    let shelf = FeedShelf(json: json)
+                    self.feeds.append(contentsOf: shelf.feeds)
+                    self.pagination = shelf.pagination
+                    self.didLoadFeedsFinish?()
+                } catch {}
             } else {
                 if isRefreshToken {
                     self.tokenHelper.refreshToken()
@@ -66,11 +68,35 @@ final class SearchFeedViewModel {
         }
     }
     
+//    public func getTopTrends() {
+//        self.searchRepository.getTopTrends(searchRequest: self.searchRequest)  { (success, response, isRefreshToken) in
+//            if success {
+//                do {
+//                    let rawJson = try response.mapJSON()
+//                    let json = JSON(rawJson)
+//
+//                    print(json)
+//                } catch {
+//
+//                }
+//            } else {
+//                if isRefreshToken {
+//                    self.tokenHelper.refreshToken()
+//                }
+//            }
+//        }
+//    }
+    
     //MARK: Output
     var didLoadFeedsFinish: (() -> ())?
     
-    public init() {
-        self.getFeeds()
+    public init(stage: SearchFeedStage, feedRequest: FeedRequest) {
+        self.stage = stage
+        self.feedRequest = feedRequest
+        self.feedRequest.limit = 100
+        if self.stage != .unknow {
+            self.getFeeds()
+        }
         self.tokenHelper.delegate = self
     }
 }

@@ -41,7 +41,7 @@ class SearchFeedViewController: UIViewController {
     var pageIndex: Int = 0
     var pageTitle: String?
     
-    var viewModel = SearchFeedViewModel()
+    var viewModel = SearchFeedViewModel(stage: .unknow, feedRequest: FeedRequest())
     
     enum FeedCellType {
         case activity
@@ -64,11 +64,11 @@ class SearchFeedViewController: UIViewController {
 
 extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.viewModel.feedShelf.feeds.count
+        return self.viewModel.feeds.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let content = self.viewModel.feedShelf.feeds[section].feedPayload
+        let content = self.viewModel.feeds[section].feedPayload
         if content.isRecast || content.isQuote {
             return 4
         } else {
@@ -77,7 +77,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let content = self.viewModel.feedShelf.feeds[indexPath.section].feedPayload
+        let content = self.viewModel.feeds[indexPath.section].feedPayload
         if content.isRecast {
             if indexPath.row == 0 {
                 return self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath)
