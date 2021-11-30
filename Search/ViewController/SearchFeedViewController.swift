@@ -60,6 +60,25 @@ class SearchFeedViewController: UIViewController {
             self.tableView.reloadData()
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getSearchFeed(notification:)), name: .getSearchFeed, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: .getSearchFeed, object: nil)
+    }
+    
+    @objc func getSearchFeed(notification: NSNotification) {
+        if let dict = notification.userInfo as NSDictionary? {
+            if let searchText = dict["searchText"] as? String {
+                self.viewModel.feedRequest.hashtag = searchText
+                self.viewModel.getFeeds()
+            }
+        }
+    }
 }
 
 extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {

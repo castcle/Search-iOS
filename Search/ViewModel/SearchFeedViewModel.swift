@@ -36,10 +36,7 @@ public enum SearchFeedStage {
 
 final public class SearchFeedViewModel {
    
-//    private var searchRepository: SearchRepository = SearchRepositoryImpl()
     private var feedRepository: FeedRepository = FeedRepositoryImpl()
-//    var feedShelf: FeedShelf = FeedShelf()
-//    var searchRequest: SearchRequest = SearchRequest()
     var feedRequest: FeedRequest = FeedRequest()
     let tokenHelper: TokenHelper = TokenHelper()
     var pagination: Pagination = Pagination()
@@ -67,25 +64,6 @@ final public class SearchFeedViewModel {
             }
         }
     }
-    
-//    public func getTopTrends() {
-//        self.searchRepository.getTopTrends(searchRequest: self.searchRequest)  { (success, response, isRefreshToken) in
-//            if success {
-//                do {
-//                    let rawJson = try response.mapJSON()
-//                    let json = JSON(rawJson)
-//
-//                    print(json)
-//                } catch {
-//
-//                }
-//            } else {
-//                if isRefreshToken {
-//                    self.tokenHelper.refreshToken()
-//                }
-//            }
-//        }
-//    }
     
     //MARK: Output
     var didLoadFeedsFinish: (() -> ())?

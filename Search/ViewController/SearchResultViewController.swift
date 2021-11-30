@@ -56,6 +56,10 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.setupButtonBar()
+    }
+    
+    private func setupButtonBar() {
         settings.style.buttonBarBackgroundColor = UIColor.Asset.darkGraphiteBlue
         settings.style.buttonBarItemBackgroundColor = UIColor.Asset.darkGraphiteBlue
         settings.style.selectedBarBackgroundColor = UIColor.Asset.white
@@ -90,29 +94,20 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
             newCell?.label.textColor = UIColor.Asset.white
         }
         
-        if self.viewModel.searchResualState == .initial {
-            self.tableView.isHidden = false
-            self.buttonBarView.isHidden = true
-            self.containerView.isHidden = true
-            self.clearButton.isHidden = true
-            self.emptyView.isHidden = true
-        } else {
+//        if self.viewModel.searchResualState == .initial {
+//            self.tableView.isHidden = false
+//            self.buttonBarView.isHidden = true
+//            self.containerView.isHidden = true
+//            self.clearButton.isHidden = true
+//            self.emptyView.isHidden = true
+//        } else {
             self.tableView.isHidden = true
             self.buttonBarView.isHidden = false
             self.containerView.isHidden = false
             self.clearButton.isHidden = false
             self.emptyView.isHidden = true
             self.searchTextField.text = self.viewModel.searchText
-        }
-        
-        self.viewModel.didGetSuggestionFinish = {
-            if self.viewModel.searchText.hasPrefix("#") {
-                self.viewModel.searchResualState = .hastag
-            } else {
-                self.viewModel.searchResualState = .suggest
-            }
-            self.tableView.reloadData()
-        }
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -151,14 +146,23 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.timer?.invalidate()
         
+        let searchValue = textField.text ?? ""
         if self.viewModel.searchResualState == .initial {
             self.tableView.isHidden = true
             self.emptyView.isHidden = false
-            let searchValue = textField.text ?? ""
+            
             if !(searchValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
                 self.viewModel.addRecentSearch(value: searchValue.trimmingCharacters(in: .whitespacesAndNewlines))
             }
         }
+        
+        if !(searchValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
+            let searchDataDict: [String: String] = ["searchText": searchValue.trimmingCharacters(in: .whitespacesAndNewlines)]
+            NotificationCenter.default.post(name: .getSearchFeed, object: nil, userInfo: searchDataDict)
+            self.viewModel.searchResualState = .resualt
+//            self.updateUI()
+        }
+        
         textField.resignFirstResponder()
         return true
     }
