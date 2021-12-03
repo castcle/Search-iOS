@@ -39,7 +39,7 @@ final public class SearchFeedViewModel {
     private var feedRepository: FeedRepository = FeedRepositoryImpl()
     var feedRequest: FeedRequest = FeedRequest()
     let tokenHelper: TokenHelper = TokenHelper()
-    var pagination: Pagination = Pagination()
+    var meta: Meta = Meta()
     var feeds: [Feed] = []
     private var featureSlug: String = "feed"
     private var circleSlug: String = "forYou"
@@ -54,7 +54,7 @@ final public class SearchFeedViewModel {
                     let json = JSON(rawJson)
                     let shelf = FeedShelf(json: json)
                     self.feeds.append(contentsOf: shelf.feeds)
-                    self.pagination = shelf.pagination
+                    self.meta = shelf.meta
                     self.didLoadFeedsFinish?()
                 } catch {}
             } else {
@@ -71,7 +71,7 @@ final public class SearchFeedViewModel {
     public init(stage: SearchFeedStage, feedRequest: FeedRequest) {
         self.stage = stage
         self.feedRequest = feedRequest
-        self.feedRequest.limit = 100
+        self.feedRequest.maxResults = 100
         if self.stage != .unknow {
             self.getFeeds()
         }
