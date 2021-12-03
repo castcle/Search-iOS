@@ -94,20 +94,24 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
             newCell?.label.textColor = UIColor.Asset.white
         }
         
-//        if self.viewModel.searchResualState == .initial {
-//            self.tableView.isHidden = false
-//            self.buttonBarView.isHidden = true
-//            self.containerView.isHidden = true
-//            self.clearButton.isHidden = true
-//            self.emptyView.isHidden = true
-//        } else {
+        self.updateUI()
+    }
+    
+    private func updateUI() {
+        if self.viewModel.searchResualState == .initial {
+            self.tableView.isHidden = false
+            self.buttonBarView.isHidden = true
+            self.containerView.isHidden = true
+            self.clearButton.isHidden = true
+            self.emptyView.isHidden = true
+        } else {
             self.tableView.isHidden = true
             self.buttonBarView.isHidden = false
             self.containerView.isHidden = false
             self.clearButton.isHidden = false
             self.emptyView.isHidden = true
             self.searchTextField.text = self.viewModel.searchText
-//        }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -160,7 +164,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
             let searchDataDict: [String: String] = ["searchText": searchValue.trimmingCharacters(in: .whitespacesAndNewlines)]
             NotificationCenter.default.post(name: .getSearchFeed, object: nil, userInfo: searchDataDict)
             self.viewModel.searchResualState = .resualt
-//            self.updateUI()
+            self.updateUI()
         }
         
         textField.resignFirstResponder()
@@ -311,7 +315,17 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         case SearchResultViewControllerSection.recent.rawValue:
             let recentSearch = self.viewModel.recentSearch[indexPath.row]
             self.searchTextField.text = recentSearch.value
-//        case SearchResultViewControllerSection.keyword.rawValue:
+            let searchDataDict: [String: String] = ["searchText": recentSearch.value]
+            NotificationCenter.default.post(name: .getSearchFeed, object: nil, userInfo: searchDataDict)
+            self.viewModel.searchResualState = .resualt
+            self.updateUI()
+        case SearchResultViewControllerSection.keyword.rawValue:
+            let keyword = self.viewModel.suggestions.keyword[indexPath.row]
+            self.searchTextField.text = keyword.text
+            let searchDataDict: [String: String] = ["searchText": keyword.text]
+            NotificationCenter.default.post(name: .getSearchFeed, object: nil, userInfo: searchDataDict)
+            self.viewModel.searchResualState = .resualt
+            self.updateUI()
         case SearchResultViewControllerSection.follow.rawValue:
             let follow = self.viewModel.suggestions.follows[indexPath.row]
             if follow.type == .page {
@@ -319,7 +333,13 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             } else {
                 ProfileOpener.openProfileDetail(follow.type, castcleId: follow.castcleId, displayName: follow.displayName, page: nil)
             }
-//        case SearchResultViewControllerSection.hastag.rawValue:
+        case SearchResultViewControllerSection.hastag.rawValue:
+            let hashtag = self.viewModel.suggestions.hashtags[indexPath.row]
+            self.searchTextField.text = hashtag.name
+            let searchDataDict: [String: String] = ["searchText": hashtag.name]
+            NotificationCenter.default.post(name: .getSearchFeed, object: nil, userInfo: searchDataDict)
+            self.viewModel.searchResualState = .resualt
+            self.updateUI()
         default:
             return
         }
