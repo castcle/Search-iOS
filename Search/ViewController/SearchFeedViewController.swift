@@ -75,7 +75,11 @@ class SearchFeedViewController: UIViewController {
         if let dict = notification.userInfo as NSDictionary? {
             if let searchText = dict["searchText"] as? String {
                 self.viewModel.feedRequest.hashtag = searchText
-                self.viewModel.getFeeds()
+                if UserManager.shared.isLogin {
+                    
+                } else {
+                    self.viewModel.getFeedsGuests()
+                }
             }
         }
     }

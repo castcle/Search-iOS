@@ -25,6 +25,7 @@
 //  Created by Castcle Co., Ltd. on 25/9/2564 BE.
 //
 
+import Core
 import Foundation
 import Networking
 import SwiftyJSON
@@ -46,8 +47,8 @@ final public class SearchFeedViewModel {
     var stage: SearchFeedStage = .unknow
 
     //MARK: Input
-    public func getFeeds() {
-        self.feedRepository.getFeeds(featureSlug: self.featureSlug, circleSlug: self.circleSlug, feedRequest: self.feedRequest) { (success, response, isRefreshToken) in
+    public func getFeedsGuests() {
+        self.feedRepository.getFeedsGuests(feedRequest: self.feedRequest) { (success, response, isRefreshToken) in
             if success {
                 do {
                     let rawJson = try response.mapJSON()
@@ -65,6 +66,25 @@ final public class SearchFeedViewModel {
         }
     }
     
+//    public func getFeeds() {
+//        self.feedRepository.getFeeds(featureSlug: self.featureSlug, circleSlug: self.circleSlug, feedRequest: self.feedRequest) { (success, response, isRefreshToken) in
+//            if success {
+//                do {
+//                    let rawJson = try response.mapJSON()
+//                    let json = JSON(rawJson)
+//                    let shelf = FeedShelf(json: json)
+//                    self.feeds.append(contentsOf: shelf.feeds)
+//                    self.meta = shelf.meta
+//                    self.didLoadFeedsFinish?()
+//                } catch {}
+//            } else {
+//                if isRefreshToken {
+//                    self.tokenHelper.refreshToken()
+//                }
+//            }
+//        }
+//    }
+    
     //MARK: Output
     var didLoadFeedsFinish: (() -> ())?
     
@@ -73,7 +93,11 @@ final public class SearchFeedViewModel {
         self.feedRequest = feedRequest
         self.feedRequest.maxResults = 100
         if self.stage != .unknow {
-            self.getFeeds()
+            if UserManager.shared.isLogin {
+                
+            } else {
+                self.getFeedsGuests()
+            }
         }
         self.tokenHelper.delegate = self
     }
@@ -81,6 +105,10 @@ final public class SearchFeedViewModel {
 
 extension SearchFeedViewModel: TokenHelperDelegate {
     public func didRefreshTokenFinish() {
-        self.getFeeds()
+        if UserManager.shared.isLogin {
+            
+        } else {
+            self.getFeedsGuests()
+        }
     }
 }
