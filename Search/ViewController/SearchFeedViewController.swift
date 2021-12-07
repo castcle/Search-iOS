@@ -204,6 +204,19 @@ extension SearchFeedViewController: HeaderTableViewCellDelegate {
     func didAuthen(_ headerTableViewCell: HeaderTableViewCell) {
         Utility.currentViewController().presentPanModal(AuthenOpener.open(.signUpMethod) as! SignUpMethodViewController)
     }
+    
+    func didReportSuccess(_ headerTableViewCell: HeaderTableViewCell) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
+            Utility.currentViewController().navigationController?.pushViewController(ComponentOpener.open(.reportSuccess(true, "")), animated: true)
+        }
+        
+        if let indexPath = self.tableView.indexPath(for: headerTableViewCell) {
+            UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
+                self.viewModel.feeds.remove(at: indexPath.section)
+                self.tableView.reloadData()
+            })
+        }
+    }
 }
 
 extension SearchFeedViewController: FooterTableViewCellDelegate {
