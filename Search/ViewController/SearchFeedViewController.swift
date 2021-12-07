@@ -75,7 +75,12 @@ class SearchFeedViewController: UIViewController {
         if let dict = notification.userInfo as NSDictionary? {
             if let searchText = dict["searchText"] as? String {
                 self.viewModel.feedRequest.hashtag = searchText
-                self.viewModel.getFeeds()
+                self.viewModel.feedRequest.untilId = ""
+                if UserManager.shared.isLogin {
+                    self.viewModel.getFeedsMembers()
+                } else {
+                    self.viewModel.getFeedsGuests()
+                }
             }
         }
     }
@@ -87,8 +92,8 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let content = self.viewModel.feeds[section].feedPayload
-        if content.isRecast || content.isQuote {
+        let content = self.viewModel.feeds[section].payload
+        if content.participate.recasted || content.participate.quoted {
             return 4
         } else {
             return 3
@@ -96,8 +101,8 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let content = self.viewModel.feeds[indexPath.section].feedPayload
-        if content.isRecast {
+        let content = self.viewModel.feeds[indexPath.section].payload
+        if content.participate.recasted {
             if indexPath.row == 0 {
                 return self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath)
             } else if indexPath.row == 1 {
@@ -107,7 +112,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
                 return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
             }
-        } else if content.isQuote {
+        } else if content.participate.quoted {
             if indexPath.row == 0 {
                 return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
             } else if indexPath.row == 1 {
@@ -140,8 +145,9 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     
     func renderFeedCell(content: Content, cellType: FeedCellType, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         var originalContent = Content()
-        if content.isRecast || content.isQuote {
-            originalContent = ContentHelper().originalPostToContent(originalPost: content.originalPost)
+        if content.participate.recasted || content.participate.quoted {
+            // Original Post
+//            originalContent = ContentHelper().originalPostToContent(originalPost: content.originalPost)
         }
         
         switch cellType {
@@ -154,7 +160,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.headerFeed, for: indexPath as IndexPath) as? HeaderTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGray
             cell?.delegate = self
-            if content.isRecast {
+            if content.participate.recasted {
                 cell?.content = originalContent
             } else {
                 cell?.content = content
@@ -164,7 +170,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.footerFeed, for: indexPath as IndexPath) as? FooterTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGray
             cell?.delegate = self
-            if content.isRecast {
+            if content.participate.recasted {
                 cell?.content = originalContent
             } else {
                 cell?.content = content
@@ -173,7 +179,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
         case .quote:
             return FeedCellHelper().renderQuoteCastCell(content: originalContent, tableView: self.tableView, indexPath: indexPath, isRenderForFeed: true)
         default:
-            if content.isRecast {
+            if content.participate.recasted {
                 return FeedCellHelper().renderFeedCell(content: originalContent, tableView: self.tableView, indexPath: indexPath)
             } else {
                 return FeedCellHelper().renderFeedCell(content: content, tableView: self.tableView, indexPath: indexPath)
@@ -189,7 +195,7 @@ extension SearchFeedViewController: HeaderTableViewCellDelegate {
     
     func didTabProfile(_ headerTableViewCell: HeaderTableViewCell, author: Author) {
         if author.type == .page {
-            ProfileOpener.openProfileDetail(author.type, castcleId: nil, displayName: "", page: Page().initCustom(displayName: author.displayName, castcleId: author.castcleId))
+            ProfileOpener.openProfileDetail(author.type, castcleId: nil, displayName: "", page: Page().initCustom(id: author.id, displayName: author.displayName, castcleId: author.castcleId))
         } else {
             ProfileOpener.openProfileDetail(author.type, castcleId: author.castcleId, displayName: author.displayName, page: nil)
         }
@@ -197,6 +203,19 @@ extension SearchFeedViewController: HeaderTableViewCellDelegate {
     
     func didAuthen(_ headerTableViewCell: HeaderTableViewCell) {
         Utility.currentViewController().presentPanModal(AuthenOpener.open(.signUpMethod) as! SignUpMethodViewController)
+    }
+    
+    func didReportSuccess(_ headerTableViewCell: HeaderTableViewCell) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
+            Utility.currentViewController().navigationController?.pushViewController(ComponentOpener.open(.reportSuccess(true, "")), animated: true)
+        }
+        
+        if let indexPath = self.tableView.indexPath(for: headerTableViewCell) {
+            UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
+                self.viewModel.feeds.remove(at: indexPath.section)
+                self.tableView.reloadData()
+            })
+        }
     }
 }
 

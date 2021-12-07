@@ -25,6 +25,7 @@
 //  Created by Castcle Co., Ltd. on 25/9/2564 BE.
 //
 
+import Core
 import Foundation
 import Networking
 import SwiftyJSON
@@ -39,22 +40,41 @@ final public class SearchFeedViewModel {
     private var feedRepository: FeedRepository = FeedRepositoryImpl()
     var feedRequest: FeedRequest = FeedRequest()
     let tokenHelper: TokenHelper = TokenHelper()
-    var pagination: Pagination = Pagination()
+    var meta: Meta = Meta()
     var feeds: [Feed] = []
     private var featureSlug: String = "feed"
     private var circleSlug: String = "forYou"
     var stage: SearchFeedStage = .unknow
 
     //MARK: Input
-    public func getFeeds() {
-        self.feedRepository.getFeeds(featureSlug: self.featureSlug, circleSlug: self.circleSlug, feedRequest: self.feedRequest) { (success, response, isRefreshToken) in
+    public func getFeedsGuests() {
+        self.feedRepository.getFeedsGuests(feedRequest: self.feedRequest) { (success, response, isRefreshToken) in
             if success {
                 do {
                     let rawJson = try response.mapJSON()
                     let json = JSON(rawJson)
                     let shelf = FeedShelf(json: json)
                     self.feeds.append(contentsOf: shelf.feeds)
-                    self.pagination = shelf.pagination
+                    self.meta = shelf.meta
+                    self.didLoadFeedsFinish?()
+                } catch {}
+            } else {
+                if isRefreshToken {
+                    self.tokenHelper.refreshToken()
+                }
+            }
+        }
+    }
+    
+    public func getFeedsMembers() {
+        self.feedRepository.getFeedsMembers(featureSlug: self.featureSlug, circleSlug: self.circleSlug, feedRequest: self.feedRequest) { (success, response, isRefreshToken) in
+            if success {
+                do {
+                    let rawJson = try response.mapJSON()
+                    let json = JSON(rawJson)
+                    let shelf = FeedShelf(json: json)
+                    self.feeds.append(contentsOf: shelf.feeds)
+                    self.meta = shelf.meta
                     self.didLoadFeedsFinish?()
                 } catch {}
             } else {
@@ -71,9 +91,13 @@ final public class SearchFeedViewModel {
     public init(stage: SearchFeedStage, feedRequest: FeedRequest) {
         self.stage = stage
         self.feedRequest = feedRequest
-        self.feedRequest.limit = 100
+        self.feedRequest.maxResults = 100
         if self.stage != .unknow {
-            self.getFeeds()
+            if UserManager.shared.isLogin {
+                self.getFeedsMembers()
+            } else {
+                self.getFeedsGuests()
+            }
         }
         self.tokenHelper.delegate = self
     }
@@ -81,6 +105,10 @@ final public class SearchFeedViewModel {
 
 extension SearchFeedViewModel: TokenHelperDelegate {
     public func didRefreshTokenFinish() {
-        self.getFeeds()
+        if UserManager.shared.isLogin {
+            self.getFeedsMembers()
+        } else {
+            self.getFeedsGuests()
+        }
     }
 }
