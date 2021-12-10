@@ -19,20 +19,28 @@
 //  Thailand 10160, or visit www.castcle.com if you need additional information
 //  or have any questions.
 //
-//  Search.h
+//  SearchHeaderTableViewCell.swift
 //  Search
 //
-//  Created by Castcle Co., Ltd. on 2/7/2564 BE.
+//  Created by Castcle Co., Ltd. on 23/9/2564 BE.
 //
 
-#import <Foundation/Foundation.h>
+import UIKit
+import Core
 
-//! Project version number for Search.
-FOUNDATION_EXPORT double SearchVersionNumber;
+class SearchHeaderTableViewCell: UITableViewCell {
 
-//! Project version string for Search.
-FOUNDATION_EXPORT const unsigned char SearchVersionString[];
+    @IBOutlet var iconImage: UIImageView!
+    @IBOutlet var titleLabel: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.iconImage.image = UIImage.init(icon: .castcle(.toptrend), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.white)
+        self.titleLabel.font = UIFont.asset(.bold, fontSize: .h4)
+    }
 
-// In this header, you should import all the public headers of your framework using statements like #import <Search/PublicHeader.h>
-
-
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+    }
+    
+}

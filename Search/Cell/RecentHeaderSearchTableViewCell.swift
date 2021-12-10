@@ -19,20 +19,37 @@
 //  Thailand 10160, or visit www.castcle.com if you need additional information
 //  or have any questions.
 //
-//  Search.h
+//  RecentHeaderSearchTableViewCell.swift
 //  Search
 //
-//  Created by Castcle Co., Ltd. on 2/7/2564 BE.
+//  Created by Castcle Co., Ltd. on 14/10/2564 BE.
 //
 
-#import <Foundation/Foundation.h>
+import UIKit
+import Core
 
-//! Project version number for Search.
-FOUNDATION_EXPORT double SearchVersionNumber;
+class RecentHeaderSearchTableViewCell: UITableViewCell {
 
-//! Project version string for Search.
-FOUNDATION_EXPORT const unsigned char SearchVersionString[];
+    @IBOutlet var displayLabel: UILabel!
+    @IBOutlet var actionButton: UIButton!
+    @IBOutlet var lineView: UIView!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.displayLabel.font = UIFont.asset(.regular, fontSize: .overline)
+        self.displayLabel.textColor = UIColor.Asset.white
+        self.lineView.backgroundColor = UIColor.Asset.darkGraphiteBlue
+        self.actionButton.setImage(UIImage.init(icon: .castcle(.incorrect), size: CGSize(width: 15, height: 15), textColor: UIColor.Asset.white).withRenderingMode(.alwaysOriginal), for: .normal)
+    }
 
-// In this header, you should import all the public headers of your framework using statements like #import <Search/PublicHeader.h>
-
-
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+    }
+    
+    func configCell(display: String) {
+        self.displayLabel.text = display
+    }
+    
+    @IBAction func cellAction(_ sender: Any) {
+    }
+}

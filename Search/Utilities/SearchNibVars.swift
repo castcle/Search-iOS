@@ -19,20 +19,36 @@
 //  Thailand 10160, or visit www.castcle.com if you need additional information
 //  or have any questions.
 //
-//  Search.h
+//  SearchNibVars.swift
 //  Search
 //
-//  Created by Castcle Co., Ltd. on 2/7/2564 BE.
+//  Created by Castcle Co., Ltd. on 6/7/2564 BE.
 //
 
-#import <Foundation/Foundation.h>
-
-//! Project version number for Search.
-FOUNDATION_EXPORT double SearchVersionNumber;
-
-//! Project version string for Search.
-FOUNDATION_EXPORT const unsigned char SearchVersionString[];
-
-// In this header, you should import all the public headers of your framework using statements like #import <Search/PublicHeader.h>
-
-
+public struct SearchNibVars {
+    // MARK: - View Controller
+    public struct ViewController {
+        public static let search = "SearchViewController"
+        public static let searchResult = "SearchResultViewController"
+        public static let searchFeed = "SearchFeedViewController"
+    }
+    
+    // MARK: - View
+    public struct Storyboard {
+        public static let search = "Search"
+    }
+    
+    // MARK: - TableViewCell
+    public struct TableViewCell {
+        public static let searchTextField = "SearchTextFieldTableViewCell"
+        public static let searchTitle = "SearchHeaderTableViewCell"
+        public static let searchTrend = "SearchTrendTableViewCell"
+        public static let recentSearchHeader = "RecentHeaderSearchTableViewCell"
+        public static let recentSearch = "RecentSearchTableViewCell"
+        public static let suggestionUser = "SuggestionUserTableViewCell"
+    }
+    
+    // MARK: - CollectionViewCell
+    public struct CollectionViewCell {
+    }
+}
