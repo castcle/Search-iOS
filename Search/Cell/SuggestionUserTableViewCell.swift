@@ -19,41 +19,38 @@
 //  Thailand 10160, or visit www.castcle.com if you need additional information
 //  or have any questions.
 //
-//  SearchViewController.swift
+//  SuggestionUserTableViewCell.swift
 //  Search
 //
-//  Created by Tanakorn Phoochaliaw on 6/7/2564 BE.
+//  Created by Castcle Co., Ltd. on 14/10/2564 BE.
 //
 
 import UIKit
-import Core
-import Defaults
+import Networking
 
-class SearchViewController: UIViewController {
+class SuggestionUserTableViewCell: UITableViewCell {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.setupNavBar()
+    @IBOutlet var avatar: UIImageView!
+    @IBOutlet var displayNameLabel: UILabel!
+    @IBOutlet var castcleIdLabel: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.displayNameLabel.font = UIFont.asset(.regular, fontSize: .overline)
+        self.displayNameLabel.textColor = UIColor.Asset.white
+        self.castcleIdLabel.font = UIFont.asset(.regular, fontSize: .small)
+        self.castcleIdLabel.textColor = UIColor.Asset.lightGray
+        self.avatar.circle(color: UIColor.Asset.white)
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        Defaults[.screenId] = ""
-    }
-    
-    func setupNavBar() {
-        self.customNavigationBar(.secondary, title: "For You")
-        
-        var rightButton: [UIBarButtonItem] = []
-        
-        let icon = NavBarButtonType.menu.barButton
-        icon.addTarget(self, action: #selector(menuAction), for: .touchUpInside)
-        rightButton.append(UIBarButtonItem(customView: icon))
-
-        navigationItem.rightBarButtonItems = rightButton
-    }
-    
-    @objc private func menuAction() {
-        print("Menu")
+    func configCell(follow: Follow) {
+        let url = URL(string: follow.avatar.thumbnail)
+        self.avatar.kf.setImage(with: url, placeholder: UIImage.Asset.userPlaceholder, options: [.transition(.fade(0.35))])
+        self.displayNameLabel.text = follow.displayName
+        self.castcleIdLabel.text = "@\(follow.castcleId)"
     }
 }

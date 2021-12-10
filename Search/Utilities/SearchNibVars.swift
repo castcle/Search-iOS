@@ -22,13 +22,15 @@
 //  SearchNibVars.swift
 //  Search
 //
-//  Created by Tanakorn Phoochaliaw on 6/7/2564 BE.
+//  Created by Castcle Co., Ltd. on 6/7/2564 BE.
 //
 
 public struct SearchNibVars {
     // MARK: - View Controller
     public struct ViewController {
         public static let search = "SearchViewController"
+        public static let searchResult = "SearchResultViewController"
+        public static let searchFeed = "SearchFeedViewController"
     }
     
     // MARK: - View
@@ -38,6 +40,12 @@ public struct SearchNibVars {
     
     // MARK: - TableViewCell
     public struct TableViewCell {
+        public static let searchTextField = "SearchTextFieldTableViewCell"
+        public static let searchTitle = "SearchHeaderTableViewCell"
+        public static let searchTrend = "SearchTrendTableViewCell"
+        public static let recentSearchHeader = "RecentHeaderSearchTableViewCell"
+        public static let recentSearch = "RecentSearchTableViewCell"
+        public static let suggestionUser = "SuggestionUserTableViewCell"
     }
     
     // MARK: - CollectionViewCell
