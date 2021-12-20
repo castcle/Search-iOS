@@ -143,6 +143,26 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
         return footerView
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let content = self.viewModel.feeds[indexPath.section].payload
+        if content.participate.recasted {
+            if content.type == .long && indexPath.row == 2 {
+                self.viewModel.feeds[indexPath.section].payload.isExpand.toggle()
+                tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
+        } else if content.participate.quoted {
+            if content.type == .long && indexPath.row == 1 {
+                self.viewModel.feeds[indexPath.section].payload.isExpand.toggle()
+                tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
+        } else {
+            if content.type == .long && indexPath.row == 1 {
+                self.viewModel.feeds[indexPath.section].payload.isExpand.toggle()
+                tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
+        }
+    }
+    
     func renderFeedCell(content: Content, cellType: FeedCellType, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         var originalContent = Content()
         if content.participate.recasted || content.participate.quoted {
