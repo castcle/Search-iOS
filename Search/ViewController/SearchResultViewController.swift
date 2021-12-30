@@ -215,12 +215,12 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         vc3?.pageTitle = "Photo"
         let child_3 = vc3 ?? SearchFeedViewController()
         
-        let vc4 = SearchOpener.open(.searchFeed(SearchFeedViewModel(stage: self.viewModel.searchFeedStage, feedRequest: self.viewModel.feedRequest))) as? SearchFeedViewController
-        vc4?.pageIndex = 3
-        vc4?.pageTitle = "People"
-        let child_4 = vc4 ?? SearchFeedViewController()
+//        let vc4 = SearchOpener.open(.searchFeed(SearchFeedViewModel(stage: self.viewModel.searchFeedStage, feedRequest: self.viewModel.feedRequest))) as? SearchFeedViewController
+//        vc4?.pageIndex = 3
+//        vc4?.pageTitle = "People"
+//        let child_4 = vc4 ?? SearchFeedViewController()
 
-        return [child_1, child_2, child_3, child_4]
+        return [child_1, child_2, child_3]
     }
     
     @IBAction func clearAction(_ sender: Any) {
