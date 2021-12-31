@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -51,7 +51,7 @@
                                 <rect key="frame" x="0.0" y="60" width="375" height="607"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V2C-ns-ZX3">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V2C-ns-ZX3">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aio-KM-aNc">
@@ -102,7 +102,7 @@
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kyi-6K-6JZ" customClass="ButtonBarView" customModule="XLPagerTabStrip">
-                                <rect key="frame" x="0.0" y="60" width="375" height="60"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="4ra-fe-GKv"/>
@@ -153,7 +153,7 @@
                                 </constraints>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EaW-Ur-wgs">
-                                <rect key="frame" x="0.0" y="120" width="375" height="547"/>
+                                <rect key="frame" x="0.0" y="60" width="375" height="607"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </scrollView>
                         </subviews>
@@ -167,11 +167,11 @@
                             <constraint firstItem="EaW-Ur-wgs" firstAttribute="trailing" secondItem="5Cl-hX-65v" secondAttribute="trailing" id="BAk-PX-mt0"/>
                             <constraint firstItem="Cj9-Vd-c1w" firstAttribute="leading" secondItem="5Cl-hX-65v" secondAttribute="leading" id="FE0-5P-B9T"/>
                             <constraint firstItem="kyi-6K-6JZ" firstAttribute="trailing" secondItem="5Cl-hX-65v" secondAttribute="trailing" id="L5F-q2-9C4"/>
-                            <constraint firstItem="kyi-6K-6JZ" firstAttribute="top" secondItem="V2C-ns-ZX3" secondAttribute="bottom" id="Qt1-hb-bAk"/>
                             <constraint firstItem="5Cl-hX-65v" firstAttribute="trailing" secondItem="V2C-ns-ZX3" secondAttribute="trailing" id="T5f-l6-7bG"/>
                             <constraint firstItem="V2C-ns-ZX3" firstAttribute="top" secondItem="5Cl-hX-65v" secondAttribute="top" id="Ush-zM-BX2"/>
                             <constraint firstItem="EaW-Ur-wgs" firstAttribute="top" secondItem="kyi-6K-6JZ" secondAttribute="bottom" id="XF9-Yi-IUE"/>
                             <constraint firstItem="5Cl-hX-65v" firstAttribute="trailing" secondItem="Cj9-Vd-c1w" secondAttribute="trailing" id="YE7-Uf-WGK"/>
+                            <constraint firstItem="kyi-6K-6JZ" firstAttribute="top" secondItem="Bao-QY-ZWf" secondAttribute="top" id="af8-t8-6Kl"/>
                             <constraint firstAttribute="bottom" secondItem="Cj9-Vd-c1w" secondAttribute="bottom" id="clH-Ek-m6F"/>
                             <constraint firstItem="V2C-ns-ZX3" firstAttribute="leading" secondItem="5Cl-hX-65v" secondAttribute="leading" id="eeZ-OT-8TH"/>
                             <constraint firstItem="kyi-6K-6JZ" firstAttribute="leading" secondItem="5Cl-hX-65v" secondAttribute="leading" id="ktb-2V-8YC"/>
