@@ -91,7 +91,6 @@ final public class SearchFeedViewModel {
     public init(stage: SearchFeedStage, feedRequest: FeedRequest) {
         self.stage = stage
         self.feedRequest = feedRequest
-        self.feedRequest.maxResults = 100
         if self.stage != .unknow {
             if UserManager.shared.isLogin {
                 self.getFeedsMembers()
