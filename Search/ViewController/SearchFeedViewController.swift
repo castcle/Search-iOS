@@ -74,6 +74,7 @@ class SearchFeedViewController: UIViewController {
     func configureTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        self.tableView.register(UINib(nibName: SearchNibVars.TableViewCell.searchNotFound, bundle: ConfigBundle.search), forCellReuseIdentifier: SearchNibVars.TableViewCell.searchNotFound)
         self.tableView.registerFeedCell()
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight = 100
@@ -96,47 +97,62 @@ class SearchFeedViewController: UIViewController {
 
 extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.viewModel.feeds.count
+        if self.viewModel.feeds.isEmpty {
+            return 1
+        } else {
+            return self.viewModel.feeds.count
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let content = self.viewModel.feeds[section].payload
-        if content.participate.recasted || content.participate.quoted {
-            return 4
+        if self.viewModel.feeds.isEmpty {
+            return 1
         } else {
-            return 3
+            let content = self.viewModel.feeds[section].payload
+            if content.participate.recasted || content.participate.quoted {
+                return 4
+            } else {
+                return 3
+            }
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let content = self.viewModel.feeds[indexPath.section].payload
-        if content.participate.recasted {
-            if indexPath.row == 0 {
-                return self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath)
-            } else if indexPath.row == 1 {
-                return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
-            } else if indexPath.row == 2 {
-                return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
-            } else {
-                return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
-            }
-        } else if content.participate.quoted {
-            if indexPath.row == 0 {
-                return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
-            } else if indexPath.row == 1 {
-                return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
-            } else if indexPath.row == 2 {
-                return self.renderFeedCell(content: content, cellType: .quote, tableView: tableView, indexPath: indexPath)
-            } else {
-                return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
-            }
+        if self.viewModel.feeds.isEmpty {
+            let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchNotFound, for: indexPath as IndexPath) as? SearchNotFoundTableViewCell
+            cell?.backgroundColor = UIColor.Asset.darkGray
+            cell?.configCell()
+            return cell ?? SearchNotFoundTableViewCell()
         } else {
-            if indexPath.row == 0 {
-                return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
-            } else if indexPath.row == 1 {
-                return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
+            let content = self.viewModel.feeds[indexPath.section].payload
+            if content.participate.recasted {
+                if indexPath.row == 0 {
+                    return self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath)
+                } else if indexPath.row == 1 {
+                    return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
+                } else if indexPath.row == 2 {
+                    return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
+                } else {
+                    return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+                }
+            } else if content.participate.quoted {
+                if indexPath.row == 0 {
+                    return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
+                } else if indexPath.row == 1 {
+                    return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
+                } else if indexPath.row == 2 {
+                    return self.renderFeedCell(content: content, cellType: .quote, tableView: tableView, indexPath: indexPath)
+                } else {
+                    return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+                }
             } else {
-                return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+                if indexPath.row == 0 {
+                    return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
+                } else if indexPath.row == 1 {
+                    return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
+                } else {
+                    return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+                }
             }
         }
     }

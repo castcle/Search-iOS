@@ -55,8 +55,8 @@ class SearchTrendTableViewCell: UITableViewCell {
     }
     
     func configCell(hastag: Hashtag) {
-        self.titleLabel.text = "\(hastag.rank). Trending"
+        self.titleLabel.text = "\(hastag.rank). \(Localization.searchTopTrends.trending.text)"
         self.trendLabel.text = hastag.name
-        self.countLabel.text = "\(String.displayCount(count: hastag.count)) Cast"
+        self.countLabel.text = "\(String.displayCount(count: hastag.count)) \(Localization.searchTopTrends.cast.text)"
     }
 }

@@ -19,24 +19,27 @@
 //  Thailand 10160, or visit www.castcle.com if you need additional information
 //  or have any questions.
 //
-//  SearchHeaderTableViewCell.swift
+//  SearchNotFoundTableViewCell.swift
 //  Search
 //
-//  Created by Castcle Co., Ltd. on 23/9/2564 BE.
+//  Created by Castcle Co., Ltd. on 9/1/2565 BE.
 //
 
 import UIKit
 import Core
 
-class SearchHeaderTableViewCell: UITableViewCell {
+class SearchNotFoundTableViewCell: UITableViewCell {
 
-    @IBOutlet var iconImage: UIImageView!
-    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var emptyView: UIView!
+    @IBOutlet var emptyTitleLabel: UILabel!
+    @IBOutlet var emptyDetailLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.iconImage.image = UIImage.init(icon: .castcle(.toptrend), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.white)
-        self.titleLabel.font = UIFont.asset(.bold, fontSize: .h4)
+        self.emptyTitleLabel.font = UIFont.asset(.regular, fontSize: .body)
+        self.emptyTitleLabel.textColor = UIColor.Asset.white
+        self.emptyDetailLabel.font = UIFont.asset(.regular, fontSize: .body)
+        self.emptyDetailLabel.textColor = UIColor.Asset.lightGray
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -44,6 +47,7 @@ class SearchHeaderTableViewCell: UITableViewCell {
     }
     
     func configCell() {
-        self.titleLabel.text = Localization.searchTopTrends.topTen.text
+        self.emptyTitleLabel.text = Localization.searchNotFound.headline.text
+        self.emptyDetailLabel.text = Localization.searchNotFound.description.text
     }
 }

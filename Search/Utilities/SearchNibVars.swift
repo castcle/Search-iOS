@@ -46,6 +46,7 @@ public struct SearchNibVars {
         public static let recentSearchHeader = "RecentHeaderSearchTableViewCell"
         public static let recentSearch = "RecentSearchTableViewCell"
         public static let suggestionUser = "SuggestionUserTableViewCell"
+        public static let searchNotFound = "SearchNotFoundTableViewCell"
     }
     
     // MARK: - CollectionViewCell

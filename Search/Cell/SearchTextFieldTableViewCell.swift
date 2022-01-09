@@ -46,6 +46,10 @@ class SearchTextFieldTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
+    func configCell() {
+        self.searchTextField.placeholder = Localization.searchTopTrends.placeholder.text
+    }
+    
     @IBAction func searchAction(_ sender: Any) {
         let vc = SearchOpener.open(.searchResult(SearchResualViewModel(state: .initial)))
         Utility.currentViewController().navigationController?.pushViewController(vc, animated: false)

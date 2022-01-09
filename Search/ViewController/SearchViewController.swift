@@ -44,7 +44,6 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.Asset.darkGraphiteBlue
-        self.setupNavBar()
         self.configureTableView()
         self.viewModel.getTopTrends()
         
@@ -55,11 +54,13 @@ class SearchViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.setupNavBar()
+        self.tableView.reloadData()
         Defaults[.screenId] = ""
     }
     
     func setupNavBar() {
-        self.customNavigationBar(.primary, title: "For You", textColor: UIColor.Asset.lightBlue, leftBarButton: .logo)
+        self.customNavigationBar(.primary, title: Localization.searchTopTrends.title.text, textColor: UIColor.Asset.lightBlue, leftBarButton: .logo)
     }
     
     func configureTableView() {
@@ -92,11 +93,13 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         switch indexPath.section {
 //        case SearchViewControllerSection.search.rawValue:
 //            let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTextField, for: indexPath as IndexPath) as? SearchTextFieldTableViewCell
+//            cell?.configCell()
 //            cell?.backgroundColor = UIColor.Asset.darkGray
 //            return cell ?? SearchTextFieldTableViewCell()
         case SearchViewControllerSection.trendingHeader.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTitle, for: indexPath as IndexPath) as? SearchHeaderTableViewCell
             cell?.backgroundColor = UIColor.clear
+            cell?.configCell()
             return cell ?? SearchHeaderTableViewCell()
         case SearchViewControllerSection.trending.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTrend, for: indexPath as IndexPath) as? SearchTrendTableViewCell
