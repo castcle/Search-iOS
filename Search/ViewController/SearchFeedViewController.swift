@@ -109,7 +109,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             return 1
         } else {
             let content = self.viewModel.feeds[section].payload
-            if content.participate.recasted || content.participate.quoted {
+            if content.referencedCasts.type == .recasted || content.referencedCasts.type == .quoted {
                 return 4
             } else {
                 return 3
@@ -125,7 +125,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             return cell ?? SearchNotFoundTableViewCell()
         } else {
             let content = self.viewModel.feeds[indexPath.section].payload
-            if content.participate.recasted {
+            if content.referencedCasts.type == .recasted {
                 if indexPath.row == 0 {
                     return self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath)
                 } else if indexPath.row == 1 {
@@ -135,7 +135,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
                 } else {
                     return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
                 }
-            } else if content.participate.quoted {
+            } else if content.referencedCasts.type == .quoted {
                 if indexPath.row == 0 {
                     return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
                 } else if indexPath.row == 1 {
@@ -169,12 +169,12 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let content = self.viewModel.feeds[indexPath.section].payload
-        if content.participate.recasted {
+        if content.referencedCasts.type == .recasted {
             if content.type == .long && indexPath.row == 2 {
                 self.viewModel.feeds[indexPath.section].payload.isExpand.toggle()
                 tableView.reloadRows(at: [indexPath], with: .automatic)
             }
-        } else if content.participate.quoted {
+        } else if content.referencedCasts.type == .quoted {
             if content.type == .long && indexPath.row == 1 {
                 self.viewModel.feeds[indexPath.section].payload.isExpand.toggle()
                 tableView.reloadRows(at: [indexPath], with: .automatic)
@@ -189,9 +189,10 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     
     func renderFeedCell(content: Content, cellType: FeedCellType, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         var originalContent = Content()
-        if content.participate.recasted || content.participate.quoted {
-            // Original Post
-//            originalContent = ContentHelper().originalPostToContent(originalPost: content.originalPost)
+        if content.referencedCasts.type == .recasted || content.referencedCasts.type == .quoted {
+            if let tempContent = ContentHelper.shared.getContentRef(id: content.referencedCasts.id) {
+                originalContent = tempContent
+            }
         }
         
         switch cellType {
@@ -204,7 +205,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.headerFeed, for: indexPath as IndexPath) as? HeaderTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGray
             cell?.delegate = self
-            if content.participate.recasted {
+            if content.referencedCasts.type == .recasted {
                 cell?.content = originalContent
             } else {
                 cell?.content = content
@@ -214,7 +215,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.footerFeed, for: indexPath as IndexPath) as? FooterTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGray
             cell?.delegate = self
-            if content.participate.recasted {
+            if content.referencedCasts.type == .recasted {
                 cell?.content = originalContent
             } else {
                 cell?.content = content
@@ -223,7 +224,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
         case .quote:
             return FeedCellHelper().renderQuoteCastCell(content: originalContent, tableView: self.tableView, indexPath: indexPath, isRenderForFeed: true)
         default:
-            if content.participate.recasted {
+            if content.referencedCasts.type == .recasted {
                 return FeedCellHelper().renderFeedCell(content: originalContent, tableView: self.tableView, indexPath: indexPath)
             } else {
                 return FeedCellHelper().renderFeedCell(content: content, tableView: self.tableView, indexPath: indexPath)
