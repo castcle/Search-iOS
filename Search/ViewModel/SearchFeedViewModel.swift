@@ -37,25 +37,29 @@ public enum SearchFeedStage {
 
 final public class SearchFeedViewModel {
    
-    private var feedRepository: FeedRepository = FeedRepositoryImpl()
-    var feedRequest: FeedRequest = FeedRequest()
+    private var searchRepository: SearchRepository = SearchRepositoryImpl()
+    var searchRequest: SearchRequest = SearchRequest()
     let tokenHelper: TokenHelper = TokenHelper()
+    var searchContents: [Content] = []
     var meta: Meta = Meta()
-    var feeds: [Feed] = []
-    private var featureSlug: String = "feed"
-    private var circleSlug: String = "forYou"
+    var searchLoaded: Bool = false
+    var searchCanLoad: Bool = true
     var stage: SearchFeedStage = .unknow
+    var searchSection: SearchSection
 
-    //MARK: Input
-    public func getFeedsGuests() {
-        self.feedRepository.getFeedsGuests(feedRequest: self.feedRequest) { (success, response, isRefreshToken) in
+    func searchTrend() {
+        self.searchRepository.searchTrend(searchRequest: self.searchRequest) { (success, response, isRefreshToken) in
             if success {
                 do {
                     let rawJson = try response.mapJSON()
                     let json = JSON(rawJson)
-                    let shelf = FeedShelf(json: json)
-                    self.feeds.append(contentsOf: shelf.feeds)
+                    let shelf = ContentShelf(json: json)
+                    if shelf.meta.resultCount < self.searchRequest.maxResults {
+                        self.searchCanLoad = false
+                    }
+                    self.searchContents.append(contentsOf: shelf.contents)
                     self.meta = shelf.meta
+                    self.searchLoaded = true
                     self.didLoadFeedsFinish?()
                 } catch {}
             } else {
@@ -66,15 +70,19 @@ final public class SearchFeedViewModel {
         }
     }
     
-    public func getFeedsMembers() {
-        self.feedRepository.getFeedsMembers(featureSlug: self.featureSlug, circleSlug: self.circleSlug, feedRequest: self.feedRequest) { (success, response, isRefreshToken) in
+    func searchRecent() {
+        self.searchRepository.searchRecent(searchRequest: self.searchRequest) { (success, response, isRefreshToken) in
             if success {
                 do {
                     let rawJson = try response.mapJSON()
                     let json = JSON(rawJson)
-                    let shelf = FeedShelf(json: json)
-                    self.feeds.append(contentsOf: shelf.feeds)
+                    let shelf = ContentShelf(json: json)
+                    if shelf.meta.resultCount < self.searchRequest.maxResults {
+                        self.searchCanLoad = false
+                    }
+                    self.searchContents.append(contentsOf: shelf.contents)
                     self.meta = shelf.meta
+                    self.searchLoaded = true
                     self.didLoadFeedsFinish?()
                 } catch {}
             } else {
@@ -88,26 +96,57 @@ final public class SearchFeedViewModel {
     //MARK: Output
     var didLoadFeedsFinish: (() -> ())?
     
-    public init(stage: SearchFeedStage, feedRequest: FeedRequest) {
+    public init(searchSection: SearchSection, stage: SearchFeedStage = .unknow, searchRequest: SearchRequest = SearchRequest()) {
         self.stage = stage
-        self.feedRequest = feedRequest
+        self.searchRequest = searchRequest
+        self.searchRequest.maxResults = 5
+        self.searchSection = searchSection
         if self.stage != .unknow {
-            if UserManager.shared.isLogin {
-                self.getFeedsMembers()
-            } else {
-                self.getFeedsGuests()
+            if self.searchSection == .trend {
+                self.searchTrend()
+            } else if self.searchSection == .lastest {
+                self.searchRecent()
+            } else if self.searchSection == .photo {
+                self.searchRequest.type = .photo
+                self.searchTrend()
             }
         }
         self.tokenHelper.delegate = self
+    }
+    
+    func reloadData(with keywoard: String = "") {
+        if !keywoard.isEmpty {
+            self.searchRequest.keyword = keywoard
+        }
+        
+        self.searchRequest.maxResults = 5
+        self.searchLoaded = false
+        self.searchCanLoad = true
+        self.searchRequest.untilId = ""
+        if self.stage != .unknow {
+            if self.searchSection == .trend {
+                self.searchTrend()
+            } else if self.searchSection == .lastest {
+                self.searchRecent()
+            } else if self.searchSection == .photo {
+                self.searchRequest.type = .photo
+                self.searchTrend()
+            }
+        }
     }
 }
 
 extension SearchFeedViewModel: TokenHelperDelegate {
     public func didRefreshTokenFinish() {
-        if UserManager.shared.isLogin {
-            self.getFeedsMembers()
-        } else {
-            self.getFeedsGuests()
+        if self.stage != .unknow {
+            if self.searchSection == .trend {
+                self.searchTrend()
+            } else if self.searchSection == .lastest {
+                self.searchRecent()
+            } else if self.searchSection == .photo {
+                self.searchRequest.type = .photo
+                self.searchTrend()
+            }
         }
     }
 }

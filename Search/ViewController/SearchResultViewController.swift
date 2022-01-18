@@ -188,24 +188,22 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     
     // MARK: - PagerTabStripDataSource
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
-        let vc1 = SearchOpener.open(.searchFeed(SearchFeedViewModel(stage: self.viewModel.searchFeedStage, feedRequest: self.viewModel.feedRequest))) as? SearchFeedViewController
+        let vc1 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .trend, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
         vc1?.pageIndex = 0
         vc1?.pageTitle = Localization.searchResult.trend.text
         let child_1 = vc1 ?? SearchFeedViewController()
         
-        let vc2 = SearchOpener.open(.searchFeed(SearchFeedViewModel(stage: self.viewModel.searchFeedStage, feedRequest: self.viewModel.feedRequest))) as? SearchFeedViewController
+        let vc2 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .lastest, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
         vc2?.pageIndex = 1
         vc2?.pageTitle = Localization.searchResult.lastest.text
         let child_2 = vc2 ?? SearchFeedViewController()
         
-        var feedfeedRequestPhoto = self.viewModel.feedRequest
-        feedfeedRequestPhoto.type = .image
-        let vc3 = SearchOpener.open(.searchFeed(SearchFeedViewModel(stage: self.viewModel.searchFeedStage, feedRequest: feedfeedRequestPhoto))) as? SearchFeedViewController
+        let vc3 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .photo, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
         vc3?.pageIndex = 2
         vc3?.pageTitle = Localization.searchResult.photo.text
         let child_3 = vc3 ?? SearchFeedViewController()
         
-        let vc4 = SearchOpener.open(.searchFeed(SearchFeedViewModel(stage: self.viewModel.searchFeedStage, feedRequest: self.viewModel.feedRequest))) as? SearchFeedViewController
+        let vc4 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .people, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
         vc4?.pageIndex = 3
         vc4?.pageTitle = Localization.searchResult.people.text
         let child_4 = vc4 ?? SearchFeedViewController()

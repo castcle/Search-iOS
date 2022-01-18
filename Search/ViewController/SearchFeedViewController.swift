@@ -41,7 +41,7 @@ class SearchFeedViewController: UIViewController {
     var pageIndex: Int = 0
     var pageTitle: String?
     
-    var viewModel = SearchFeedViewModel(stage: .unknow, feedRequest: FeedRequest())
+    var viewModel = SearchFeedViewModel(searchSection: .none)
     
     enum FeedCellType {
         case activity
@@ -83,13 +83,9 @@ class SearchFeedViewController: UIViewController {
     @objc func getSearchFeed(notification: NSNotification) {
         if let dict = notification.userInfo as NSDictionary? {
             if let searchText = dict["searchText"] as? String {
-                self.viewModel.feedRequest.hashtag = searchText
-                self.viewModel.feedRequest.untilId = ""
-                if UserManager.shared.isLogin {
-                    self.viewModel.getFeedsMembers()
-                } else {
-                    self.viewModel.getFeedsGuests()
-                }
+                // Set top
+                self.viewModel.reloadData(with: searchText)
+                self.viewModel.searchRequest.keyword = searchText
             }
         }
     }
@@ -97,18 +93,18 @@ class SearchFeedViewController: UIViewController {
 
 extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        if self.viewModel.feeds.isEmpty {
+        if self.viewModel.searchContents.isEmpty {
             return 1
         } else {
-            return self.viewModel.feeds.count
+            return self.viewModel.searchContents.count
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.viewModel.feeds.isEmpty {
+        if self.viewModel.searchContents.isEmpty {
             return 1
         } else {
-            let content = self.viewModel.feeds[section].payload
+            let content = self.viewModel.searchContents[section]
             if content.referencedCasts.type == .recasted || content.referencedCasts.type == .quoted {
                 return 4
             } else {
@@ -118,13 +114,13 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if self.viewModel.feeds.isEmpty {
+        if self.viewModel.searchContents.isEmpty {
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchNotFound, for: indexPath as IndexPath) as? SearchNotFoundTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGray
             cell?.configCell()
             return cell ?? SearchNotFoundTableViewCell()
         } else {
-            let content = self.viewModel.feeds[indexPath.section].payload
+            let content = self.viewModel.searchContents[indexPath.section]
             if content.referencedCasts.type == .recasted {
                 if indexPath.row == 0 {
                     return self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath)
@@ -168,20 +164,15 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let content = self.viewModel.feeds[indexPath.section].payload
+        let content = self.viewModel.searchContents[indexPath.section]
         if content.referencedCasts.type == .recasted {
             if content.type == .long && indexPath.row == 2 {
-                self.viewModel.feeds[indexPath.section].payload.isExpand.toggle()
-                tableView.reloadRows(at: [indexPath], with: .automatic)
-            }
-        } else if content.referencedCasts.type == .quoted {
-            if content.type == .long && indexPath.row == 1 {
-                self.viewModel.feeds[indexPath.section].payload.isExpand.toggle()
+                self.viewModel.searchContents[indexPath.section].isExpand.toggle()
                 tableView.reloadRows(at: [indexPath], with: .automatic)
             }
         } else {
             if content.type == .long && indexPath.row == 1 {
-                self.viewModel.feeds[indexPath.section].payload.isExpand.toggle()
+                self.viewModel.searchContents[indexPath.section].isExpand.toggle()
                 tableView.reloadRows(at: [indexPath], with: .automatic)
             }
         }
@@ -257,7 +248,7 @@ extension SearchFeedViewController: HeaderTableViewCellDelegate {
         
         if let indexPath = self.tableView.indexPath(for: headerTableViewCell) {
             UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
-                self.viewModel.feeds.remove(at: indexPath.section)
+                self.viewModel.searchContents.remove(at: indexPath.section)
                 self.tableView.reloadData()
             })
         }

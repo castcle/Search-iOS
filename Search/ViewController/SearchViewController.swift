@@ -66,11 +66,9 @@ class SearchViewController: UIViewController {
     func configureTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        
         self.tableView.register(UINib(nibName: SearchNibVars.TableViewCell.searchTextField, bundle: ConfigBundle.search), forCellReuseIdentifier: SearchNibVars.TableViewCell.searchTextField)
         self.tableView.register(UINib(nibName: SearchNibVars.TableViewCell.searchTitle, bundle: ConfigBundle.search), forCellReuseIdentifier: SearchNibVars.TableViewCell.searchTitle)
         self.tableView.register(UINib(nibName: SearchNibVars.TableViewCell.searchTrend, bundle: ConfigBundle.search), forCellReuseIdentifier: SearchNibVars.TableViewCell.searchTrend)
-        
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight = 100
     }
