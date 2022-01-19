@@ -56,7 +56,27 @@ class SearchFeedViewController: UIViewController {
         self.view.backgroundColor = UIColor.Asset.darkGraphiteBlue
         self.configureTableView()
         
+        self.tableView.isScrollEnabled = false
+        self.tableView.cr.addHeadRefresh(animator: FastAnimator()) {
+            self.tableView.cr.resetNoMore()
+            self.tableView.isScrollEnabled = false
+            self.viewModel.searchLoaded = false
+            self.tableView.reloadData()
+            self.viewModel.reloadData()
+        }
+        
+        self.tableView.cr.addFootRefresh(animator: NormalFooterAnimator()) {
+            if self.viewModel.searchCanLoad {
+                self.viewModel.getSearchContent()
+            } else {
+                self.tableView.cr.noticeNoMoreData()
+            }
+        }
+        
         self.viewModel.didLoadFeedsFinish = {
+            self.tableView.cr.endHeaderRefresh()
+            self.tableView.cr.endLoadingMore()
+            self.tableView.isScrollEnabled = true
             self.tableView.reloadData()
         }
     }
@@ -93,63 +113,78 @@ class SearchFeedViewController: UIViewController {
 
 extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        if self.viewModel.searchContents.isEmpty {
-            return 1
+        if self.viewModel.searchLoaded {
+            if self.viewModel.searchContents.isEmpty {
+                return 1
+            } else {
+                return self.viewModel.searchContents.count
+            }
         } else {
-            return self.viewModel.searchContents.count
+            return 5
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.viewModel.searchContents.isEmpty {
-            return 1
-        } else {
-            let content = self.viewModel.searchContents[section]
-            if content.referencedCasts.type == .recasted || content.referencedCasts.type == .quoted {
-                return 4
+        if self.viewModel.searchLoaded {
+            if self.viewModel.searchContents.isEmpty {
+                return 1
             } else {
-                return 3
+                let content = self.viewModel.searchContents[section]
+                if content.referencedCasts.type == .recasted || content.referencedCasts.type == .quoted {
+                    return 4
+                } else {
+                    return 3
+                }
             }
+        } else {
+            return 1
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if self.viewModel.searchContents.isEmpty {
-            let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchNotFound, for: indexPath as IndexPath) as? SearchNotFoundTableViewCell
-            cell?.backgroundColor = UIColor.Asset.darkGray
-            cell?.configCell()
-            return cell ?? SearchNotFoundTableViewCell()
-        } else {
-            let content = self.viewModel.searchContents[indexPath.section]
-            if content.referencedCasts.type == .recasted {
-                if indexPath.row == 0 {
-                    return self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath)
-                } else if indexPath.row == 1 {
-                    return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
-                } else if indexPath.row == 2 {
-                    return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
-                } else {
-                    return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
-                }
-            } else if content.referencedCasts.type == .quoted {
-                if indexPath.row == 0 {
-                    return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
-                } else if indexPath.row == 1 {
-                    return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
-                } else if indexPath.row == 2 {
-                    return self.renderFeedCell(content: content, cellType: .quote, tableView: tableView, indexPath: indexPath)
-                } else {
-                    return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
-                }
+        if self.viewModel.searchLoaded {
+            if self.viewModel.searchContents.isEmpty {
+                let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchNotFound, for: indexPath as IndexPath) as? SearchNotFoundTableViewCell
+                cell?.backgroundColor = UIColor.Asset.darkGraphiteBlue
+                cell?.configCell()
+                return cell ?? SearchNotFoundTableViewCell()
             } else {
-                if indexPath.row == 0 {
-                    return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
-                } else if indexPath.row == 1 {
-                    return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
+                let content = self.viewModel.searchContents[indexPath.section]
+                if content.referencedCasts.type == .recasted {
+                    if indexPath.row == 0 {
+                        return self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath)
+                    } else if indexPath.row == 1 {
+                        return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
+                    } else if indexPath.row == 2 {
+                        return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
+                    } else {
+                        return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+                    }
+                } else if content.referencedCasts.type == .quoted {
+                    if indexPath.row == 0 {
+                        return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
+                    } else if indexPath.row == 1 {
+                        return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
+                    } else if indexPath.row == 2 {
+                        return self.renderFeedCell(content: content, cellType: .quote, tableView: tableView, indexPath: indexPath)
+                    } else {
+                        return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+                    }
                 } else {
-                    return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+                    if indexPath.row == 0 {
+                        return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
+                    } else if indexPath.row == 1 {
+                        return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
+                    } else {
+                        return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+                    }
                 }
             }
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.skeleton, for: indexPath as IndexPath) as? SkeletonFeedTableViewCell
+            cell?.backgroundColor = UIColor.Asset.darkGray
+            cell?.configCell()
+            return cell ?? SkeletonFeedTableViewCell()
         }
     }
     
@@ -164,16 +199,18 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let content = self.viewModel.searchContents[indexPath.section]
-        if content.referencedCasts.type == .recasted {
-            if content.type == .long && indexPath.row == 2 {
-                self.viewModel.searchContents[indexPath.section].isExpand.toggle()
-                tableView.reloadRows(at: [indexPath], with: .automatic)
-            }
-        } else {
-            if content.type == .long && indexPath.row == 1 {
-                self.viewModel.searchContents[indexPath.section].isExpand.toggle()
-                tableView.reloadRows(at: [indexPath], with: .automatic)
+        if self.viewModel.searchLoaded {
+            let content = self.viewModel.searchContents[indexPath.section]
+            if content.referencedCasts.type == .recasted {
+                if content.type == .long && indexPath.row == 2 {
+                    self.viewModel.searchContents[indexPath.section].isExpand.toggle()
+                    tableView.reloadRows(at: [indexPath], with: .automatic)
+                }
+            } else {
+                if content.type == .long && indexPath.row == 1 {
+                    self.viewModel.searchContents[indexPath.section].isExpand.toggle()
+                    tableView.reloadRows(at: [indexPath], with: .automatic)
+                }
             }
         }
     }

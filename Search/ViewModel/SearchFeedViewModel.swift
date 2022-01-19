@@ -119,10 +119,26 @@ final public class SearchFeedViewModel {
             self.searchRequest.keyword = keywoard
         }
         
-        self.searchRequest.maxResults = 5
+        self.searchContents = []
         self.searchLoaded = false
         self.searchCanLoad = true
+        self.searchRequest.maxResults = 5
         self.searchRequest.untilId = ""
+        if self.stage != .unknow {
+            if self.searchSection == .trend {
+                self.searchTrend()
+            } else if self.searchSection == .lastest {
+                self.searchRecent()
+            } else if self.searchSection == .photo {
+                self.searchRequest.type = .photo
+                self.searchTrend()
+            }
+        }
+    }
+    
+    func getSearchContent() {
+        self.searchRequest.maxResults = 25
+        self.searchRequest.untilId = self.meta.oldestId
         if self.stage != .unknow {
             if self.searchSection == .trend {
                 self.searchTrend()
