@@ -46,6 +46,7 @@ final public class SearchFeedViewModel {
     var searchCanLoad: Bool = true
     var stage: SearchFeedStage = .unknow
     var searchSection: SearchSection
+    var notification: Notification.Name? = nil
 
     func searchTrend() {
         self.searchRepository.searchTrend(searchRequest: self.searchRequest) { (success, response, isRefreshToken) in
@@ -96,11 +97,12 @@ final public class SearchFeedViewModel {
     //MARK: Output
     var didLoadFeedsFinish: (() -> ())?
     
-    public init(searchSection: SearchSection, stage: SearchFeedStage = .unknow, searchRequest: SearchRequest = SearchRequest()) {
+    public init(searchSection: SearchSection, noti: Notification.Name?, stage: SearchFeedStage = .unknow, searchRequest: SearchRequest = SearchRequest()) {
         self.stage = stage
         self.searchRequest = searchRequest
         self.searchRequest.maxResults = 5
         self.searchSection = searchSection
+        self.notification = noti
         if self.stage != .unknow {
             if self.searchSection == .trend {
                 self.searchTrend()
@@ -124,15 +126,14 @@ final public class SearchFeedViewModel {
         self.searchCanLoad = true
         self.searchRequest.maxResults = 5
         self.searchRequest.untilId = ""
-        if self.stage != .unknow {
-            if self.searchSection == .trend {
-                self.searchTrend()
-            } else if self.searchSection == .lastest {
-                self.searchRecent()
-            } else if self.searchSection == .photo {
-                self.searchRequest.type = .photo
-                self.searchTrend()
-            }
+        self.stage = .getFeed
+        if self.searchSection == .trend {
+            self.searchTrend()
+        } else if self.searchSection == .lastest {
+            self.searchRecent()
+        } else if self.searchSection == .photo {
+            self.searchRequest.type = .photo
+            self.searchTrend()
         }
     }
     

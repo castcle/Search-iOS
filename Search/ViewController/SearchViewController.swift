@@ -36,7 +36,7 @@ class SearchViewController: UIViewController {
     var viewModel = SearchViewModel()
     
     enum SearchViewControllerSection: Int, CaseIterable {
-//        case search = 0
+        case search = 0
         case trendingHeader
         case trending
     }
@@ -89,11 +89,11 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
-//        case SearchViewControllerSection.search.rawValue:
-//            let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTextField, for: indexPath as IndexPath) as? SearchTextFieldTableViewCell
-//            cell?.configCell()
-//            cell?.backgroundColor = UIColor.Asset.darkGray
-//            return cell ?? SearchTextFieldTableViewCell()
+        case SearchViewControllerSection.search.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTextField, for: indexPath as IndexPath) as? SearchTextFieldTableViewCell
+            cell?.configCell()
+            cell?.backgroundColor = UIColor.Asset.darkGray
+            return cell ?? SearchTextFieldTableViewCell()
         case SearchViewControllerSection.trendingHeader.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTitle, for: indexPath as IndexPath) as? SearchHeaderTableViewCell
             cell?.backgroundColor = UIColor.clear

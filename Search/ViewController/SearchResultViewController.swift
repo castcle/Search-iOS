@@ -38,6 +38,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     @IBOutlet var searchImage: UIImageView!
     @IBOutlet var searchTextField: UITextField!
     @IBOutlet var searchContainerView: UIView!
+    @IBOutlet var resultView: UIView!
     @IBOutlet var clearButton: UIButton!
     
     enum SearchResultViewControllerSection: Int, CaseIterable {
@@ -68,6 +69,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.layoutIfNeeded()
         self.view.backgroundColor = UIColor.Asset.darkGraphiteBlue
         self.hideKeyboardWhenTapped()
         self.configureTableView()
@@ -86,20 +88,17 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
             newCell?.label.textColor = UIColor.Asset.white
         }
         
+        print(self.viewModel.notification)
         self.updateUI()
     }
     
     private func updateUI() {
         if self.viewModel.searchResualState == .initial {
             self.tableView.isHidden = false
-            self.buttonBarView.isHidden = true
-            self.containerView.isHidden = true
-            self.clearButton.isHidden = true
+            self.resultView.isHidden = true
         } else {
             self.tableView.isHidden = true
-            self.buttonBarView.isHidden = false
-            self.containerView.isHidden = false
-            self.clearButton.isHidden = false
+            self.resultView.isHidden = false
             self.searchTextField.text = self.viewModel.searchText
         }
     }
@@ -129,11 +128,9 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     func configureTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        
         self.tableView.register(UINib(nibName: SearchNibVars.TableViewCell.recentSearchHeader, bundle: ConfigBundle.search), forCellReuseIdentifier: SearchNibVars.TableViewCell.recentSearchHeader)
         self.tableView.register(UINib(nibName: SearchNibVars.TableViewCell.recentSearch, bundle: ConfigBundle.search), forCellReuseIdentifier: SearchNibVars.TableViewCell.recentSearch)
         self.tableView.register(UINib(nibName: SearchNibVars.TableViewCell.suggestionUser, bundle: ConfigBundle.search), forCellReuseIdentifier: SearchNibVars.TableViewCell.suggestionUser)
-        
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight = 100
     }
@@ -144,17 +141,13 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         let searchValue = textField.text ?? ""
         if self.viewModel.searchResualState == .initial {
             self.tableView.isHidden = true
-            
             if !(searchValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
                 self.viewModel.addRecentSearch(value: searchValue.trimmingCharacters(in: .whitespacesAndNewlines))
             }
         }
         
         if !(searchValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
-            let searchDataDict: [String: String] = ["searchText": searchValue.trimmingCharacters(in: .whitespacesAndNewlines)]
-            NotificationCenter.default.post(name: .getSearchFeed, object: nil, userInfo: searchDataDict)
-            self.viewModel.searchResualState = .resualt
-            self.updateUI()
+            self.sendSearch(keyword: searchValue.trimmingCharacters(in: .whitespacesAndNewlines))
         }
         
         textField.resignFirstResponder()
@@ -186,29 +179,39 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         self.viewModel.getSuggestion()
     }
     
+    private func sendSearch(keyword: String) {
+        self.viewModel.searchText = keyword
+        let searchDataDict: [String: String] = ["searchText": keyword]
+        let searchUdid: String = self.viewModel.notification.rawValue
+        UserDefaults.standard.set(keyword, forKey: searchUdid)
+        NotificationCenter.default.post(name: self.viewModel.notification, object: nil, userInfo: searchDataDict)
+        self.viewModel.searchResualState = .resualt
+        self.updateUI()
+    }
+    
     // MARK: - PagerTabStripDataSource
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
-        let vc1 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .trend, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
+        let vc1 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .trend, noti: self.viewModel.notification, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
         vc1?.pageIndex = 0
         vc1?.pageTitle = Localization.searchResult.trend.text
         let child_1 = vc1 ?? SearchFeedViewController()
         
-        let vc2 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .lastest, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
+        let vc2 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .lastest, noti: self.viewModel.notification, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
         vc2?.pageIndex = 1
         vc2?.pageTitle = Localization.searchResult.lastest.text
         let child_2 = vc2 ?? SearchFeedViewController()
         
-        let vc3 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .photo, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
+        let vc3 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .photo, noti: self.viewModel.notification, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
         vc3?.pageIndex = 2
         vc3?.pageTitle = Localization.searchResult.photo.text
         let child_3 = vc3 ?? SearchFeedViewController()
         
-        let vc4 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .people, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
-        vc4?.pageIndex = 3
-        vc4?.pageTitle = Localization.searchResult.people.text
-        let child_4 = vc4 ?? SearchFeedViewController()
+//        let vc4 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .people, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
+//        vc4?.pageIndex = 3
+//        vc4?.pageTitle = Localization.searchResult.people.text
+//        let child_4 = vc4 ?? SearchFeedViewController()
 
-        return [child_1, child_2, child_3, child_4]
+        return [child_1, child_2, child_3]
     }
     
     @IBAction func clearAction(_ sender: Any) {
@@ -239,23 +242,23 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
                 return 0
             }
         case SearchResultViewControllerSection.keyword.rawValue:
-            if self.viewModel.searchResualState == .suggest {
-                return self.viewModel.suggestions.keyword.count
-            } else {
+//            if self.viewModel.searchResualState == .suggest {
+//                return self.viewModel.suggestions.keyword.count
+//            } else {
                 return 0
-            }
+//            }
         case SearchResultViewControllerSection.follow.rawValue:
-            if self.viewModel.searchResualState == .suggest {
-                return self.viewModel.suggestions.follows.count
-            } else {
+//            if self.viewModel.searchResualState == .suggest {
+//                return self.viewModel.suggestions.follows.count
+//            } else {
                 return 0
-            }
+//            }
         case SearchResultViewControllerSection.hastag.rawValue:
-            if self.viewModel.searchResualState == .hastag {
-                return self.viewModel.suggestions.hashtags.count
-            } else {
+//            if self.viewModel.searchResualState == .hastag {
+//                return self.viewModel.suggestions.hashtags.count
+//            } else {
                 return 0
-            }
+//            }
         default:
             return 0
         }
@@ -302,32 +305,28 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         switch indexPath.section {
         case SearchResultViewControllerSection.recent.rawValue:
             let recentSearch = self.viewModel.recentSearch[indexPath.row]
-            self.searchTextField.text = recentSearch.value
-            let searchDataDict: [String: String] = ["searchText": recentSearch.value]
-            NotificationCenter.default.post(name: .getSearchFeed, object: nil, userInfo: searchDataDict)
-            self.viewModel.searchResualState = .resualt
-            self.updateUI()
-        case SearchResultViewControllerSection.keyword.rawValue:
-            let keyword = self.viewModel.suggestions.keyword[indexPath.row]
-            self.searchTextField.text = keyword.text
-            let searchDataDict: [String: String] = ["searchText": keyword.text]
-            NotificationCenter.default.post(name: .getSearchFeed, object: nil, userInfo: searchDataDict)
-            self.viewModel.searchResualState = .resualt
-            self.updateUI()
-        case SearchResultViewControllerSection.follow.rawValue:
-            let follow = self.viewModel.suggestions.follows[indexPath.row]
-            if follow.type == .page {
-                ProfileOpener.openProfileDetail(follow.type, castcleId: nil, displayName: "", page: Page().initCustom(id: follow.id, displayName: follow.displayName, castcleId: follow.castcleId, avatar: follow.avatar.thumbnail, cover: ""))
-            } else {
-                ProfileOpener.openProfileDetail(follow.type, castcleId: follow.castcleId, displayName: follow.displayName, page: nil)
-            }
-        case SearchResultViewControllerSection.hastag.rawValue:
-            let hashtag = self.viewModel.suggestions.hashtags[indexPath.row]
-            self.searchTextField.text = hashtag.name
-            let searchDataDict: [String: String] = ["searchText": hashtag.name]
-            NotificationCenter.default.post(name: .getSearchFeed, object: nil, userInfo: searchDataDict)
-            self.viewModel.searchResualState = .resualt
-            self.updateUI()
+            self.sendSearch(keyword: recentSearch.value)
+//        case SearchResultViewControllerSection.keyword.rawValue:
+//            let keyword = self.viewModel.suggestions.keyword[indexPath.row]
+//            self.searchTextField.text = keyword.text
+//            let searchDataDict: [String: String] = ["searchText": keyword.text]
+//            NotificationCenter.default.post(name: .getSearchFeed, object: nil, userInfo: searchDataDict)
+//            self.viewModel.searchResualState = .resualt
+//            self.updateUI()
+//        case SearchResultViewControllerSection.follow.rawValue:
+//            let follow = self.viewModel.suggestions.follows[indexPath.row]
+//            if follow.type == .page {
+//                ProfileOpener.openProfileDetail(follow.type, castcleId: nil, displayName: "", page: Page().initCustom(id: follow.id, displayName: follow.displayName, castcleId: follow.castcleId, avatar: follow.avatar.thumbnail, cover: ""))
+//            } else {
+//                ProfileOpener.openProfileDetail(follow.type, castcleId: follow.castcleId, displayName: follow.displayName, page: nil)
+//            }
+//        case SearchResultViewControllerSection.hastag.rawValue:
+//            let hashtag = self.viewModel.suggestions.hashtags[indexPath.row]
+//            self.searchTextField.text = hashtag.name
+//            let searchDataDict: [String: String] = ["searchText": hashtag.name]
+//            NotificationCenter.default.post(name: .getSearchFeed, object: nil, userInfo: searchDataDict)
+//            self.viewModel.searchResualState = .resualt
+//            self.updateUI()
         default:
             return
         }

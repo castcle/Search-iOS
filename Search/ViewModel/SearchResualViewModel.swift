@@ -33,8 +33,8 @@ import SwiftyJSON
 
 public enum SearchResualState {
     case initial
-    case suggest
-    case hastag
+//    case suggest
+//    case hastag
     case resualt
     case unknow
 }
@@ -59,6 +59,7 @@ final public class SearchResualViewModel {
     var suggestions: Suggestion = Suggestion()
     let tokenHelper: TokenHelper = TokenHelper()
     var searchFeedStage: SearchFeedStage = .unknow
+    var notification: Notification.Name = .getSearchFeedNotification()
     
     //MARK: Output
     var didGetSuggestionFinish: (() -> ())?

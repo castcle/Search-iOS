@@ -41,7 +41,7 @@ class SearchFeedViewController: UIViewController {
     var pageIndex: Int = 0
     var pageTitle: String?
     
-    var viewModel = SearchFeedViewModel(searchSection: .none)
+    var viewModel = SearchFeedViewModel(searchSection: .none, noti: nil)
     
     enum FeedCellType {
         case activity
@@ -79,16 +79,14 @@ class SearchFeedViewController: UIViewController {
             self.tableView.isScrollEnabled = true
             self.tableView.reloadData()
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.getSearchFeed(notification:)), name: .getSearchFeed, object: nil)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: .getSearchFeed, object: nil)
+        
+        if !self.viewModel.searchLoaded {
+            if let searchUdid: String = self.viewModel.notification?.rawValue, let keyword: String = UserDefaults.standard.string(forKey: searchUdid) {
+                self.viewModel.reloadData(with: keyword)
+            }
+        }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getSearchFeed(notification:)), name: self.viewModel.notification, object: nil)
     }
     
     func configureTableView() {

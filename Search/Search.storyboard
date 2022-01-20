@@ -47,11 +47,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Cj9-Vd-c1w">
-                                <rect key="frame" x="0.0" y="60" width="375" height="607"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </tableView>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V2C-ns-ZX3">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V2C-ns-ZX3">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aio-KM-aNc">
@@ -101,48 +97,65 @@
                                     <constraint firstItem="aio-KM-aNc" firstAttribute="centerY" secondItem="V2C-ns-ZX3" secondAttribute="centerY" id="aDK-aV-Mjv"/>
                                 </constraints>
                             </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kyi-6K-6JZ" customClass="ButtonBarView" customModule="XLPagerTabStrip">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="4ra-fe-GKv"/>
-                                </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="8tF-aq-Z9J">
-                                    <size key="itemSize" width="40" height="40"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells/>
-                            </collectionView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EaW-Ur-wgs">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Cj9-Vd-c1w">
                                 <rect key="frame" x="0.0" y="60" width="375" height="607"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </scrollView>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="93n-KI-bxn">
+                                <rect key="frame" x="0.0" y="60" width="375" height="607"/>
+                                <subviews>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kyi-6K-6JZ" customClass="ButtonBarView" customModule="XLPagerTabStrip">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="4ra-fe-GKv"/>
+                                        </constraints>
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="8tF-aq-Z9J">
+                                            <size key="itemSize" width="40" height="40"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells/>
+                                    </collectionView>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EaW-Ur-wgs">
+                                        <rect key="frame" x="0.0" y="60" width="375" height="547"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </scrollView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="kyi-6K-6JZ" secondAttribute="trailing" id="4kv-Yx-Kmw"/>
+                                    <constraint firstAttribute="bottom" secondItem="EaW-Ur-wgs" secondAttribute="bottom" id="EmR-Es-evL"/>
+                                    <constraint firstItem="kyi-6K-6JZ" firstAttribute="top" secondItem="93n-KI-bxn" secondAttribute="top" id="J5B-ke-us0"/>
+                                    <constraint firstAttribute="trailing" secondItem="EaW-Ur-wgs" secondAttribute="trailing" id="Ux3-nx-DDa"/>
+                                    <constraint firstItem="kyi-6K-6JZ" firstAttribute="leading" secondItem="93n-KI-bxn" secondAttribute="leading" id="XrI-6q-VjX"/>
+                                    <constraint firstItem="EaW-Ur-wgs" firstAttribute="leading" secondItem="93n-KI-bxn" secondAttribute="leading" id="h9v-OF-13R"/>
+                                    <constraint firstItem="EaW-Ur-wgs" firstAttribute="top" secondItem="kyi-6K-6JZ" secondAttribute="bottom" id="oss-Hp-oUp"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="5Cl-hX-65v"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="93n-KI-bxn" firstAttribute="leading" secondItem="5Cl-hX-65v" secondAttribute="leading" id="2fK-Vk-2m0"/>
                             <constraint firstItem="Cj9-Vd-c1w" firstAttribute="top" secondItem="V2C-ns-ZX3" secondAttribute="bottom" id="5x6-gl-QUt"/>
-                            <constraint firstItem="EaW-Ur-wgs" firstAttribute="leading" secondItem="5Cl-hX-65v" secondAttribute="leading" id="8me-hA-fGo"/>
-                            <constraint firstItem="EaW-Ur-wgs" firstAttribute="trailing" secondItem="5Cl-hX-65v" secondAttribute="trailing" id="BAk-PX-mt0"/>
                             <constraint firstItem="Cj9-Vd-c1w" firstAttribute="leading" secondItem="5Cl-hX-65v" secondAttribute="leading" id="FE0-5P-B9T"/>
-                            <constraint firstItem="kyi-6K-6JZ" firstAttribute="trailing" secondItem="5Cl-hX-65v" secondAttribute="trailing" id="L5F-q2-9C4"/>
                             <constraint firstItem="5Cl-hX-65v" firstAttribute="trailing" secondItem="V2C-ns-ZX3" secondAttribute="trailing" id="T5f-l6-7bG"/>
                             <constraint firstItem="V2C-ns-ZX3" firstAttribute="top" secondItem="5Cl-hX-65v" secondAttribute="top" id="Ush-zM-BX2"/>
-                            <constraint firstItem="EaW-Ur-wgs" firstAttribute="top" secondItem="kyi-6K-6JZ" secondAttribute="bottom" id="XF9-Yi-IUE"/>
                             <constraint firstItem="5Cl-hX-65v" firstAttribute="trailing" secondItem="Cj9-Vd-c1w" secondAttribute="trailing" id="YE7-Uf-WGK"/>
-                            <constraint firstItem="kyi-6K-6JZ" firstAttribute="top" secondItem="Bao-QY-ZWf" secondAttribute="top" id="af8-t8-6Kl"/>
+                            <constraint firstItem="93n-KI-bxn" firstAttribute="bottom" secondItem="5Cl-hX-65v" secondAttribute="bottom" id="YsB-Vb-Edp"/>
                             <constraint firstAttribute="bottom" secondItem="Cj9-Vd-c1w" secondAttribute="bottom" id="clH-Ek-m6F"/>
                             <constraint firstItem="V2C-ns-ZX3" firstAttribute="leading" secondItem="5Cl-hX-65v" secondAttribute="leading" id="eeZ-OT-8TH"/>
-                            <constraint firstItem="kyi-6K-6JZ" firstAttribute="leading" secondItem="5Cl-hX-65v" secondAttribute="leading" id="ktb-2V-8YC"/>
-                            <constraint firstAttribute="bottom" secondItem="EaW-Ur-wgs" secondAttribute="bottom" id="ntV-z3-Fy1"/>
+                            <constraint firstItem="93n-KI-bxn" firstAttribute="trailing" secondItem="5Cl-hX-65v" secondAttribute="trailing" id="ggn-2u-BHb"/>
+                            <constraint firstItem="93n-KI-bxn" firstAttribute="top" secondItem="V2C-ns-ZX3" secondAttribute="bottom" id="xy4-uK-GMW"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="buttonBarView" destination="kyi-6K-6JZ" id="GDZ-OM-fjh"/>
                         <outlet property="clearButton" destination="Noo-PZ-9NM" id="ifD-8j-9ET"/>
                         <outlet property="containerView" destination="EaW-Ur-wgs" id="xMd-yW-6eI"/>
+                        <outlet property="resultView" destination="93n-KI-bxn" id="FK0-Zb-Yhn"/>
                         <outlet property="searchContainerView" destination="V2C-ns-ZX3" id="3bn-Es-gzy"/>
                         <outlet property="searchImage" destination="Ee2-n4-3oY" id="pLd-T2-EtH"/>
                         <outlet property="searchTextField" destination="Tom-m6-3Bc" id="3ZO-IK-TtC"/>
