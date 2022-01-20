@@ -88,8 +88,14 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
             newCell?.label.textColor = UIColor.Asset.white
         }
         
-        print(self.viewModel.notification)
         self.updateUI()
+        
+        self.viewModel.didGetSuggestionFinish = {
+            if !self.viewModel.suggestions.keyword.isEmpty || !self.viewModel.suggestions.follows.isEmpty {
+                self.viewModel.searchResualState = .suggest
+                self.tableView.reloadData()
+            }
+        }
     }
     
     private func updateUI() {
@@ -168,7 +174,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
 
         let currentText = textField.text ?? ""
         if (currentText as NSString).replacingCharacters(in: range, with: string).count >= 1 {
-            self.timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(self.performSearch), userInfo: nil, repeats: false)
+            self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.performSearch), userInfo: nil, repeats: false)
         }
         
         return true
@@ -242,11 +248,11 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
                 return 0
             }
         case SearchResultViewControllerSection.keyword.rawValue:
-//            if self.viewModel.searchResualState == .suggest {
-//                return self.viewModel.suggestions.keyword.count
-//            } else {
+            if self.viewModel.searchResualState == .suggest {
+                return self.viewModel.suggestions.keyword.count
+            } else {
                 return 0
-//            }
+            }
         case SearchResultViewControllerSection.follow.rawValue:
 //            if self.viewModel.searchResualState == .suggest {
 //                return self.viewModel.suggestions.follows.count
@@ -306,13 +312,10 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         case SearchResultViewControllerSection.recent.rawValue:
             let recentSearch = self.viewModel.recentSearch[indexPath.row]
             self.sendSearch(keyword: recentSearch.value)
-//        case SearchResultViewControllerSection.keyword.rawValue:
-//            let keyword = self.viewModel.suggestions.keyword[indexPath.row]
-//            self.searchTextField.text = keyword.text
-//            let searchDataDict: [String: String] = ["searchText": keyword.text]
-//            NotificationCenter.default.post(name: .getSearchFeed, object: nil, userInfo: searchDataDict)
-//            self.viewModel.searchResualState = .resualt
-//            self.updateUI()
+        case SearchResultViewControllerSection.keyword.rawValue:
+            let keyword = self.viewModel.suggestions.keyword[indexPath.row]
+            self.viewModel.addRecentSearch(value: keyword.text)
+            self.sendSearch(keyword: keyword.text)
 //        case SearchResultViewControllerSection.follow.rawValue:
 //            let follow = self.viewModel.suggestions.follows[indexPath.row]
 //            if follow.type == .page {
