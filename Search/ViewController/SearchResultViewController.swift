@@ -126,7 +126,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         if self.viewModel.searchResualState == .initial {
             self.customNavigationBar(.secondary, title: Localization.searchSuggestion.title.text, animated: false)
         } else {
-            self.customNavigationBar(.secondary, title:  Localization.searchSuggestion.title.text, animated: true)
+            self.customNavigationBar(.secondary, title: Localization.searchSuggestion.title.text, animated: true)
         }
     }
     
