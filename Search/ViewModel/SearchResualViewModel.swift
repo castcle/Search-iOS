@@ -34,7 +34,7 @@ import SwiftyJSON
 public enum SearchResualState {
     case initial
     case suggest
-//    case hastag
+    case hastag
     case resualt
     case unknow
 }

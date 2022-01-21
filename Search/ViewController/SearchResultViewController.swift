@@ -91,21 +91,20 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         self.updateUI()
         
         self.viewModel.didGetSuggestionFinish = {
-            if !self.viewModel.suggestions.keyword.isEmpty || !self.viewModel.suggestions.follows.isEmpty {
-                self.viewModel.searchResualState = .suggest
+            if !self.viewModel.suggestions.keyword.isEmpty || !self.viewModel.suggestions.follows.isEmpty || !self.viewModel.suggestions.hashtags.isEmpty {
                 self.tableView.reloadData()
             }
         }
     }
     
     private func updateUI() {
-        if self.viewModel.searchResualState == .initial {
-            self.tableView.isHidden = false
-            self.resultView.isHidden = true
-        } else {
+        if self.viewModel.searchResualState == .resualt {
             self.tableView.isHidden = true
             self.resultView.isHidden = false
             self.searchTextField.text = self.viewModel.searchText
+        } else {
+            self.tableView.isHidden = false
+            self.resultView.isHidden = true
         }
     }
     
@@ -163,8 +162,15 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     @objc func textFieldDidChange(_ textField: UITextField) {
         if textField.text!.isEmpty {
             self.clearButton.isHidden = true
+            self.viewModel.searchResualState = .initial
+            self.tableView.reloadData()
         } else {
             self.clearButton.isHidden = false
+            if textField.text!.hasPrefix("#") {
+                self.viewModel.searchResualState = .hastag
+            } else {
+                self.viewModel.searchResualState = .suggest
+            }
         }
     }
 
@@ -181,8 +187,10 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     }
 
     @objc func performSearch() {
-        self.viewModel.searchText = self.searchTextField.text ?? ""
-        self.viewModel.getSuggestion()
+        if self.viewModel.searchResualState != .resualt {
+            self.viewModel.searchText = self.searchTextField.text ?? ""
+            self.viewModel.getSuggestion()
+        }
     }
     
     private func sendSearch(keyword: String) {
@@ -193,6 +201,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         NotificationCenter.default.post(name: self.viewModel.notification, object: nil, userInfo: searchDataDict)
         self.viewModel.searchResualState = .resualt
         self.updateUI()
+        self.viewModel.addRecentSearch(value: keyword)
     }
     
     // MARK: - PagerTabStripDataSource
@@ -254,17 +263,17 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
                 return 0
             }
         case SearchResultViewControllerSection.follow.rawValue:
-//            if self.viewModel.searchResualState == .suggest {
-//                return self.viewModel.suggestions.follows.count
-//            } else {
+            if self.viewModel.searchResualState == .suggest {
+                return self.viewModel.suggestions.follows.count
+            } else {
                 return 0
-//            }
+            }
         case SearchResultViewControllerSection.hastag.rawValue:
-//            if self.viewModel.searchResualState == .hastag {
-//                return self.viewModel.suggestions.hashtags.count
-//            } else {
+            if self.viewModel.searchResualState == .hastag {
+                return self.viewModel.suggestions.hashtags.count
+            } else {
                 return 0
-//            }
+            }
         default:
             return 0
         }
@@ -314,22 +323,17 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             self.sendSearch(keyword: recentSearch.value)
         case SearchResultViewControllerSection.keyword.rawValue:
             let keyword = self.viewModel.suggestions.keyword[indexPath.row]
-            self.viewModel.addRecentSearch(value: keyword.text)
             self.sendSearch(keyword: keyword.text)
-//        case SearchResultViewControllerSection.follow.rawValue:
-//            let follow = self.viewModel.suggestions.follows[indexPath.row]
-//            if follow.type == .page {
-//                ProfileOpener.openProfileDetail(follow.type, castcleId: nil, displayName: "", page: Page().initCustom(id: follow.id, displayName: follow.displayName, castcleId: follow.castcleId, avatar: follow.avatar.thumbnail, cover: ""))
-//            } else {
-//                ProfileOpener.openProfileDetail(follow.type, castcleId: follow.castcleId, displayName: follow.displayName, page: nil)
-//            }
-//        case SearchResultViewControllerSection.hastag.rawValue:
-//            let hashtag = self.viewModel.suggestions.hashtags[indexPath.row]
-//            self.searchTextField.text = hashtag.name
-//            let searchDataDict: [String: String] = ["searchText": hashtag.name]
-//            NotificationCenter.default.post(name: .getSearchFeed, object: nil, userInfo: searchDataDict)
-//            self.viewModel.searchResualState = .resualt
-//            self.updateUI()
+        case SearchResultViewControllerSection.follow.rawValue:
+            let follow = self.viewModel.suggestions.follows[indexPath.row]
+            if follow.type == .page {
+                ProfileOpener.openProfileDetail(follow.type, castcleId: nil, displayName: "", page: Page().initCustom(id: follow.id, displayName: follow.displayName, castcleId: follow.castcleId, avatar: follow.avatar.thumbnail, cover: ""))
+            } else {
+                ProfileOpener.openProfileDetail(follow.type, castcleId: follow.castcleId, displayName: follow.displayName, page: nil)
+            }
+        case SearchResultViewControllerSection.hastag.rawValue:
+            let hashtag = self.viewModel.suggestions.hashtags[indexPath.row]
+            self.sendSearch(keyword: hashtag.name)
         default:
             return
         }

@@ -101,9 +101,10 @@ class SearchFeedViewController: UIViewController {
     @objc func getSearchFeed(notification: NSNotification) {
         if let dict = notification.userInfo as NSDictionary? {
             if let searchText = dict["searchText"] as? String {
-                // Set top
                 self.viewModel.reloadData(with: searchText)
-                self.viewModel.searchRequest.keyword = searchText
+                self.tableView.scrollToRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, at: .top, animated: true)
+                self.tableView.isScrollEnabled = false
+                self.tableView.reloadData()
             }
         }
     }
