@@ -28,6 +28,7 @@
 import UIKit
 import Core
 import Component
+import Profile
 import XLPagerTabStrip
 
 class SearchUserViewController: UIViewController {
@@ -143,20 +144,14 @@ extension SearchUserViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        if self.viewModel.searchLoaded {
-//            let content = self.viewModel.searchContents[indexPath.section]
-//            if content.referencedCasts.type == .recasted {
-//                if content.type == .long && indexPath.row == 2 {
-//                    self.viewModel.searchContents[indexPath.section].isExpand.toggle()
-//                    tableView.reloadRows(at: [indexPath], with: .automatic)
-//                }
-//            } else {
-//                if content.type == .long && indexPath.row == 1 {
-//                    self.viewModel.searchContents[indexPath.section].isExpand.toggle()
-//                    tableView.reloadRows(at: [indexPath], with: .automatic)
-//                }
-//            }
-//        }
+        if self.viewModel.searchUserLoaded {
+            let user = self.viewModel.users[indexPath.section]
+            if user.type == .page {
+                ProfileOpener.openProfileDetail(user.type, castcleId: nil, displayName: "", page: Page().initCustom(id: user.id, displayName: user.displayName, castcleId: user.castcleId, avatar: user.images.avatar.thumbnail, cover: ""))
+            } else {
+                ProfileOpener.openProfileDetail(user.type, castcleId: user.castcleId, displayName: user.displayName, page: nil)
+            }
+        }
     }
 }
 
