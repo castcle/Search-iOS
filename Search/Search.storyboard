@@ -197,6 +197,36 @@
             </objects>
             <point key="canvasLocation" x="1402" y="70"/>
         </scene>
+        <!--Search User View Controller-->
+        <scene sceneID="9ze-hB-zdt">
+            <objects>
+                <viewController storyboardIdentifier="SearchUserViewController" id="wgf-Et-SBO" customClass="SearchUserViewController" customModule="Search" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="7P0-ix-wY7">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="McH-Y4-bai">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="JKI-mW-Xcm"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="McH-Y4-bai" secondAttribute="bottom" id="7f0-2G-SOD"/>
+                            <constraint firstItem="JKI-mW-Xcm" firstAttribute="trailing" secondItem="McH-Y4-bai" secondAttribute="trailing" id="W95-Hq-vOM"/>
+                            <constraint firstItem="McH-Y4-bai" firstAttribute="top" secondItem="JKI-mW-Xcm" secondAttribute="top" id="wMK-jE-c9S"/>
+                            <constraint firstItem="McH-Y4-bai" firstAttribute="leading" secondItem="JKI-mW-Xcm" secondAttribute="leading" id="wem-5X-8a0"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="McH-Y4-bai" id="OzH-oO-OkP"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Dvs-DB-K2Z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2111" y="70"/>
+        </scene>
     </scenes>
     <resources>
         <systemColor name="systemBackgroundColor">

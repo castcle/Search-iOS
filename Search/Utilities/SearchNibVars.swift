@@ -31,6 +31,7 @@ public struct SearchNibVars {
         public static let search = "SearchViewController"
         public static let searchResult = "SearchResultViewController"
         public static let searchFeed = "SearchFeedViewController"
+        public static let searchUser = "SearchUserViewController"
     }
     
     // MARK: - View
@@ -47,6 +48,7 @@ public struct SearchNibVars {
         public static let recentSearch = "RecentSearchTableViewCell"
         public static let suggestionUser = "SuggestionUserTableViewCell"
         public static let searchNotFound = "SearchNotFoundTableViewCell"
+        public static let userSearch = "UserSearchTableViewCell"
     }
     
     // MARK: - CollectionViewCell

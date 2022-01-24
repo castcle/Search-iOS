@@ -65,6 +65,11 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         settings.style.selectedBarHeight = 4
         settings.style.buttonBarItemFont = UIFont.asset(.bold, fontSize: .body)
         settings.style.buttonBarHeight = 60.0
+        
+        self.changeCurrentIndexProgressive = { (oldCell: ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage: CGFloat, changeCurrentIndex: Bool, animated: Bool) -> Void in
+            oldCell?.label.textColor = UIColor.Asset.lightGray
+            newCell?.label.textColor = UIColor.Asset.white
+        }
     }
     
     override func viewDidLoad() {
@@ -82,11 +87,6 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         
         self.searchTextField.delegate = self
         self.searchTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: .editingChanged)
-        
-        self.changeCurrentIndexProgressive = { (oldCell: ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage: CGFloat, changeCurrentIndex: Bool, animated: Bool) -> Void in
-            oldCell?.label.textColor = UIColor.Asset.lightGray
-            newCell?.label.textColor = UIColor.Asset.white
-        }
         
         self.updateUI()
         
@@ -209,24 +209,24 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         let vc1 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .trend, noti: self.viewModel.notification, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
         vc1?.pageIndex = 0
         vc1?.pageTitle = Localization.searchResult.trend.text
-        let child_1 = vc1 ?? SearchFeedViewController()
+        let trend = vc1 ?? SearchFeedViewController()
         
         let vc2 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .lastest, noti: self.viewModel.notification, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
         vc2?.pageIndex = 1
         vc2?.pageTitle = Localization.searchResult.lastest.text
-        let child_2 = vc2 ?? SearchFeedViewController()
+        let lastest = vc2 ?? SearchFeedViewController()
         
         let vc3 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .photo, noti: self.viewModel.notification, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
         vc3?.pageIndex = 2
         vc3?.pageTitle = Localization.searchResult.photo.text
-        let child_3 = vc3 ?? SearchFeedViewController()
+        let photo = vc3 ?? SearchFeedViewController()
         
-//        let vc4 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .people, stage: self.viewModel.searchFeedStage, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
-//        vc4?.pageIndex = 3
-//        vc4?.pageTitle = Localization.searchResult.people.text
-//        let child_4 = vc4 ?? SearchFeedViewController()
+        let vc4 = SearchOpener.open(.searchUser(SearchUserViewModel(noti: self.viewModel.notification, stage: .searchUser, searchRequest: self.viewModel.searchRequest))) as? SearchUserViewController
+        vc4?.pageIndex = 3
+        vc4?.pageTitle = Localization.searchResult.people.text
+        let people = vc4 ?? SearchFeedViewController()
 
-        return [child_1, child_2, child_3]
+        return [trend, lastest, photo, people]
     }
     
     @IBAction func clearAction(_ sender: Any) {

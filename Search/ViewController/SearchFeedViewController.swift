@@ -56,7 +56,7 @@ class SearchFeedViewController: UIViewController {
         self.view.backgroundColor = UIColor.Asset.darkGraphiteBlue
         self.configureTableView()
         
-        self.tableView.isScrollEnabled = false
+        self.viewModel.delegate = self
         self.tableView.cr.addHeadRefresh(animator: FastAnimator()) {
             self.tableView.cr.resetNoMore()
             self.tableView.isScrollEnabled = false
@@ -73,17 +73,13 @@ class SearchFeedViewController: UIViewController {
             }
         }
         
-        self.viewModel.didLoadFeedsFinish = {
-            self.tableView.cr.endHeaderRefresh()
-            self.tableView.cr.endLoadingMore()
-            self.tableView.isScrollEnabled = true
-            self.tableView.reloadData()
-        }
-        
         if !self.viewModel.searchLoaded {
+            self.tableView.isScrollEnabled = false
             if let searchUdid: String = self.viewModel.notification?.rawValue, let keyword: String = UserDefaults.standard.string(forKey: searchUdid) {
                 self.viewModel.reloadData(with: keyword)
             }
+        } else {
+            self.tableView.isScrollEnabled = true
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.getSearchFeed(notification:)), name: self.viewModel.notification, object: nil)
@@ -257,6 +253,15 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
                 return FeedCellHelper().renderFeedCell(content: content, tableView: self.tableView, indexPath: indexPath)
             }
         }
+    }
+}
+
+extension SearchFeedViewController: SearchFeedViewModelDelegate {
+    func didGetContentSuccess() {
+        self.tableView.cr.endHeaderRefresh()
+        self.tableView.cr.endLoadingMore()
+        self.tableView.isScrollEnabled = true
+        self.tableView.reloadData()
     }
 }
 

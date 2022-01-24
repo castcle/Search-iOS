@@ -30,6 +30,10 @@ import Foundation
 import Networking
 import SwiftyJSON
 
+public protocol SearchFeedViewModelDelegate {
+    func didGetContentSuccess()
+}
+
 public enum SearchFeedStage {
     case getFeed
     case unknow
@@ -37,6 +41,7 @@ public enum SearchFeedStage {
 
 final public class SearchFeedViewModel {
    
+    public var delegate: SearchFeedViewModelDelegate?
     private var searchRepository: SearchRepository = SearchRepositoryImpl()
     var searchRequest: SearchRequest = SearchRequest()
     let tokenHelper: TokenHelper = TokenHelper()
@@ -61,7 +66,7 @@ final public class SearchFeedViewModel {
                     self.searchContents.append(contentsOf: shelf.contents)
                     self.meta = shelf.meta
                     self.searchLoaded = true
-                    self.didLoadFeedsFinish?()
+                    self.delegate?.didGetContentSuccess()
                 } catch {}
             } else {
                 if isRefreshToken {
@@ -84,7 +89,7 @@ final public class SearchFeedViewModel {
                     self.searchContents.append(contentsOf: shelf.contents)
                     self.meta = shelf.meta
                     self.searchLoaded = true
-                    self.didLoadFeedsFinish?()
+                    self.delegate?.didGetContentSuccess()
                 } catch {}
             } else {
                 if isRefreshToken {
@@ -93,9 +98,6 @@ final public class SearchFeedViewModel {
             }
         }
     }
-    
-    //MARK: Output
-    var didLoadFeedsFinish: (() -> ())?
     
     public init(searchSection: SearchSection, noti: Notification.Name?, stage: SearchFeedStage = .unknow, searchRequest: SearchRequest = SearchRequest()) {
         self.stage = stage

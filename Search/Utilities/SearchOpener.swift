@@ -32,6 +32,7 @@ public enum SearchScene {
     case search
     case searchResult(SearchResualViewModel)
     case searchFeed(SearchFeedViewModel)
+    case searchUser(SearchUserViewModel)
 }
 
 public struct SearchOpener {
@@ -52,6 +53,11 @@ public struct SearchOpener {
             let vc = storyboard.instantiateViewController(withIdentifier: SearchNibVars.ViewController.searchFeed) as? SearchFeedViewController
             vc?.viewModel = viewModel
             return vc ?? SearchFeedViewController()
+        case .searchUser(let viewModel):
+            let storyboard: UIStoryboard = UIStoryboard(name: SearchNibVars.Storyboard.search, bundle: ConfigBundle.search)
+            let vc = storyboard.instantiateViewController(withIdentifier: SearchNibVars.ViewController.searchUser) as? SearchUserViewController
+            vc?.viewModel = viewModel
+            return vc ?? SearchUserViewController()
         }
     }
 }
