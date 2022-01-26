@@ -41,6 +41,7 @@ class UserSearchTableViewCell: UITableViewCell {
     @IBOutlet weak var userDescLabel: UILabel!
     @IBOutlet weak var userFollowButton: UIButton!
     @IBOutlet weak var userVerifyImage: UIImageView!
+    @IBOutlet weak var lineView: UIView!
     
     private var userRepository: UserRepository = UserRepositoryImpl()
     private var user: User = User()
@@ -66,6 +67,7 @@ class UserSearchTableViewCell: UITableViewCell {
         self.userDescLabel.textColor = UIColor.Asset.white
         self.userVerifyImage.image = UIImage.init(icon: .castcle(.verify), size: CGSize(width: 15, height: 15), textColor: UIColor.Asset.lightBlue)
         self.userFollowButton.titleLabel?.font = UIFont.asset(.regular, fontSize: .small)
+        self.lineView.backgroundColor = UIColor.Asset.darkGraphiteBlue
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -134,7 +136,6 @@ class UserSearchTableViewCell: UITableViewCell {
             user.followed.toggle()
             self.updateUserFollow()
         } else {
-            Utility.currentViewController().navigationController?.popToRootViewController(animated: true)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
                 Utility.currentViewController().presentPanModal(AuthenOpener.open(.signUpMethod) as! SignUpMethodViewController)
             }

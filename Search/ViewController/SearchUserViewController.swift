@@ -65,7 +65,12 @@ class SearchUserViewController: UIViewController {
             self.tableView.isScrollEnabled = false
             if let searchUdid: String = self.viewModel.notification?.rawValue, let keyword: String = UserDefaults.standard.string(forKey: searchUdid) {
                 self.viewModel.reloadData(with: keyword)
+            } else {
+                if !self.viewModel.searchRequest.keyword.isEmpty {
+                    self.viewModel.reloadData(with: "")
+                }
             }
+            
         } else {
             self.tableView.isScrollEnabled = true
         }
@@ -121,7 +126,7 @@ extension SearchUserViewController: UITableViewDelegate, UITableViewDataSource {
                 return cell ?? SearchNotFoundTableViewCell()
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.userSearch, for: indexPath as IndexPath) as? UserSearchTableViewCell
-                cell?.backgroundColor = UIColor.Asset.darkGraphiteBlue
+                cell?.backgroundColor = UIColor.Asset.darkGray
                 cell?.configCell(user: self.viewModel.users[indexPath.section])
                 return cell ?? UserSearchTableViewCell()
             }
