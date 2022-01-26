@@ -51,6 +51,9 @@ final public class SearchUserViewModel {
     var notification: Notification.Name? = nil
     
     private func searchUser() {
+        if self.searchRequest.keyword.isEmpty {
+            return
+        }
         self.searchRepository.searchUser(searchRequest: self.searchRequest) { (success, response, isRefreshToken) in
             if success {
                 do {

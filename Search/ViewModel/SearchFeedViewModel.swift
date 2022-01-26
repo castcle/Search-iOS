@@ -54,6 +54,9 @@ final public class SearchFeedViewModel {
     var notification: Notification.Name? = nil
 
     func searchTrend() {
+        if self.searchRequest.keyword.isEmpty {
+            return
+        }
         self.searchRepository.searchTrend(searchRequest: self.searchRequest) { (success, response, isRefreshToken) in
             if success {
                 do {
@@ -77,6 +80,9 @@ final public class SearchFeedViewModel {
     }
     
     func searchRecent() {
+        if self.searchRequest.keyword.isEmpty {
+            return
+        }
         self.searchRepository.searchRecent(searchRequest: self.searchRequest) { (success, response, isRefreshToken) in
             if success {
                 do {
