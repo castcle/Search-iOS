@@ -39,6 +39,14 @@ public enum SearchResualState {
     case unknow
 }
 
+public enum SearchSection {
+    case trend
+    case lastest
+    case photo
+    case people
+    case none
+}
+
 final public class SearchResualViewModel {
     
     var searchText: String = ""
@@ -48,10 +56,10 @@ final public class SearchResualViewModel {
     var searchResualState: SearchResualState = .unknow
     private var searchRepository: SearchRepository = SearchRepositoryImpl()
     var searchRequest: SearchRequest = SearchRequest()
-    var feedRequest: FeedRequest = FeedRequest()
     var suggestions: Suggestion = Suggestion()
     let tokenHelper: TokenHelper = TokenHelper()
     var searchFeedStage: SearchFeedStage = .unknow
+    var notification: Notification.Name = .getSearchFeedNotification()
     
     //MARK: Output
     var didGetSuggestionFinish: (() -> ())?
@@ -59,7 +67,7 @@ final public class SearchResualViewModel {
     public init(state: SearchResualState = .unknow, textSearch: String = "", searchFeedStage: SearchFeedStage = .unknow) {
         self.searchResualState = state
         self.searchText = textSearch
-        self.feedRequest.hashtag = textSearch
+        self.searchRequest.keyword = textSearch
         self.searchFeedStage = searchFeedStage
         self.recentSearch = self.realm.objects(RecentSearch.self)
         self.tokenHelper.delegate = self

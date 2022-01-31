@@ -18,32 +18,31 @@
 //  Please contact Castcle, 22 Phet Kasem 47/2 Alley, Bang Khae, Bangkok,
 //  Thailand 10160, or visit www.castcle.com if you need additional information
 //  or have any questions.
-//
-//  SearchHeaderTableViewCell.swift
-//  Search
-//
-//  Created by Castcle Co., Ltd. on 23/9/2564 BE.
-//
+/*
+  Localizable.strings
+  Search
 
-import UIKit
-import Core
+  Created by Castcle Co., Ltd. on 9/1/2565 BE.
+  
+*/
 
-class SearchHeaderTableViewCell: UITableViewCell {
+// MARK: - Search (Top Trends)
+"search_top_trends_title"                   = "For You";
+"search_top_trends_placeholder"             = "World trends search";
+"search_top_trends_top_ten"                 = "Top 10 World Trends";
+"search_top_trends_trending"                = "Trending";
+"search_top_trends_cast"                    = "Cast";
 
-    @IBOutlet var iconImage: UIImageView!
-    @IBOutlet var titleLabel: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        self.iconImage.image = UIImage.init(icon: .castcle(.toptrend), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.white)
-        self.titleLabel.font = UIFont.asset(.bold, fontSize: .h4)
-    }
+// MARK: - Search (Suggestion)
+"search_suggestion_title"                   = "Search";
+"search_suggestion_lastest"                 = "Recent searches";
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
-    
-    func configCell() {
-        self.titleLabel.text = Localization.searchTopTrends.topTen.text
-    }
-}
+// MARK: - Search (Result)
+"search_result_trend"                       = "Trend";
+"search_result_lastest"                     = "Lastest";
+"search_result_photo"                       = "Photo";
+"search_result_people"                      = "People";
+
+// MARK: - Search (Not found)
+"search_not_found_headline"                 = "We didn't find any results";
+"search_not_found_description"              = "Make sure everything is spelled correctly or try different keywords.";
