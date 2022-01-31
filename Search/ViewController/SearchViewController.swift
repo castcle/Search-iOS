@@ -27,6 +27,7 @@
 
 import UIKit
 import Core
+import Networking
 import Defaults
 
 class SearchViewController: UIViewController {
@@ -56,7 +57,12 @@ class SearchViewController: UIViewController {
         super.viewWillAppear(animated)
         self.setupNavBar()
         self.tableView.reloadData()
-        Defaults[.screenId] = ""
+        Defaults[.screenId] = ScreenId.search.rawValue
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        EngagementHelper().sendCastcleAnalytic(event: .onScreenView, screen: .search)
     }
     
     func setupNavBar() {

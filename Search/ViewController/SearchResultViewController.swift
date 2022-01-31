@@ -221,7 +221,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         vc3?.pageTitle = Localization.searchResult.photo.text
         let photo = vc3 ?? SearchFeedViewController()
         
-        let vc4 = SearchOpener.open(.searchUser(SearchUserViewModel(noti: self.viewModel.notification, stage: .searchUser, searchRequest: self.viewModel.searchRequest))) as? SearchUserViewController
+        let vc4 = SearchOpener.open(.searchUser(SearchUserViewModel(noti: self.viewModel.notification, searchRequest: self.viewModel.searchRequest))) as? SearchUserViewController
         vc4?.pageIndex = 3
         vc4?.pageTitle = Localization.searchResult.people.text
         let people = vc4 ?? SearchFeedViewController()
