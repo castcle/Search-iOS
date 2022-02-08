@@ -131,10 +131,10 @@ extension SearchUserViewController: UITableViewDelegate, UITableViewDataSource {
                 return cell ?? UserSearchTableViewCell()
             }
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.skeleton, for: indexPath as IndexPath) as? SkeletonFeedTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.skeleton, for: indexPath as IndexPath) as? SkeletonUserTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGray
             cell?.configCell()
-            return cell ?? SkeletonFeedTableViewCell()
+            return cell ?? SkeletonUserTableViewCell()
         }
     }
     
