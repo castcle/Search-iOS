@@ -144,7 +144,7 @@ class UserSearchTableViewCell: UITableViewCell {
     
     @IBAction func userProfileAction(_ sender: Any) {
         if self.user.type == .page {
-            ProfileOpener.openProfileDetail(self.user.type, castcleId: nil, displayName: "", page: Page().initCustom(id: self.user.id, displayName: self.user.displayName, castcleId: self.user.castcleId, avatar: self.user.images.avatar.thumbnail, cover: ""))
+            ProfileOpener.openProfileDetail(self.user.type, castcleId: nil, displayName: "", page: Page().initCustom(id: self.user.id, displayName: self.user.displayName, castcleId: self.user.castcleId, avatar: self.user.images.avatar.thumbnail, cover: "", overview: "", official: false))
         } else {
             ProfileOpener.openProfileDetail(self.user.type, castcleId: self.user.castcleId, displayName: self.user.displayName, page: nil)
         }
