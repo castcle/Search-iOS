@@ -44,7 +44,7 @@ class UserSearchTableViewCell: UITableViewCell {
     @IBOutlet weak var lineView: UIView!
     
     private var userRepository: UserRepository = UserRepositoryImpl()
-    private var user: User = User()
+    private var user: UserInfo = UserInfo()
     let tokenHelper: TokenHelper = TokenHelper()
     private var stage: Stage = .none
     private var userRequest: UserRequest = UserRequest()
@@ -74,7 +74,7 @@ class UserSearchTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    public func configCell(user: User) {
+    public func configCell(user: UserInfo) {
         self.user = user
         let userAvatar = URL(string: self.user.images.avatar.thumbnail)
         self.userAvatarImage.kf.setImage(with: userAvatar, placeholder: UIImage.Asset.userPlaceholder, options: [.transition(.fade(0.35))])
@@ -143,11 +143,7 @@ class UserSearchTableViewCell: UITableViewCell {
     }
     
     @IBAction func userProfileAction(_ sender: Any) {
-        if self.user.type == .page {
-            ProfileOpener.openProfileDetail(self.user.type, castcleId: nil, displayName: "", page: Page().initCustom(id: self.user.id, displayName: self.user.displayName, castcleId: self.user.castcleId, avatar: self.user.images.avatar.thumbnail, cover: ""))
-        } else {
-            ProfileOpener.openProfileDetail(self.user.type, castcleId: self.user.castcleId, displayName: self.user.displayName, page: nil)
-        }
+        ProfileOpener.openProfileDetail(self.user.type, castcleId: self.user.castcleId, displayName: self.user.displayName)
     }
 }
 

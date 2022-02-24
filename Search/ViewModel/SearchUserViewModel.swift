@@ -43,7 +43,7 @@ final public class SearchUserViewModel {
     private var searchRepository: SearchRepository = SearchRepositoryImpl()
     var searchRequest: SearchRequest = SearchRequest()
     let tokenHelper: TokenHelper = TokenHelper()
-    var users: [User] = []
+    var users: [UserInfo] = []
     var meta: Meta = Meta()
     var searchUserLoaded: Bool = false
     var searchUserCanLoad: Bool = true
@@ -67,7 +67,7 @@ final public class SearchUserViewModel {
                     }
                     
                     payload.forEach { content in
-                        self.users.append(User(json: content))
+                        self.users.append(UserInfo(json: content))
                     }
 
                     self.meta = meta
