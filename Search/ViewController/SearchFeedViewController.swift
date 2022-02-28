@@ -238,7 +238,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             if content.referencedCasts.type == .recasted {
                 cell?.configCell(feedType: .content, content: originalContent)
             } else {
-                cell?.configCell(feedType: .content, content: originalContent)
+                cell?.configCell(feedType: .content, content: content)
             }
             return cell ?? HeaderTableViewCell()
         case .footer:
