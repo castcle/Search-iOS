@@ -131,7 +131,7 @@ extension SearchUserViewController: UITableViewDelegate, UITableViewDataSource {
                 return cell ?? UserSearchTableViewCell()
             }
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.skeleton, for: indexPath as IndexPath) as? SkeletonUserTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.skeletonUser, for: indexPath as IndexPath) as? SkeletonUserTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGray
             cell?.configCell()
             return cell ?? SkeletonUserTableViewCell()
@@ -151,11 +151,7 @@ extension SearchUserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if self.viewModel.searchUserLoaded {
             let user = self.viewModel.users[indexPath.section]
-            if user.type == .page {
-                ProfileOpener.openProfileDetail(user.type, castcleId: nil, displayName: "", page: Page().initCustom(id: user.id, displayName: user.displayName, castcleId: user.castcleId, avatar: user.images.avatar.thumbnail, cover: ""))
-            } else {
-                ProfileOpener.openProfileDetail(user.type, castcleId: user.castcleId, displayName: user.displayName, page: nil)
-            }
+            ProfileOpener.openProfileDetail(user.type, castcleId: user.castcleId, displayName: user.displayName)
         }
     }
 }
