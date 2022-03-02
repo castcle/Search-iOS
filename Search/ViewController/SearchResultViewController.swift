@@ -326,11 +326,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             self.sendSearch(keyword: keyword.text)
         case SearchResultViewControllerSection.follow.rawValue:
             let follow = self.viewModel.suggestions.follows[indexPath.row]
-            if follow.type == .page {
-                ProfileOpener.openProfileDetail(follow.type, castcleId: nil, displayName: "", page: Page().initCustom(id: follow.id, displayName: follow.displayName, castcleId: follow.castcleId, avatar: follow.avatar.thumbnail, cover: "", overview: "", official: false))
-            } else {
-                ProfileOpener.openProfileDetail(follow.type, castcleId: follow.castcleId, displayName: follow.displayName, page: nil)
-            }
+            ProfileOpener.openProfileDetail(follow.type, castcleId: follow.castcleId, displayName: follow.displayName)
         case SearchResultViewControllerSection.hastag.rawValue:
             let hashtag = self.viewModel.suggestions.hashtags[indexPath.row]
             self.sendSearch(keyword: hashtag.name)
