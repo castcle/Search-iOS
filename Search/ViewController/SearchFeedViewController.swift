@@ -236,9 +236,9 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             cell?.backgroundColor = UIColor.Asset.darkGray
             cell?.delegate = self
             if content.referencedCasts.type == .recasted {
-                cell?.configCell(feedType: .content, content: originalContent)
+                cell?.configCell(feedType: .content, content: originalContent, isDefaultContent: false)
             } else {
-                cell?.configCell(feedType: .content, content: content)
+                cell?.configCell(feedType: .content, content: content, isDefaultContent: false)
             }
             return cell ?? HeaderTableViewCell()
         case .footer:
