@@ -32,7 +32,7 @@ public protocol SearchUserViewModelDelegate {
     func didSearchUserSuccess()
 }
 
-public enum SearchUserStage {
+public enum SearchUserState {
     case searchUser
     case unknow
 }
@@ -47,7 +47,7 @@ final public class SearchUserViewModel {
     var meta: Meta = Meta()
     var searchUserLoaded: Bool = false
     var searchUserCanLoad: Bool = true
-    var stage: SearchUserStage = .unknow
+    var state: SearchUserState = .unknow
     var notification: Notification.Name? = nil
     
     private func searchUser() {
@@ -82,13 +82,13 @@ final public class SearchUserViewModel {
         }
     }
     
-    public init(noti: Notification.Name?, stage: SearchUserStage = .unknow, searchRequest: SearchRequest = SearchRequest()) {
-        self.stage = stage
+    public init(noti: Notification.Name?, state: SearchUserState = .unknow, searchRequest: SearchRequest = SearchRequest()) {
+        self.state = state
         self.searchRequest = searchRequest
         self.searchRequest.maxResults = 25
         self.notification = noti
         
-        if self.stage != .unknow {
+        if self.state != .unknow {
             self.searchUser()
         }
         self.tokenHelper.delegate = self
@@ -104,7 +104,7 @@ final public class SearchUserViewModel {
         self.searchUserCanLoad = true
         self.searchRequest.maxResults = 25
         self.searchRequest.untilId = ""
-        self.stage = .searchUser
+        self.state = .searchUser
         self.searchUser()
     }
     
@@ -117,7 +117,7 @@ final public class SearchUserViewModel {
 
 extension SearchUserViewModel: TokenHelperDelegate {
     public func didRefreshTokenFinish() {
-        if self.stage != .unknow {
+        if self.state != .unknow {
             self.searchUser()
         }
     }

@@ -34,7 +34,7 @@ public protocol SearchFeedViewModelDelegate {
     func didGetContentSuccess()
 }
 
-public enum SearchFeedStage {
+public enum SearchFeedState {
     case getFeed
     case unknow
 }
@@ -49,7 +49,7 @@ final public class SearchFeedViewModel {
     var meta: Meta = Meta()
     var searchLoaded: Bool = false
     var searchCanLoad: Bool = true
-    var stage: SearchFeedStage = .unknow
+    var state: SearchFeedState = .unknow
     var searchSection: SearchSection
     var notification: Notification.Name? = nil
 
@@ -105,13 +105,13 @@ final public class SearchFeedViewModel {
         }
     }
     
-    public init(searchSection: SearchSection, noti: Notification.Name?, stage: SearchFeedStage = .unknow, searchRequest: SearchRequest = SearchRequest()) {
-        self.stage = stage
+    public init(searchSection: SearchSection, noti: Notification.Name?, state: SearchFeedState = .unknow, searchRequest: SearchRequest = SearchRequest()) {
+        self.state = state
         self.searchRequest = searchRequest
         self.searchRequest.maxResults = 5
         self.searchSection = searchSection
         self.notification = noti
-        if self.stage != .unknow {
+        if self.state != .unknow {
             if self.searchSection == .trend {
                 self.searchTrend()
             } else if self.searchSection == .lastest {
@@ -134,7 +134,7 @@ final public class SearchFeedViewModel {
         self.searchCanLoad = true
         self.searchRequest.maxResults = 5
         self.searchRequest.untilId = ""
-        self.stage = .getFeed
+        self.state = .getFeed
         if self.searchSection == .trend {
             self.searchTrend()
         } else if self.searchSection == .lastest {
@@ -148,7 +148,7 @@ final public class SearchFeedViewModel {
     func getSearchContent() {
         self.searchRequest.maxResults = 25
         self.searchRequest.untilId = self.meta.oldestId
-        if self.stage != .unknow {
+        if self.state != .unknow {
             if self.searchSection == .trend {
                 self.searchTrend()
             } else if self.searchSection == .lastest {
@@ -163,7 +163,7 @@ final public class SearchFeedViewModel {
 
 extension SearchFeedViewModel: TokenHelperDelegate {
     public func didRefreshTokenFinish() {
-        if self.stage != .unknow {
+        if self.state != .unknow {
             if self.searchSection == .trend {
                 self.searchTrend()
             } else if self.searchSection == .lastest {
