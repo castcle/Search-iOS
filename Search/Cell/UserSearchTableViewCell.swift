@@ -143,7 +143,7 @@ class UserSearchTableViewCell: UITableViewCell {
     }
     
     @IBAction func userProfileAction(_ sender: Any) {
-        ProfileOpener.openProfileDetail(self.user.type, castcleId: self.user.castcleId, displayName: self.user.displayName)
+        ProfileOpener.openProfileDetail(self.user.castcleId, displayName: self.user.displayName)
     }
 }
 

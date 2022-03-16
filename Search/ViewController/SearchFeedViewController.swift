@@ -286,7 +286,7 @@ extension SearchFeedViewController: HeaderTableViewCellDelegate {
     }
     
     func didTabProfile(_ headerTableViewCell: HeaderTableViewCell, author: Author) {
-        ProfileOpener.openProfileDetail(author.type, castcleId: author.castcleId, displayName: author.displayName)
+        ProfileOpener.openProfileDetail(author.castcleId, displayName: author.displayName)
     }
     
     func didAuthen(_ headerTableViewCell: HeaderTableViewCell) {
