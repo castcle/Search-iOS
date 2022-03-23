@@ -103,8 +103,7 @@ class UserSearchTableViewCell: UITableViewCell {
     
     private func followUser() {
         self.state = .followUser
-        let userId: String = UserManager.shared.rawCastcleId
-        self.userRepository.follow(userId: userId, userRequest: self.userRequest) { (success, response, isRefreshToken) in
+        self.userRepository.follow(userRequest: self.userRequest) { (success, response, isRefreshToken) in
             if !success {
                 if isRefreshToken {
                     self.tokenHelper.refreshToken()
@@ -115,8 +114,7 @@ class UserSearchTableViewCell: UITableViewCell {
     
     private func unfollowUser() {
         self.state = .unfollowUser
-        let userId: String = UserManager.shared.rawCastcleId
-        self.userRepository.unfollow(userId: userId, targetCastcleId: self.userRequest.targetCastcleId) { (success, response, isRefreshToken) in
+        self.userRepository.unfollow(targetCastcleId: self.userRequest.targetCastcleId) { (success, response, isRefreshToken) in
             if !success {
                 if isRefreshToken {
                     self.tokenHelper.refreshToken()
