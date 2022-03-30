@@ -32,6 +32,7 @@ import Networking
 import Profile
 import Authen
 import Post
+import Farming
 import XLPagerTabStrip
 
 class SearchFeedViewController: UIViewController {
@@ -322,6 +323,12 @@ extension SearchFeedViewController: FooterTableViewCellDelegate {
     
     func didAuthen(_ footerTableViewCell: FooterTableViewCell) {
         Utility.currentViewController().presentPanModal(AuthenOpener.open(.signUpMethod) as! SignUpMethodViewController)
+    }
+    
+    func didViewFarmmingHistory(_ footerTableViewCell: FooterTableViewCell) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
+            Utility.currentViewController().navigationController?.pushViewController(FarmingOpener.open(.contentFarming), animated: true)
+        }
     }
 }
 
