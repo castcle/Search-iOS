@@ -46,10 +46,10 @@ class UserSearchTableViewCell: UITableViewCell {
     private var userRepository: UserRepository = UserRepositoryImpl()
     private var user: UserInfo = UserInfo()
     let tokenHelper: TokenHelper = TokenHelper()
-    private var stage: Stage = .none
+    private var state: State = .none
     private var userRequest: UserRequest = UserRequest()
     
-    enum Stage {
+    enum State {
         case followUser
         case unfollowUser
         case none
@@ -102,9 +102,8 @@ class UserSearchTableViewCell: UITableViewCell {
     }
     
     private func followUser() {
-        self.stage = .followUser
-        let userId: String = UserManager.shared.rawCastcleId
-        self.userRepository.follow(userId: userId, userRequest: self.userRequest) { (success, response, isRefreshToken) in
+        self.state = .followUser
+        self.userRepository.follow(userRequest: self.userRequest) { (success, response, isRefreshToken) in
             if !success {
                 if isRefreshToken {
                     self.tokenHelper.refreshToken()
@@ -114,9 +113,8 @@ class UserSearchTableViewCell: UITableViewCell {
     }
     
     private func unfollowUser() {
-        self.stage = .unfollowUser
-        let userId: String = UserManager.shared.rawCastcleId
-        self.userRepository.unfollow(userId: userId, targetCastcleId: self.userRequest.targetCastcleId) { (success, response, isRefreshToken) in
+        self.state = .unfollowUser
+        self.userRepository.unfollow(targetCastcleId: self.userRequest.targetCastcleId) { (success, response, isRefreshToken) in
             if !success {
                 if isRefreshToken {
                     self.tokenHelper.refreshToken()
@@ -143,15 +141,15 @@ class UserSearchTableViewCell: UITableViewCell {
     }
     
     @IBAction func userProfileAction(_ sender: Any) {
-        ProfileOpener.openProfileDetail(self.user.type, castcleId: self.user.castcleId, displayName: self.user.displayName)
+        ProfileOpener.openProfileDetail(self.user.castcleId, displayName: self.user.displayName)
     }
 }
 
 extension UserSearchTableViewCell: TokenHelperDelegate {
     public func didRefreshTokenFinish() {
-        if self.stage == .followUser {
+        if self.state == .followUser {
             self.followUser()
-        } else if self.stage == .unfollowUser {
+        } else if self.state == .unfollowUser {
             self.unfollowUser()
         }
     }

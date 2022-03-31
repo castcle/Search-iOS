@@ -151,7 +151,7 @@ extension SearchUserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if self.viewModel.searchUserLoaded {
             let user = self.viewModel.users[indexPath.section]
-            ProfileOpener.openProfileDetail(user.type, castcleId: user.castcleId, displayName: user.displayName)
+            ProfileOpener.openProfileDetail(user.castcleId, displayName: user.displayName)
         }
     }
 }

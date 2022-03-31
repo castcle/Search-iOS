@@ -58,17 +58,17 @@ final public class SearchResualViewModel {
     var searchRequest: SearchRequest = SearchRequest()
     var suggestions: Suggestion = Suggestion()
     let tokenHelper: TokenHelper = TokenHelper()
-    var searchFeedStage: SearchFeedStage = .unknow
+    var searchFeedState: SearchFeedState = .unknow
     var notification: Notification.Name = .getSearchFeedNotification()
     
     //MARK: Output
     var didGetSuggestionFinish: (() -> ())?
     
-    public init(state: SearchResualState = .unknow, textSearch: String = "", searchFeedStage: SearchFeedStage = .unknow) {
+    public init(state: SearchResualState = .unknow, textSearch: String = "", searchFeedState: SearchFeedState = .unknow) {
         self.searchResualState = state
         self.searchText = textSearch
         self.searchRequest.keyword = textSearch
-        self.searchFeedStage = searchFeedStage
+        self.searchFeedState = searchFeedState
         self.recentSearch = self.realm.objects(RecentSearch.self)
         self.tokenHelper.delegate = self
     }
