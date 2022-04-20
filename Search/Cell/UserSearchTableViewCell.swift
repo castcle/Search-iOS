@@ -49,12 +49,6 @@ class UserSearchTableViewCell: UITableViewCell {
     private var state: State = .none
     private var userRequest: UserRequest = UserRequest()
     
-    enum State {
-        case followUser
-        case unfollowUser
-        case none
-    }
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         self.tokenHelper.delegate = self
