@@ -44,14 +44,6 @@ class SearchFeedViewController: UIViewController {
     
     var viewModel = SearchFeedViewModel(searchSection: .none, noti: nil)
     
-    enum FeedCellType {
-        case activity
-        case header
-        case content
-        case quote
-        case footer
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.Asset.darkGraphiteBlue
