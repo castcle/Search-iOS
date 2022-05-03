@@ -16,6 +16,7 @@
 		B710692F271887FD00D53527 /* RecentHeaderSearchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B710692D271887FD00D53527 /* RecentHeaderSearchTableViewCell.xib */; };
 		B71069342718988C00D53527 /* SuggestionUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71069322718988C00D53527 /* SuggestionUserTableViewCell.swift */; };
 		B71069352718988C00D53527 /* SuggestionUserTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B71069332718988C00D53527 /* SuggestionUserTableViewCell.xib */; };
+		B71B204727F474D50030721A /* Farming.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B71B204627F474D50030721A /* Farming.framework */; };
 		B75E62B426972E7A003E1ADA /* Component.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B75E62B326972E7A003E1ADA /* Component.framework */; };
 		B792814A268F2C13000ED84A /* Search.h in Headers */ = {isa = PBXBuildFile; fileRef = B7928148268F2C13000ED84A /* Search.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B79281AF26945594000ED84A /* Search.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B79281AE26945594000ED84A /* Search.storyboard */; };
@@ -61,6 +62,7 @@
 		B710692D271887FD00D53527 /* RecentHeaderSearchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecentHeaderSearchTableViewCell.xib; sourceTree = "<group>"; };
 		B71069322718988C00D53527 /* SuggestionUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionUserTableViewCell.swift; sourceTree = "<group>"; };
 		B71069332718988C00D53527 /* SuggestionUserTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SuggestionUserTableViewCell.xib; sourceTree = "<group>"; };
+		B71B204627F474D50030721A /* Farming.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Farming.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B75E62B326972E7A003E1ADA /* Component.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Component.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7928145268F2C13000ED84A /* Search.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Search.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7928148268F2C13000ED84A /* Search.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Search.h; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B71B204727F474D50030721A /* Farming.framework in Frameworks */,
 				B75E62B426972E7A003E1ADA /* Component.framework in Frameworks */,
 				090AF01B1CAB6CB16E7D018B /* Pods_Search.framework in Frameworks */,
 				B7A71D692701E0270092F318 /* Profile.framework in Frameworks */,
@@ -133,6 +136,7 @@
 		ACC3D8772D4B5269CD4B1DAD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B71B204627F474D50030721A /* Farming.framework */,
 				B7A71D6F2701E0600092F318 /* Authen.framework */,
 				B7A71D6C2701E0590092F318 /* Networking.framework */,
 				B7A71D682701E0270092F318 /* Profile.framework */,
