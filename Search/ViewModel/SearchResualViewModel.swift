@@ -39,14 +39,6 @@ public enum SearchResualState {
     case unknow
 }
 
-public enum SearchSection {
-    case trend
-    case lastest
-    case photo
-    case people
-    case none
-}
-
 final public class SearchResualViewModel {
     
     var searchText: String = ""
