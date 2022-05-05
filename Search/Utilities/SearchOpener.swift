@@ -36,7 +36,6 @@ public enum SearchScene {
 }
 
 public struct SearchOpener {
-    
     public static func open(_ searchScene: SearchScene) -> UIViewController {
         switch searchScene {
         case .search:

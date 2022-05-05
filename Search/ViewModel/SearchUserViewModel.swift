@@ -25,6 +25,7 @@
 //  Created by Castcle Co., Ltd. on 24/1/2565 BE.
 //
 
+import Core
 import Networking
 import SwiftyJSON
 
@@ -59,8 +60,8 @@ final public class SearchUserViewModel {
                 do {
                     let rawJson = try response.mapJSON()
                     let json = JSON(rawJson)
-                    let payload = json[ContentShelfKey.payload.rawValue].arrayValue
-                    let meta: Meta = Meta(json: JSON(json[ContentShelfKey.meta.rawValue].dictionaryValue))
+                    let payload = json[JsonKey.payload.rawValue].arrayValue
+                    let meta: Meta = Meta(json: JSON(json[JsonKey.meta.rawValue].dictionaryValue))
 
                     if meta.resultCount < self.searchRequest.maxResults {
                         self.searchUserCanLoad = false
