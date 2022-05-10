@@ -283,7 +283,7 @@ extension SearchFeedViewController: HeaderTableViewCellDelegate {
     }
     
     func didAuthen(_ headerTableViewCell: HeaderTableViewCell) {
-        Utility.currentViewController().presentPanModal(AuthenOpener.open(.signUpMethod) as! SignUpMethodViewController)
+        NotificationCenter.default.post(name: .openSignInDelegate, object: nil, userInfo: nil)
     }
     
     func didReportSuccess(_ headerTableViewCell: HeaderTableViewCell) {
@@ -314,7 +314,7 @@ extension SearchFeedViewController: FooterTableViewCellDelegate {
     }
     
     func didAuthen(_ footerTableViewCell: FooterTableViewCell) {
-        Utility.currentViewController().presentPanModal(AuthenOpener.open(.signUpMethod) as! SignUpMethodViewController)
+        NotificationCenter.default.post(name: .openSignInDelegate, object: nil, userInfo: nil)
     }
     
     func didViewFarmmingHistory(_ footerTableViewCell: FooterTableViewCell) {

@@ -129,7 +129,7 @@ class UserSearchTableViewCell: UITableViewCell {
             self.updateUserFollow()
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
-                Utility.currentViewController().presentPanModal(AuthenOpener.open(.signUpMethod) as! SignUpMethodViewController)
+                NotificationCenter.default.post(name: .openSignInDelegate, object: nil, userInfo: nil)
             }
         }
     }
