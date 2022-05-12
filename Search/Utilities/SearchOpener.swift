@@ -40,23 +40,23 @@ public struct SearchOpener {
         switch searchScene {
         case .search:
             let storyboard: UIStoryboard = UIStoryboard(name: SearchNibVars.Storyboard.search, bundle: ConfigBundle.search)
-            let vc = storyboard.instantiateViewController(withIdentifier: SearchNibVars.ViewController.search)
-            return vc
+            let viewController = storyboard.instantiateViewController(withIdentifier: SearchNibVars.ViewController.search)
+            return viewController
         case .searchResult(let viewModel):
             let storyboard: UIStoryboard = UIStoryboard(name: SearchNibVars.Storyboard.search, bundle: ConfigBundle.search)
-            let vc = storyboard.instantiateViewController(withIdentifier: SearchNibVars.ViewController.searchResult) as? SearchResultViewController
-            vc?.viewModel = viewModel
-            return vc ?? SearchResultViewController()
+            let viewController = storyboard.instantiateViewController(withIdentifier: SearchNibVars.ViewController.searchResult) as? SearchResultViewController
+            viewController?.viewModel = viewModel
+            return viewController ?? SearchResultViewController()
         case .searchFeed(let viewModel):
             let storyboard: UIStoryboard = UIStoryboard(name: SearchNibVars.Storyboard.search, bundle: ConfigBundle.search)
-            let vc = storyboard.instantiateViewController(withIdentifier: SearchNibVars.ViewController.searchFeed) as? SearchFeedViewController
-            vc?.viewModel = viewModel
-            return vc ?? SearchFeedViewController()
+            let viewController = storyboard.instantiateViewController(withIdentifier: SearchNibVars.ViewController.searchFeed) as? SearchFeedViewController
+            viewController?.viewModel = viewModel
+            return viewController ?? SearchFeedViewController()
         case .searchUser(let viewModel):
             let storyboard: UIStoryboard = UIStoryboard(name: SearchNibVars.Storyboard.search, bundle: ConfigBundle.search)
-            let vc = storyboard.instantiateViewController(withIdentifier: SearchNibVars.ViewController.searchUser) as? SearchUserViewController
-            vc?.viewModel = viewModel
-            return vc ?? SearchUserViewController()
+            let viewController = storyboard.instantiateViewController(withIdentifier: SearchNibVars.ViewController.searchUser) as? SearchUserViewController
+            viewController?.viewModel = viewModel
+            return viewController ?? SearchUserViewController()
         }
     }
 }

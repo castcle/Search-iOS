@@ -30,7 +30,7 @@ import Foundation
 import Networking
 import SwiftyJSON
 
-public protocol SearchFeedViewModelDelegate {
+public protocol SearchFeedViewModelDelegate: AnyObject {
     func didGetContentSuccess()
 }
 
@@ -40,7 +40,7 @@ public enum SearchFeedState {
 }
 
 final public class SearchFeedViewModel {
-   
+
     public var delegate: SearchFeedViewModelDelegate?
     private var searchRepository: SearchRepository = SearchRepositoryImpl()
     var searchRequest: SearchRequest = SearchRequest()
@@ -51,7 +51,7 @@ final public class SearchFeedViewModel {
     var searchCanLoad: Bool = true
     var state: SearchFeedState = .unknow
     var searchSection: SearchSection
-    var notification: Notification.Name? = nil
+    var notification: Notification.Name?
 
     func searchTrend() {
         if self.searchRequest.keyword.isEmpty {
@@ -78,7 +78,7 @@ final public class SearchFeedViewModel {
             }
         }
     }
-    
+
     func searchRecent() {
         if self.searchRequest.keyword.isEmpty {
             return
@@ -104,7 +104,7 @@ final public class SearchFeedViewModel {
             }
         }
     }
-    
+
     public init(searchSection: SearchSection, noti: Notification.Name?, state: SearchFeedState = .unknow, searchRequest: SearchRequest = SearchRequest()) {
         self.state = state
         self.searchRequest = searchRequest
@@ -123,12 +123,12 @@ final public class SearchFeedViewModel {
         }
         self.tokenHelper.delegate = self
     }
-    
+
     func reloadData(with keywoard: String = "") {
         if !keywoard.isEmpty {
             self.searchRequest.keyword = keywoard
         }
-        
+
         self.searchContents = []
         self.searchLoaded = false
         self.searchCanLoad = true
@@ -144,7 +144,7 @@ final public class SearchFeedViewModel {
             self.searchTrend()
         }
     }
-    
+
     func getSearchContent() {
         self.searchRequest.maxResults = 25
         self.searchRequest.untilId = self.meta.oldestId

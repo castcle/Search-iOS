@@ -42,13 +42,13 @@ class UserSearchTableViewCell: UITableViewCell {
     @IBOutlet weak var userFollowButton: UIButton!
     @IBOutlet weak var userVerifyImage: UIImageView!
     @IBOutlet weak var lineView: UIView!
-    
+
     private var userRepository: UserRepository = UserRepositoryImpl()
     private var user: UserInfo = UserInfo()
     let tokenHelper: TokenHelper = TokenHelper()
     private var state: State = .none
     private var userRequest: UserRequest = UserRequest()
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         self.tokenHelper.delegate = self
@@ -67,7 +67,7 @@ class UserSearchTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-    
+
     public func configCell(user: UserInfo) {
         self.user = user
         let userAvatar = URL(string: self.user.images.avatar.thumbnail)
@@ -82,7 +82,7 @@ class UserSearchTableViewCell: UITableViewCell {
         }
         self.updateUserFollow()
     }
-    
+
     private func updateUserFollow() {
         if self.user.followed {
             self.userFollowButton.setTitle("Following", for: .normal)
@@ -94,10 +94,10 @@ class UserSearchTableViewCell: UITableViewCell {
             self.userFollowButton.capsule(color: .clear, borderWidth: 1.0, borderColor: UIColor.Asset.lightBlue)
         }
     }
-    
+
     private func followUser() {
         self.state = .followUser
-        self.userRepository.follow(userRequest: self.userRequest) { (success, response, isRefreshToken) in
+        self.userRepository.follow(userRequest: self.userRequest) { (success, _, isRefreshToken) in
             if !success {
                 if isRefreshToken {
                     self.tokenHelper.refreshToken()
@@ -105,10 +105,10 @@ class UserSearchTableViewCell: UITableViewCell {
             }
         }
     }
-    
+
     private func unfollowUser() {
         self.state = .unfollowUser
-        self.userRepository.unfollow(targetCastcleId: self.userRequest.targetCastcleId) { (success, response, isRefreshToken) in
+        self.userRepository.unfollow(targetCastcleId: self.userRequest.targetCastcleId) { (success, _, isRefreshToken) in
             if !success {
                 if isRefreshToken {
                     self.tokenHelper.refreshToken()
@@ -116,7 +116,7 @@ class UserSearchTableViewCell: UITableViewCell {
             }
         }
     }
-    
+
     @IBAction func userFollowAction(_ sender: Any) {
         if UserManager.shared.isLogin {
             self.userRequest.targetCastcleId = user.castcleId
@@ -128,12 +128,12 @@ class UserSearchTableViewCell: UITableViewCell {
             user.followed.toggle()
             self.updateUserFollow()
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 NotificationCenter.default.post(name: .openSignInDelegate, object: nil, userInfo: nil)
             }
         }
     }
-    
+
     @IBAction func userProfileAction(_ sender: Any) {
         ProfileOpener.openProfileDetail(self.user.castcleId, displayName: self.user.displayName)
     }

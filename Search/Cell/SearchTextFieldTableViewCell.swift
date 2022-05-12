@@ -33,7 +33,7 @@ class SearchTextFieldTableViewCell: UITableViewCell {
     @IBOutlet var searchView: UIView!
     @IBOutlet var searchImage: UIImageView!
     @IBOutlet var searchTextField: UITextField!
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         self.searchView.custom(color: UIColor.Asset.darkGray, cornerRadius: 18, borderWidth: 1, borderColor: UIColor.Asset.darkGraphiteBlue)
@@ -45,13 +45,13 @@ class SearchTextFieldTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-    
+
     func configCell() {
-        self.searchTextField.placeholder = Localization.searchTopTrends.placeholder.text
+        self.searchTextField.placeholder = Localization.SearchTopTrends.placeholder.text
     }
-    
+
     @IBAction func searchAction(_ sender: Any) {
-        let vc = SearchOpener.open(.searchResult(SearchResualViewModel(state: .initial)))
-        Utility.currentViewController().navigationController?.pushViewController(vc, animated: false)
+        let viewController = SearchOpener.open(.searchResult(SearchResualViewModel(state: .initial)))
+        Utility.currentViewController().navigationController?.pushViewController(viewController, animated: false)
     }
 }

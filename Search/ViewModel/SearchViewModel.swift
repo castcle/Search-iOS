@@ -30,23 +30,21 @@ import Networking
 import SwiftyJSON
 
 final class SearchViewModel {
-   
+
     private var searchRepository: SearchRepository = SearchRepositoryImpl()
     var searchRequest: SearchRequest = SearchRequest()
     let tokenHelper: TokenHelper = TokenHelper()
     var topTrend: TopTrend = TopTrend()
-    
+
     public func getTopTrends() {
-        self.searchRepository.getTopTrends(searchRequest: self.searchRequest)  { (success, response, isRefreshToken) in
+        self.searchRepository.getTopTrends(searchRequest: self.searchRequest) { (success, response, isRefreshToken) in
             if success {
                 do {
                     let rawJson = try response.mapJSON()
                     let json = JSON(rawJson)
                     self.topTrend = TopTrend(json: json)
                     self.didLoadTopTrendFinish?()
-                } catch {
-                    
-                }
+                } catch {}
             } else {
                 if isRefreshToken {
                     self.tokenHelper.refreshToken()
@@ -54,10 +52,10 @@ final class SearchViewModel {
             }
         }
     }
-    
-    //MARK: Output
-    var didLoadTopTrendFinish: (() -> ())?
-    
+
+    // MARK: - Output
+    var didLoadTopTrendFinish: (() -> Void)?
+
     public init() {
         self.tokenHelper.delegate = self
     }

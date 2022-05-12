@@ -32,18 +32,18 @@ class SearchHeaderTableViewCell: UITableViewCell {
 
     @IBOutlet var iconImage: UIImageView!
     @IBOutlet var titleLabel: UILabel!
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         self.iconImage.image = UIImage.init(icon: .castcle(.toptrend), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.white)
-        self.titleLabel.font = UIFont.asset(.bold, fontSize: .h4)
+        self.titleLabel.font = UIFont.asset(.bold, fontSize: .head4)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-    
+
     func configCell() {
-        self.titleLabel.text = Localization.searchTopTrends.topTen.text
+        self.titleLabel.text = Localization.SearchTopTrends.topTen.text
     }
 }

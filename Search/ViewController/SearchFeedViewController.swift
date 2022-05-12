@@ -36,36 +36,35 @@ import Farming
 import XLPagerTabStrip
 
 class SearchFeedViewController: UIViewController {
-    
+
     @IBOutlet var tableView: UITableView!
-    
+
     var pageIndex: Int = 0
     var pageTitle: String?
-    
+
     var viewModel = SearchFeedViewModel(searchSection: .none, noti: nil)
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.Asset.darkGraphiteBlue
         self.configureTableView()
-        
         self.viewModel.delegate = self
-        self.tableView.cr.addHeadRefresh(animator: FastAnimator()) {
-            self.tableView.cr.resetNoMore()
+        self.tableView.coreRefresh.addHeadRefresh(animator: FastAnimator()) {
+            self.tableView.coreRefresh.resetNoMore()
             self.tableView.isScrollEnabled = false
             self.viewModel.searchLoaded = false
             self.tableView.reloadData()
             self.viewModel.reloadData()
         }
-        
-        self.tableView.cr.addFootRefresh(animator: NormalFooterAnimator()) {
+
+        self.tableView.coreRefresh.addFootRefresh(animator: NormalFooterAnimator()) {
             if self.viewModel.searchCanLoad {
                 self.viewModel.getSearchContent()
             } else {
-                self.tableView.cr.noticeNoMoreData()
+                self.tableView.coreRefresh.noticeNoMoreData()
             }
         }
-        
+
         if !self.viewModel.searchLoaded {
             self.tableView.isScrollEnabled = false
             if let searchUdid: String = self.viewModel.notification?.rawValue, let keyword: String = UserDefaults.standard.string(forKey: searchUdid) {
@@ -74,10 +73,9 @@ class SearchFeedViewController: UIViewController {
         } else {
             self.tableView.isScrollEnabled = true
         }
-        
         NotificationCenter.default.addObserver(self, selector: #selector(self.getSearchFeed(notification:)), name: self.viewModel.notification, object: nil)
     }
-    
+
     func configureTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -86,7 +84,7 @@ class SearchFeedViewController: UIViewController {
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight = 100
     }
-    
+
     @objc func getSearchFeed(notification: NSNotification) {
         if let dict = notification.userInfo as NSDictionary? {
             if let searchText = dict["searchText"] as? String {
@@ -111,7 +109,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             return 5
         }
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.viewModel.searchLoaded {
             if self.viewModel.searchContents.isEmpty {
@@ -128,7 +126,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             return 1
         }
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if self.viewModel.searchLoaded {
             if self.viewModel.searchContents.isEmpty {
@@ -175,17 +173,17 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             return cell ?? SkeletonFeedTableViewCell()
         }
     }
-    
+
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 5
     }
-    
+
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 5))
         footerView.backgroundColor = UIColor.clear
         return footerView
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if self.viewModel.searchLoaded {
             var originalContent = Content()
@@ -195,7 +193,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
                     originalContent = tempContent
                 }
             }
-            
+
             if content.referencedCasts.type == .recasted {
                 if originalContent.type == .long && indexPath.row == 2 {
                     self.viewModel.searchContents[indexPath.section].isOriginalExpand.toggle()
@@ -209,7 +207,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
     }
-    
+
     func renderFeedCell(content: Content, cellType: FeedCellType, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         var originalContent = Content()
         if content.referencedCasts.type == .recasted || content.referencedCasts.type == .quoted {
@@ -217,7 +215,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
                 originalContent = tempContent
             }
         }
-        
+
         switch cellType {
         case .activity:
             let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.activityHeader, for: indexPath as IndexPath) as? ActivityHeaderTableViewCell
@@ -266,8 +264,8 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension SearchFeedViewController: SearchFeedViewModelDelegate {
     func didGetContentSuccess() {
-        self.tableView.cr.endHeaderRefresh()
-        self.tableView.cr.endLoadingMore()
+        self.tableView.coreRefresh.endHeaderRefresh()
+        self.tableView.coreRefresh.endLoadingMore()
         self.tableView.isScrollEnabled = true
         self.tableView.reloadData()
     }
@@ -277,20 +275,20 @@ extension SearchFeedViewController: HeaderTableViewCellDelegate {
     func didRemoveSuccess(_ headerTableViewCell: HeaderTableViewCell) {
         // Remove success
     }
-    
+
     func didTabProfile(_ headerTableViewCell: HeaderTableViewCell, author: Author) {
         ProfileOpener.openProfileDetail(author.castcleId, displayName: author.displayName)
     }
-    
+
     func didAuthen(_ headerTableViewCell: HeaderTableViewCell) {
         NotificationCenter.default.post(name: .openSignInDelegate, object: nil, userInfo: nil)
     }
-    
+
     func didReportSuccess(_ headerTableViewCell: HeaderTableViewCell) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             Utility.currentViewController().navigationController?.pushViewController(ComponentOpener.open(.reportSuccess(true, "")), animated: true)
         }
-        
+
         if let indexPath = self.tableView.indexPath(for: headerTableViewCell) {
             UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
                 self.viewModel.searchContents.remove(at: indexPath.section)
@@ -304,21 +302,21 @@ extension SearchFeedViewController: FooterTableViewCellDelegate {
     func didTabComment(_ footerTableViewCell: FooterTableViewCell, content: Content) {
         Utility.currentViewController().navigationController?.pushViewController(ComponentOpener.open(.comment(CommentViewModel(contentId: content.id))), animated: true)
     }
-    
+
     func didTabQuoteCast(_ footerTableViewCell: FooterTableViewCell, content: Content, page: Page) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
-            let vc = PostOpener.open(.post(PostViewModel(postType: .quoteCast, content: content, page: page)))
-            vc.modalPresentationStyle = .fullScreen
-            Utility.currentViewController().present(vc, animated: true, completion: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            let viewController = PostOpener.open(.post(PostViewModel(postType: .quoteCast, content: content, page: page)))
+            viewController.modalPresentationStyle = .fullScreen
+            Utility.currentViewController().present(viewController, animated: true, completion: nil)
         }
     }
-    
+
     func didAuthen(_ footerTableViewCell: FooterTableViewCell) {
         NotificationCenter.default.post(name: .openSignInDelegate, object: nil, userInfo: nil)
     }
-    
+
     func didViewFarmmingHistory(_ footerTableViewCell: FooterTableViewCell) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             Utility.currentViewController().navigationController?.pushViewController(FarmingOpener.open(.contentFarming), animated: true)
         }
     }
