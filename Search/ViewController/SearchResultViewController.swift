@@ -198,17 +198,17 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
 
     // MARK: - PagerTabStripDataSource
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
-        let vc1 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .trend, noti: self.viewModel.notification, state: self.viewModel.searchFeedState, searchRequest: self.viewModel.searchRequest))) as? SearchFeedViewController
+        let vc1 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .trend, noti: self.viewModel.notification, state: self.viewModel.state, searchRequest: self.viewModel.searchRequest))) as? SearchFeedViewController
         vc1?.pageIndex = 0
         vc1?.pageTitle = Localization.SearchResult.trend.text
         let trend = vc1 ?? SearchFeedViewController()
 
-        let vc2 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .lastest, noti: self.viewModel.notification, state: self.viewModel.searchFeedState, searchRequest: self.viewModel.searchRequest))) as? SearchFeedViewController
+        let vc2 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .lastest, noti: self.viewModel.notification, state: self.viewModel.state, searchRequest: self.viewModel.searchRequest))) as? SearchFeedViewController
         vc2?.pageIndex = 1
         vc2?.pageTitle = Localization.SearchResult.lastest.text
         let lastest = vc2 ?? SearchFeedViewController()
 
-        let vc3 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .photo, noti: self.viewModel.notification, state: self.viewModel.searchFeedState, searchRequest: self.viewModel.searchRequest))) as? SearchFeedViewController
+        let vc3 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .photo, noti: self.viewModel.notification, state: self.viewModel.state, searchRequest: self.viewModel.searchRequest))) as? SearchFeedViewController
         vc3?.pageIndex = 2
         vc3?.pageTitle = Localization.SearchResult.photo.text
         let photo = vc3 ?? SearchFeedViewController()
