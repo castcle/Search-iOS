@@ -31,7 +31,6 @@ import Component
 import Networking
 import Profile
 import Authen
-import Post
 import Farming
 import XLPagerTabStrip
 
