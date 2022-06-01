@@ -33,7 +33,7 @@ class RecentSearchTableViewCell: UITableViewCell {
     @IBOutlet var displayLabel: UILabel!
     @IBOutlet var actionButton: UIButton!
     @IBOutlet var lineView: UIView!
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         self.displayLabel.font = UIFont.asset(.regular, fontSize: .overline)
@@ -45,11 +45,11 @@ class RecentSearchTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-    
+
     func configCell(display: String) {
         self.displayLabel.text = display
     }
-    
+
     @IBAction func cellAction(_ sender: Any) {
     }
 }

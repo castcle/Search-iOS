@@ -34,33 +34,31 @@ import XLPagerTabStrip
 class SearchUserViewController: UIViewController {
 
     @IBOutlet var tableView: UITableView!
-    
+
     var pageIndex: Int = 0
     var pageTitle: String?
-    
+
     var viewModel = SearchUserViewModel(noti: nil)
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.Asset.darkGraphiteBlue
         self.configureTableView()
         self.viewModel.delegate = self
-        self.tableView.cr.addHeadRefresh(animator: FastAnimator()) {
-            self.tableView.cr.resetNoMore()
+        self.tableView.coreRefresh.addHeadRefresh(animator: FastAnimator()) {
+            self.tableView.coreRefresh.resetNoMore()
             self.tableView.isScrollEnabled = false
             self.viewModel.searchUserLoaded = false
             self.tableView.reloadData()
             self.viewModel.reloadData()
         }
-        
-        self.tableView.cr.addFootRefresh(animator: NormalFooterAnimator()) {
+        self.tableView.coreRefresh.addFootRefresh(animator: NormalFooterAnimator()) {
             if self.viewModel.searchUserCanLoad {
                 self.viewModel.searchUserMore()
             } else {
-                self.tableView.cr.noticeNoMoreData()
+                self.tableView.coreRefresh.noticeNoMoreData()
             }
         }
-        
         if !self.viewModel.searchUserLoaded {
             self.tableView.isScrollEnabled = false
             if let searchUdid: String = self.viewModel.notification?.rawValue, let keyword: String = UserDefaults.standard.string(forKey: searchUdid) {
@@ -70,14 +68,12 @@ class SearchUserViewController: UIViewController {
                     self.viewModel.reloadData(with: "")
                 }
             }
-            
         } else {
             self.tableView.isScrollEnabled = true
         }
-        
         NotificationCenter.default.addObserver(self, selector: #selector(self.getSearchUser(notification:)), name: self.viewModel.notification, object: nil)
     }
-    
+
     func configureTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -87,7 +83,7 @@ class SearchUserViewController: UIViewController {
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight = 100
     }
-    
+
     @objc func getSearchUser(notification: NSNotification) {
         if let dict = notification.userInfo as NSDictionary? {
             if let searchText = dict["searchText"] as? String {
@@ -112,11 +108,11 @@ extension SearchUserViewController: UITableViewDelegate, UITableViewDataSource {
             return 5
         }
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if self.viewModel.searchUserLoaded {
             if self.viewModel.users.isEmpty {
@@ -137,17 +133,17 @@ extension SearchUserViewController: UITableViewDelegate, UITableViewDataSource {
             return cell ?? SkeletonUserTableViewCell()
         }
     }
-    
+
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 5
     }
-    
+
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 5))
         footerView.backgroundColor = UIColor.clear
         return footerView
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if self.viewModel.searchUserLoaded {
             let user = self.viewModel.users[indexPath.section]
@@ -158,8 +154,8 @@ extension SearchUserViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension SearchUserViewController: SearchUserViewModelDelegate {
     func didSearchUserSuccess() {
-        self.tableView.cr.endHeaderRefresh()
-        self.tableView.cr.endLoadingMore()
+        self.tableView.coreRefresh.endHeaderRefresh()
+        self.tableView.coreRefresh.endLoadingMore()
         self.tableView.isScrollEnabled = true
         self.tableView.reloadData()
     }

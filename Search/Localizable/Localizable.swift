@@ -28,15 +28,15 @@
 import Core
 
 extension Localization {
-    
+
     // MARK: - Search (Top Trends)
-    public enum searchTopTrends {
+    public enum SearchTopTrends {
         case title
         case placeholder
         case topTen
         case trending
         case cast
-        
+
         public var text: String {
             switch self {
             case .title:
@@ -54,10 +54,10 @@ extension Localization {
     }
 
     // MARK: - Search (Suggestion)
-    public enum searchSuggestion {
+    public enum SearchSuggestion {
         case title
         case lastest
-        
+
         public var text: String {
             switch self {
             case .title:
@@ -69,12 +69,12 @@ extension Localization {
     }
 
     // MARK: - Search (Result)
-    public enum searchResult {
+    public enum SearchResult {
         case trend
         case lastest
         case photo
         case people
-        
+
         public var text: String {
             switch self {
             case .trend:
@@ -90,10 +90,10 @@ extension Localization {
     }
 
     // MARK: - Search (Not found)
-    public enum searchNotFound {
+    public enum SearchNotFound {
         case headline
         case description
-        
+
         public var text: String {
             switch self {
             case .headline:

@@ -31,60 +31,44 @@ import Networking
 import RealmSwift
 import SwiftyJSON
 
-public enum SearchResualState {
-    case initial
-    case suggest
-    case hastag
-    case resualt
-    case unknow
-}
-
-public enum SearchSection {
-    case trend
-    case lastest
-    case photo
-    case people
-    case none
-}
-
 final public class SearchResualViewModel {
-    
+
     var searchText: String = ""
     var isShowRecent: Bool = false
-    private let realm = try! Realm()
     var recentSearch: Results<RecentSearch>!
     var searchResualState: SearchResualState = .unknow
     private var searchRepository: SearchRepository = SearchRepositoryImpl()
     var searchRequest: SearchRequest = SearchRequest()
     var suggestions: Suggestion = Suggestion()
     let tokenHelper: TokenHelper = TokenHelper()
-    var searchFeedState: SearchFeedState = .unknow
+    var state: State = .none
     var notification: Notification.Name = .getSearchFeedNotification()
-    
-    //MARK: Output
-    var didGetSuggestionFinish: (() -> ())?
-    
-    public init(state: SearchResualState = .unknow, textSearch: String = "", searchFeedState: SearchFeedState = .unknow) {
+
+    // MARK: - Output
+    var didGetSuggestionFinish: (() -> Void)?
+
+    public init(state: SearchResualState = .unknow, textSearch: String = "", feedState: State = .none) {
         self.searchResualState = state
         self.searchText = textSearch
         self.searchRequest.keyword = textSearch
-        self.searchFeedState = searchFeedState
-        self.recentSearch = self.realm.objects(RecentSearch.self)
+        self.state = feedState
+        do {
+            let realm = try Realm()
+            self.recentSearch = realm.objects(RecentSearch.self)
+        } catch {}
         self.tokenHelper.delegate = self
     }
-    
+
     func getSuggestion() {
         self.searchRequest.keyword = self.searchText
-        self.searchRepository.getSuggestion(searchRequest: self.searchRequest)  { (success, response, isRefreshToken) in
+        self.searchRepository.getSuggestion(searchRequest: self.searchRequest) { (success, response, isRefreshToken) in
             if success {
                 do {
                     let rawJson = try response.mapJSON()
                     let json = JSON(rawJson)
                     self.suggestions = Suggestion(json: json)
                     self.didGetSuggestionFinish?()
-                } catch {
-                    
-                }
+                } catch {}
             } else {
                 if isRefreshToken {
                     self.tokenHelper.refreshToken()
@@ -92,13 +76,16 @@ final public class SearchResualViewModel {
             }
         }
     }
-    
+
     func addRecentSearch(value: String) {
-        try! self.realm.write {
-            let valueSearch = RecentSearch()
-            valueSearch.value = value
-            self.realm.add(valueSearch, update: .modified)
-        }
+        do {
+            let realm = try Realm()
+            try realm.write {
+                let valueSearch = RecentSearch()
+                valueSearch.value = value
+                realm.add(valueSearch, update: .modified)
+            }
+        } catch {}
     }
 }
 

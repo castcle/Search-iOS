@@ -30,17 +30,12 @@ import Foundation
 import Networking
 import SwiftyJSON
 
-public protocol SearchFeedViewModelDelegate {
+public protocol SearchFeedViewModelDelegate: AnyObject {
     func didGetContentSuccess()
 }
 
-public enum SearchFeedState {
-    case getFeed
-    case unknow
-}
-
 final public class SearchFeedViewModel {
-   
+
     public var delegate: SearchFeedViewModelDelegate?
     private var searchRepository: SearchRepository = SearchRepositoryImpl()
     var searchRequest: SearchRequest = SearchRequest()
@@ -49,9 +44,9 @@ final public class SearchFeedViewModel {
     var meta: Meta = Meta()
     var searchLoaded: Bool = false
     var searchCanLoad: Bool = true
-    var state: SearchFeedState = .unknow
+    var state: State = .none
     var searchSection: SearchSection
-    var notification: Notification.Name? = nil
+    var notification: Notification.Name?
 
     func searchTrend() {
         if self.searchRequest.keyword.isEmpty {
@@ -78,7 +73,7 @@ final public class SearchFeedViewModel {
             }
         }
     }
-    
+
     func searchRecent() {
         if self.searchRequest.keyword.isEmpty {
             return
@@ -104,14 +99,14 @@ final public class SearchFeedViewModel {
             }
         }
     }
-    
-    public init(searchSection: SearchSection, noti: Notification.Name?, state: SearchFeedState = .unknow, searchRequest: SearchRequest = SearchRequest()) {
+
+    public init(searchSection: SearchSection, noti: Notification.Name?, state: State = .none, searchRequest: SearchRequest = SearchRequest()) {
         self.state = state
         self.searchRequest = searchRequest
         self.searchRequest.maxResults = 5
         self.searchSection = searchSection
         self.notification = noti
-        if self.state != .unknow {
+        if self.state != .none {
             if self.searchSection == .trend {
                 self.searchTrend()
             } else if self.searchSection == .lastest {
@@ -123,18 +118,18 @@ final public class SearchFeedViewModel {
         }
         self.tokenHelper.delegate = self
     }
-    
+
     func reloadData(with keywoard: String = "") {
         if !keywoard.isEmpty {
             self.searchRequest.keyword = keywoard
         }
-        
+
         self.searchContents = []
         self.searchLoaded = false
         self.searchCanLoad = true
         self.searchRequest.maxResults = 5
         self.searchRequest.untilId = ""
-        self.state = .getFeed
+        self.state = .getContent
         if self.searchSection == .trend {
             self.searchTrend()
         } else if self.searchSection == .lastest {
@@ -144,11 +139,11 @@ final public class SearchFeedViewModel {
             self.searchTrend()
         }
     }
-    
+
     func getSearchContent() {
         self.searchRequest.maxResults = 25
         self.searchRequest.untilId = self.meta.oldestId
-        if self.state != .unknow {
+        if self.state != .none {
             if self.searchSection == .trend {
                 self.searchTrend()
             } else if self.searchSection == .lastest {
@@ -163,7 +158,7 @@ final public class SearchFeedViewModel {
 
 extension SearchFeedViewModel: TokenHelperDelegate {
     public func didRefreshTokenFinish() {
-        if self.state != .unknow {
+        if self.state != .none {
             if self.searchSection == .trend {
                 self.searchTrend()
             } else if self.searchSection == .lastest {

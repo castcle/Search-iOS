@@ -33,7 +33,7 @@ class SuggestionUserTableViewCell: UITableViewCell {
     @IBOutlet var avatar: UIImageView!
     @IBOutlet var displayNameLabel: UILabel!
     @IBOutlet var castcleIdLabel: UILabel!
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         self.displayNameLabel.font = UIFont.asset(.regular, fontSize: .overline)
@@ -46,7 +46,7 @@ class SuggestionUserTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-    
+
     func configCell(follow: Follow) {
         let url = URL(string: follow.avatar.thumbnail)
         self.avatar.kf.setImage(with: url, placeholder: UIImage.Asset.userPlaceholder, options: [.transition(.fade(0.35))])

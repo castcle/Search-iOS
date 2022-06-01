@@ -33,12 +33,12 @@ public struct SearchNibVars {
         public static let searchFeed = "SearchFeedViewController"
         public static let searchUser = "SearchUserViewController"
     }
-    
+
     // MARK: - View
     public struct Storyboard {
         public static let search = "Search"
     }
-    
+
     // MARK: - TableViewCell
     public struct TableViewCell {
         public static let searchTextField = "SearchTextFieldTableViewCell"
@@ -50,7 +50,7 @@ public struct SearchNibVars {
         public static let searchNotFound = "SearchNotFoundTableViewCell"
         public static let userSearch = "UserSearchTableViewCell"
     }
-    
+
     // MARK: - CollectionViewCell
     public struct CollectionViewCell {
     }

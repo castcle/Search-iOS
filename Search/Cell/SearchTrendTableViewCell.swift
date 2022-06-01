@@ -36,7 +36,7 @@ class SearchTrendTableViewCell: UITableViewCell {
     @IBOutlet var countLabel: UILabel!
     @IBOutlet var nextIcon: UIImageView!
     @IBOutlet var lineView: UIView!
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         self.titleLabel.font = UIFont.asset(.bold, fontSize: .overline)
@@ -45,7 +45,6 @@ class SearchTrendTableViewCell: UITableViewCell {
         self.trendLabel.textColor = UIColor.Asset.white
         self.countLabel.font = UIFont.asset(.bold, fontSize: .overline)
         self.countLabel.textColor = UIColor.Asset.lightGray
-        
         self.nextIcon.image = UIImage.init(icon: .castcle(.next), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.lightGray)
         self.lineView.backgroundColor = UIColor.Asset.darkGraphiteBlue
     }
@@ -53,10 +52,10 @@ class SearchTrendTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-    
+
     func configCell(hastag: Hashtag) {
-        self.titleLabel.text = "\(hastag.rank). \(Localization.searchTopTrends.trending.text)"
+        self.titleLabel.text = "\(hastag.rank). \(Localization.SearchTopTrends.trending.text)"
         self.trendLabel.text = hastag.name
-        self.countLabel.text = "\(String.displayCount(count: hastag.count)) \(Localization.searchTopTrends.cast.text)"
+        self.countLabel.text = "\(String.displayCount(count: hastag.count)) \(Localization.SearchTopTrends.cast.text)"
     }
 }

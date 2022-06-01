@@ -33,7 +33,7 @@ class SearchNotFoundTableViewCell: UITableViewCell {
     @IBOutlet var emptyView: UIView!
     @IBOutlet var emptyTitleLabel: UILabel!
     @IBOutlet var emptyDetailLabel: UILabel!
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         self.emptyTitleLabel.font = UIFont.asset(.regular, fontSize: .body)
@@ -45,9 +45,9 @@ class SearchNotFoundTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-    
+
     func configCell() {
-        self.emptyTitleLabel.text = Localization.searchNotFound.headline.text
-        self.emptyDetailLabel.text = Localization.searchNotFound.description.text
+        self.emptyTitleLabel.text = Localization.SearchNotFound.headline.text
+        self.emptyDetailLabel.text = Localization.SearchNotFound.description.text
     }
 }

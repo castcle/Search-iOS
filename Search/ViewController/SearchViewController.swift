@@ -33,42 +33,42 @@ import Defaults
 class SearchViewController: UIViewController {
 
     @IBOutlet var tableView: UITableView!
-    
+
     var viewModel = SearchViewModel()
-    
+
     enum SearchViewControllerSection: Int, CaseIterable {
         case search = 0
         case trendingHeader
         case trending
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.Asset.darkGraphiteBlue
         self.configureTableView()
         self.viewModel.getTopTrends()
-        
+
         self.viewModel.didLoadTopTrendFinish = {
             self.tableView.reloadData()
         }
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setupNavBar()
         self.tableView.reloadData()
         Defaults[.screenId] = ScreenId.search.rawValue
     }
-    
+
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         EngagementHelper().sendCastcleAnalytic(event: .onScreenView, screen: .search)
     }
-    
+
     func setupNavBar() {
-        self.customNavigationBar(.primary, title: Localization.searchTopTrends.title.text, textColor: UIColor.Asset.lightBlue, leftBarButton: .logo)
+        self.customNavigationBar(.primary, title: Localization.SearchTopTrends.title.text, textColor: UIColor.Asset.lightBlue, leftBarButton: .logo)
     }
-    
+
     func configureTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -84,7 +84,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return SearchViewControllerSection.allCases.count
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == SearchViewControllerSection.trending.rawValue {
             return self.viewModel.topTrend.hashtags.count
@@ -92,7 +92,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             return 1
         }
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case SearchViewControllerSection.search.rawValue:
@@ -114,11 +114,11 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == SearchViewControllerSection.trending.rawValue {
-            let vc = SearchOpener.open(.searchResult(SearchResualViewModel(state: .resualt, textSearch: self.viewModel.topTrend.hashtags[indexPath.row].slug, searchFeedState: .getFeed)))
-            Utility.currentViewController().navigationController?.pushViewController(vc, animated: true)
+            let viewController = SearchOpener.open(.searchResult(SearchResualViewModel(state: .resualt, textSearch: self.viewModel.topTrend.hashtags[indexPath.row].slug, feedState: .getContent)))
+            Utility.currentViewController().navigationController?.pushViewController(viewController, animated: true)
         }
     }
 }

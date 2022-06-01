@@ -29,7 +29,7 @@ import Core
 import Networking
 import SwiftyJSON
 
-public protocol SearchUserViewModelDelegate {
+public protocol SearchUserViewModelDelegate: AnyObject {
     func didSearchUserSuccess()
 }
 
@@ -39,7 +39,7 @@ public enum SearchUserState {
 }
 
 final public class SearchUserViewModel {
-    
+
     public var delegate: SearchUserViewModelDelegate?
     private var searchRepository: SearchRepository = SearchRepositoryImpl()
     var searchRequest: SearchRequest = SearchRequest()
@@ -49,8 +49,8 @@ final public class SearchUserViewModel {
     var searchUserLoaded: Bool = false
     var searchUserCanLoad: Bool = true
     var state: SearchUserState = .unknow
-    var notification: Notification.Name? = nil
-    
+    var notification: Notification.Name?
+
     private func searchUser() {
         if self.searchRequest.keyword.isEmpty {
             return
@@ -66,7 +66,6 @@ final public class SearchUserViewModel {
                     if meta.resultCount < self.searchRequest.maxResults {
                         self.searchUserCanLoad = false
                     }
-                    
                     payload.forEach { content in
                         self.users.append(UserInfo(json: content))
                     }
@@ -82,24 +81,23 @@ final public class SearchUserViewModel {
             }
         }
     }
-    
+
     public init(noti: Notification.Name?, state: SearchUserState = .unknow, searchRequest: SearchRequest = SearchRequest()) {
         self.state = state
         self.searchRequest = searchRequest
         self.searchRequest.maxResults = 25
         self.notification = noti
-        
         if self.state != .unknow {
             self.searchUser()
         }
         self.tokenHelper.delegate = self
     }
-    
+
     func reloadData(with keywoard: String = "") {
         if !keywoard.isEmpty {
             self.searchRequest.keyword = keywoard
         }
-        
+
         self.users = []
         self.searchUserLoaded = false
         self.searchUserCanLoad = true
@@ -108,7 +106,7 @@ final public class SearchUserViewModel {
         self.state = .searchUser
         self.searchUser()
     }
-    
+
     func searchUserMore() {
         self.searchRequest.maxResults = 25
         self.searchRequest.untilId = self.meta.oldestId

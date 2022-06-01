@@ -40,7 +40,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     @IBOutlet var searchContainerView: UIView!
     @IBOutlet var resultView: UIView!
     @IBOutlet var clearButton: UIButton!
-    
+
     enum SearchResultViewControllerSection: Int, CaseIterable {
         case recentHeader = 0
         case recent
@@ -48,15 +48,15 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         case follow
         case hastag
     }
-    
+
     var viewModel = SearchResualViewModel()
     var timer: Timer?
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         self.setupButtonBar()
     }
-    
+
     private func setupButtonBar() {
         settings.style.buttonBarBackgroundColor = UIColor.Asset.darkGraphiteBlue
         settings.style.buttonBarItemBackgroundColor = UIColor.Asset.darkGraphiteBlue
@@ -65,13 +65,12 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         settings.style.selectedBarHeight = 4
         settings.style.buttonBarItemFont = UIFont.asset(.bold, fontSize: .body)
         settings.style.buttonBarHeight = 60.0
-        
-        self.changeCurrentIndexProgressive = { (oldCell: ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage: CGFloat, changeCurrentIndex: Bool, animated: Bool) -> Void in
+        self.changeCurrentIndexProgressive = { (oldCell: ButtonBarViewCell?, newCell: ButtonBarViewCell?, _, _, _) -> Void in
             oldCell?.label.textColor = UIColor.Asset.lightGray
             newCell?.label.textColor = UIColor.Asset.white
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.layoutIfNeeded()
@@ -84,19 +83,16 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         self.searchTextField.textColor = UIColor.Asset.white
         self.searchContainerView.backgroundColor = UIColor.Asset.darkGray
         self.clearButton.setImage(UIImage.init(icon: .castcle(.incorrect), size: CGSize(width: 15, height: 15), textColor: UIColor.Asset.white).withRenderingMode(.alwaysOriginal), for: .normal)
-        
         self.searchTextField.delegate = self
         self.searchTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: .editingChanged)
-        
         self.updateUI()
-        
         self.viewModel.didGetSuggestionFinish = {
             if !self.viewModel.suggestions.keyword.isEmpty || !self.viewModel.suggestions.follows.isEmpty || !self.viewModel.suggestions.hashtags.isEmpty {
                 self.tableView.reloadData()
             }
         }
     }
-    
+
     private func updateUI() {
         if self.viewModel.searchResualState == .resualt {
             self.tableView.isHidden = true
@@ -107,13 +103,13 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
             self.resultView.isHidden = true
         }
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setupNavBar()
         Defaults[.screenId] = ""
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if self.viewModel.searchResualState == .initial {
@@ -121,15 +117,15 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
             self.searchTextField.becomeFirstResponder()
         }
     }
-    
+
     func setupNavBar() {
         if self.viewModel.searchResualState == .initial {
-            self.customNavigationBar(.secondary, title: Localization.searchSuggestion.title.text, animated: false)
+            self.customNavigationBar(.secondary, title: Localization.SearchSuggestion.title.text, animated: false)
         } else {
-            self.customNavigationBar(.secondary, title: Localization.searchSuggestion.title.text, animated: true)
+            self.customNavigationBar(.secondary, title: Localization.SearchSuggestion.title.text, animated: true)
         }
     }
-    
+
     func configureTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -139,10 +135,9 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight = 100
     }
-    
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.timer?.invalidate()
-        
         let searchValue = textField.text ?? ""
         if self.viewModel.searchResualState == .initial {
             self.tableView.isHidden = true
@@ -150,15 +145,15 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
                 self.viewModel.addRecentSearch(value: searchValue.trimmingCharacters(in: .whitespacesAndNewlines))
             }
         }
-        
+
         if !(searchValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
             self.sendSearch(keyword: searchValue.trimmingCharacters(in: .whitespacesAndNewlines))
         }
-        
+
         textField.resignFirstResponder()
         return true
     }
-    
+
     @objc func textFieldDidChange(_ textField: UITextField) {
         if textField.text!.isEmpty {
             self.clearButton.isHidden = true
@@ -175,14 +170,11 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-
         self.timer?.invalidate()
-
         let currentText = textField.text ?? ""
         if (currentText as NSString).replacingCharacters(in: range, with: string).count >= 1 {
             self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.performSearch), userInfo: nil, repeats: false)
         }
-        
         return true
     }
 
@@ -192,7 +184,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
             self.viewModel.getSuggestion()
         }
     }
-    
+
     private func sendSearch(keyword: String) {
         self.viewModel.searchText = keyword
         let searchDataDict: [String: String] = ["searchText": keyword]
@@ -203,32 +195,32 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         self.updateUI()
         self.viewModel.addRecentSearch(value: keyword)
     }
-    
+
     // MARK: - PagerTabStripDataSource
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
-        let vc1 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .trend, noti: self.viewModel.notification, state: self.viewModel.searchFeedState, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
+        let vc1 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .trend, noti: self.viewModel.notification, state: self.viewModel.state, searchRequest: self.viewModel.searchRequest))) as? SearchFeedViewController
         vc1?.pageIndex = 0
-        vc1?.pageTitle = Localization.searchResult.trend.text
+        vc1?.pageTitle = Localization.SearchResult.trend.text
         let trend = vc1 ?? SearchFeedViewController()
-        
-        let vc2 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .lastest, noti: self.viewModel.notification, state: self.viewModel.searchFeedState, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
+
+        let vc2 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .lastest, noti: self.viewModel.notification, state: self.viewModel.state, searchRequest: self.viewModel.searchRequest))) as? SearchFeedViewController
         vc2?.pageIndex = 1
-        vc2?.pageTitle = Localization.searchResult.lastest.text
+        vc2?.pageTitle = Localization.SearchResult.lastest.text
         let lastest = vc2 ?? SearchFeedViewController()
-        
-        let vc3 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .photo, noti: self.viewModel.notification, state: self.viewModel.searchFeedState, searchRequest:  self.viewModel.searchRequest))) as? SearchFeedViewController
+
+        let vc3 = SearchOpener.open(.searchFeed(SearchFeedViewModel(searchSection: .photo, noti: self.viewModel.notification, state: self.viewModel.state, searchRequest: self.viewModel.searchRequest))) as? SearchFeedViewController
         vc3?.pageIndex = 2
-        vc3?.pageTitle = Localization.searchResult.photo.text
+        vc3?.pageTitle = Localization.SearchResult.photo.text
         let photo = vc3 ?? SearchFeedViewController()
-        
+
         let vc4 = SearchOpener.open(.searchUser(SearchUserViewModel(noti: self.viewModel.notification, searchRequest: self.viewModel.searchRequest))) as? SearchUserViewController
         vc4?.pageIndex = 3
-        vc4?.pageTitle = Localization.searchResult.people.text
+        vc4?.pageTitle = Localization.SearchResult.people.text
         let people = vc4 ?? SearchFeedViewController()
 
         return [trend, lastest, photo, people]
     }
-    
+
     @IBAction func clearAction(_ sender: Any) {
         self.clearButton.isHidden = true
         self.searchTextField.text = ""
@@ -241,7 +233,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
         return SearchResultViewControllerSection.allCases.count
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case SearchResultViewControllerSection.recentHeader.rawValue:
@@ -278,13 +270,13 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             return 0
         }
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case SearchResultViewControllerSection.recentHeader.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.recentSearchHeader, for: indexPath as IndexPath) as? RecentHeaderSearchTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGraphiteBlue
-            cell?.configCell(display: Localization.searchSuggestion.lastest.text)
+            cell?.configCell(display: Localization.SearchSuggestion.lastest.text)
             return cell ?? RecentHeaderSearchTableViewCell()
         case SearchResultViewControllerSection.recent.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.recentSearch, for: indexPath as IndexPath) as? RecentSearchTableViewCell
@@ -313,9 +305,8 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         default:
             return UITableViewCell()
         }
-        
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case SearchResultViewControllerSection.recent.rawValue:
