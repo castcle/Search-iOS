@@ -26,6 +26,7 @@
 //
 
 import Foundation
+import Core
 import Networking
 import SwiftyJSON
 
@@ -35,6 +36,7 @@ final class SearchViewModel {
     var searchRequest: SearchRequest = SearchRequest()
     let tokenHelper: TokenHelper = TokenHelper()
     var topTrend: TopTrend = TopTrend()
+    var loadState: LoadState = .loading
 
     public func getTopTrends() {
         self.searchRepository.getTopTrends(searchRequest: self.searchRequest) { (success, response, isRefreshToken) in

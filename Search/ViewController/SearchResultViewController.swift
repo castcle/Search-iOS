@@ -87,7 +87,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         self.searchTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: .editingChanged)
         self.updateUI()
         self.viewModel.didGetSuggestionFinish = {
-            if !self.viewModel.suggestions.keyword.isEmpty || !self.viewModel.suggestions.follows.isEmpty || !self.viewModel.suggestions.hashtags.isEmpty {
+            if !self.viewModel.suggestions.keyword.isEmpty || !self.viewModel.suggestions.users.isEmpty || !self.viewModel.suggestions.hashtags.isEmpty {
                 self.tableView.reloadData()
             }
         }
@@ -256,7 +256,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             }
         case SearchResultViewControllerSection.follow.rawValue:
             if self.viewModel.searchResualState == .suggest {
-                return self.viewModel.suggestions.follows.count
+                return self.viewModel.suggestions.users.count
             } else {
                 return 0
             }
@@ -292,9 +292,9 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             return cell ?? RecentSearchTableViewCell()
         case SearchResultViewControllerSection.follow.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.suggestionUser, for: indexPath as IndexPath) as? SuggestionUserTableViewCell
-            let follow = self.viewModel.suggestions.follows[indexPath.row]
+            let user = self.viewModel.suggestions.users[indexPath.row]
             cell?.backgroundColor = UIColor.Asset.darkGraphiteBlue
-            cell?.configCell(follow: follow)
+            cell?.configCell(user: user)
             return cell ?? SuggestionUserTableViewCell()
         case SearchResultViewControllerSection.hastag.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.recentSearch, for: indexPath as IndexPath) as? RecentSearchTableViewCell
@@ -316,8 +316,8 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             let keyword = self.viewModel.suggestions.keyword[indexPath.row]
             self.sendSearch(keyword: keyword.text)
         case SearchResultViewControllerSection.follow.rawValue:
-            let follow = self.viewModel.suggestions.follows[indexPath.row]
-            ProfileOpener.openProfileDetail(follow.castcleId, displayName: follow.displayName)
+            let user = self.viewModel.suggestions.users[indexPath.row]
+            ProfileOpener.openProfileDetail(user.castcleId, displayName: user.displayName)
         case SearchResultViewControllerSection.hastag.rawValue:
             let hashtag = self.viewModel.suggestions.hashtags[indexPath.row]
             self.sendSearch(keyword: hashtag.name)
