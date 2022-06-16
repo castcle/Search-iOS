@@ -61,16 +61,16 @@ final public class SearchUserViewModel {
                     let rawJson = try response.mapJSON()
                     let json = JSON(rawJson)
                     let payload = json[JsonKey.payload.rawValue].arrayValue
-                    let meta: Meta = Meta(json: JSON(json[JsonKey.meta.rawValue].dictionaryValue))
+                    let metaRespond: Meta = Meta(json: JSON(json[JsonKey.meta.rawValue].dictionaryValue))
 
-                    if meta.resultCount < self.searchRequest.maxResults {
+                    if metaRespond.resultCount < self.searchRequest.maxResults {
                         self.searchUserCanLoad = false
                     }
                     payload.forEach { content in
                         self.users.append(UserInfo(json: content))
                     }
 
-                    self.meta = meta
+                    self.meta = metaRespond
                     self.searchUserLoaded = true
                     self.delegate?.didSearchUserSuccess()
                 } catch {}
