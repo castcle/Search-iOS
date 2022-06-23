@@ -47,10 +47,10 @@ class SuggestionUserTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
 
-    func configCell(follow: Follow) {
-        let url = URL(string: follow.avatar.thumbnail)
+    func configCell(user: UserInfo) {
+        let url = URL(string: user.images.avatar.thumbnail)
         self.avatar.kf.setImage(with: url, placeholder: UIImage.Asset.userPlaceholder, options: [.transition(.fade(0.35))])
-        self.displayNameLabel.text = follow.displayName
-        self.castcleIdLabel.text = "@\(follow.castcleId)"
+        self.displayNameLabel.text = user.displayName
+        self.castcleIdLabel.text = "@\(user.castcleId)"
     }
 }
