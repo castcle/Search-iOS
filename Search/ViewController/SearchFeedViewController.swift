@@ -85,13 +85,11 @@ class SearchFeedViewController: UIViewController {
     }
 
     @objc func getSearchFeed(notification: NSNotification) {
-        if let dict = notification.userInfo as NSDictionary? {
-            if let searchText = dict["searchText"] as? String {
-                self.viewModel.reloadData(with: searchText)
-                self.tableView.scrollToRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, at: .top, animated: true)
-                self.tableView.isScrollEnabled = false
-                self.tableView.reloadData()
-            }
+        if let dict = notification.userInfo as NSDictionary?, let searchText = dict["searchText"] as? String {
+            self.viewModel.reloadData(with: searchText)
+            self.tableView.scrollToRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, at: .top, animated: true)
+            self.tableView.isScrollEnabled = false
+            self.tableView.reloadData()
         }
     }
 }
@@ -166,10 +164,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.skeleton, for: indexPath as IndexPath) as? SkeletonFeedTableViewCell
-            cell?.backgroundColor = UIColor.Asset.darkGray
-            cell?.configCell()
-            return cell ?? SkeletonFeedTableViewCell()
+            return FeedCellHelper().renderSkeletonCell(tableView: tableView, indexPath: indexPath)
         }
     }
 
@@ -226,9 +221,9 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             cell?.backgroundColor = UIColor.Asset.darkGray
             cell?.delegate = self
             if content.referencedCasts.type == .recasted {
-                cell?.configCell(feedType: .content, content: originalContent, isDefaultContent: false)
+                cell?.configCell(type: .content, content: originalContent, isDefaultContent: false)
             } else {
-                cell?.configCell(feedType: .content, content: content, isDefaultContent: false)
+                cell?.configCell(type: .content, content: content, isDefaultContent: false)
             }
             return cell ?? HeaderTableViewCell()
         case .footer:
@@ -236,9 +231,9 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             cell?.backgroundColor = UIColor.Asset.darkGray
             cell?.delegate = self
             if content.referencedCasts.type == .recasted {
-                cell?.content = originalContent
+                cell?.configCell(content: originalContent, isCommentView: false)
             } else {
-                cell?.content = content
+                cell?.configCell(content: content, isCommentView: false)
             }
             return cell ?? FooterTableViewCell()
         case .quote:
@@ -275,14 +270,6 @@ extension SearchFeedViewController: HeaderTableViewCellDelegate {
         // Remove success
     }
 
-    func didTabProfile(_ headerTableViewCell: HeaderTableViewCell, author: Author) {
-        ProfileOpener.openProfileDetail(author.castcleId, displayName: author.displayName)
-    }
-
-    func didAuthen(_ headerTableViewCell: HeaderTableViewCell) {
-        NotificationCenter.default.post(name: .openSignInDelegate, object: nil, userInfo: nil)
-    }
-
     func didReportSuccess(_ headerTableViewCell: HeaderTableViewCell) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             Utility.currentViewController().navigationController?.pushViewController(ComponentOpener.open(.reportSuccess(true, "")), animated: true)
@@ -298,25 +285,11 @@ extension SearchFeedViewController: HeaderTableViewCellDelegate {
 }
 
 extension SearchFeedViewController: FooterTableViewCellDelegate {
-    func didTabComment(_ footerTableViewCell: FooterTableViewCell, content: Content) {
-        Utility.currentViewController().navigationController?.pushViewController(ComponentOpener.open(.comment(CommentViewModel(contentId: content.id))), animated: true)
-    }
-
     func didTabQuoteCast(_ footerTableViewCell: FooterTableViewCell, content: Content, page: Page) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             let viewController = PostOpener.open(.post(PostViewModel(postType: .quoteCast, content: content, page: page)))
             viewController.modalPresentationStyle = .fullScreen
             Utility.currentViewController().present(viewController, animated: true, completion: nil)
-        }
-    }
-
-    func didAuthen(_ footerTableViewCell: FooterTableViewCell) {
-        NotificationCenter.default.post(name: .openSignInDelegate, object: nil, userInfo: nil)
-    }
-
-    func didViewFarmmingHistory(_ footerTableViewCell: FooterTableViewCell) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            Utility.currentViewController().navigationController?.pushViewController(FarmingOpener.open(.contentFarming), animated: true)
         }
     }
 }

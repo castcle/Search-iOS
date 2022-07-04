@@ -27,6 +27,7 @@
 
 import UIKit
 import Core
+import Component
 import Networking
 import Defaults
 
@@ -49,6 +50,8 @@ class SearchViewController: UIViewController {
         self.viewModel.getTopTrends()
 
         self.viewModel.didLoadTopTrendFinish = {
+            self.viewModel.loadState = .loaded
+            self.tableView.isScrollEnabled = true
             self.tableView.reloadData()
         }
     }
@@ -70,11 +73,13 @@ class SearchViewController: UIViewController {
     }
 
     func configureTableView() {
+        self.tableView.isScrollEnabled = false
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.register(UINib(nibName: SearchNibVars.TableViewCell.searchTextField, bundle: ConfigBundle.search), forCellReuseIdentifier: SearchNibVars.TableViewCell.searchTextField)
         self.tableView.register(UINib(nibName: SearchNibVars.TableViewCell.searchTitle, bundle: ConfigBundle.search), forCellReuseIdentifier: SearchNibVars.TableViewCell.searchTitle)
         self.tableView.register(UINib(nibName: SearchNibVars.TableViewCell.searchTrend, bundle: ConfigBundle.search), forCellReuseIdentifier: SearchNibVars.TableViewCell.searchTrend)
+        self.tableView.register(UINib(nibName: ComponentNibVars.TableViewCell.skeletonNormal, bundle: ConfigBundle.component), forCellReuseIdentifier: ComponentNibVars.TableViewCell.skeletonNormal)
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight = 100
     }
@@ -82,41 +87,74 @@ class SearchViewController: UIViewController {
 
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return SearchViewControllerSection.allCases.count
+        if self.viewModel.loadState == .loading {
+            return 10
+        } else {
+            return SearchViewControllerSection.allCases.count
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == SearchViewControllerSection.trending.rawValue {
-            return self.viewModel.topTrend.hashtags.count
-        } else {
+        if self.viewModel.loadState == .loading {
             return 1
+        } else {
+            if section == SearchViewControllerSection.trending.rawValue {
+                return self.viewModel.topTrend.hashtags.count
+            } else {
+                return 1
+            }
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
-        case SearchViewControllerSection.search.rawValue:
-            let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTextField, for: indexPath as IndexPath) as? SearchTextFieldTableViewCell
-            cell?.configCell()
+        if self.viewModel.loadState == .loading {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.skeletonNormal, for: indexPath as IndexPath) as? SkeletonNormalTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGray
-            return cell ?? SearchTextFieldTableViewCell()
-        case SearchViewControllerSection.trendingHeader.rawValue:
-            let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTitle, for: indexPath as IndexPath) as? SearchHeaderTableViewCell
-            cell?.backgroundColor = UIColor.clear
             cell?.configCell()
-            return cell ?? SearchHeaderTableViewCell()
-        case SearchViewControllerSection.trending.rawValue:
-            let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTrend, for: indexPath as IndexPath) as? SearchTrendTableViewCell
-            cell?.backgroundColor = UIColor.Asset.darkGray
-            cell?.configCell(hastag: self.viewModel.topTrend.hashtags[indexPath.row])
-            return cell ?? SearchTrendTableViewCell()
-        default:
-            return UITableViewCell()
+            return cell ?? SkeletonNormalTableViewCell()
+        } else {
+            switch indexPath.section {
+            case SearchViewControllerSection.search.rawValue:
+                let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTextField, for: indexPath as IndexPath) as? SearchTextFieldTableViewCell
+                cell?.configCell()
+                cell?.backgroundColor = UIColor.Asset.darkGray
+                return cell ?? SearchTextFieldTableViewCell()
+            case SearchViewControllerSection.trendingHeader.rawValue:
+                let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTitle, for: indexPath as IndexPath) as? SearchHeaderTableViewCell
+                cell?.backgroundColor = UIColor.clear
+                cell?.configCell()
+                return cell ?? SearchHeaderTableViewCell()
+            case SearchViewControllerSection.trending.rawValue:
+                let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTrend, for: indexPath as IndexPath) as? SearchTrendTableViewCell
+                cell?.backgroundColor = UIColor.Asset.darkGray
+                cell?.configCell(hastag: self.viewModel.topTrend.hashtags[indexPath.row])
+                return cell ?? SearchTrendTableViewCell()
+            default:
+                return UITableViewCell()
+            }
+        }
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if self.viewModel.loadState == .loading {
+            return 5
+        } else {
+            return 0
+        }
+    }
+
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        if self.viewModel.loadState == .loading {
+            let footerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 5))
+            footerView.backgroundColor = UIColor.clear
+            return footerView
+        } else {
+            return UIView()
         }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == SearchViewControllerSection.trending.rawValue {
+        if self.viewModel.loadState == .loaded && indexPath.section == SearchViewControllerSection.trending.rawValue {
             let viewController = SearchOpener.open(.searchResult(SearchResualViewModel(state: .resualt, textSearch: self.viewModel.topTrend.hashtags[indexPath.row].slug, feedState: .getContent)))
             Utility.currentViewController().navigationController?.pushViewController(viewController, animated: true)
         }

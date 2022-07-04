@@ -51,5 +51,6 @@ class RecentSearchTableViewCell: UITableViewCell {
     }
 
     @IBAction func cellAction(_ sender: Any) {
+        // MARK: - Add action
     }
 }
