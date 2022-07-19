@@ -77,11 +77,11 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         self.view.backgroundColor = UIColor.Asset.darkGraphiteBlue
         self.hideKeyboardWhenTapped()
         self.configureTableView()
-        self.searchView.custom(color: UIColor.Asset.darkGray, cornerRadius: 18, borderWidth: 1, borderColor: UIColor.Asset.darkGraphiteBlue)
+        self.searchView.custom(color: UIColor.Asset.cellBackground, cornerRadius: 18, borderWidth: 1, borderColor: UIColor.Asset.darkGraphiteBlue)
         self.searchImage.image = UIImage.init(icon: .castcle(.search), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.white)
         self.searchTextField.font = UIFont.asset(.regular, fontSize: .overline)
         self.searchTextField.textColor = UIColor.Asset.white
-        self.searchContainerView.backgroundColor = UIColor.Asset.darkGray
+        self.searchContainerView.backgroundColor = UIColor.Asset.cellBackground
         self.clearButton.setImage(UIImage.init(icon: .castcle(.incorrect), size: CGSize(width: 15, height: 15), textColor: UIColor.Asset.white).withRenderingMode(.alwaysOriginal), for: .normal)
         self.searchTextField.delegate = self
         self.searchTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: .editingChanged)
@@ -281,13 +281,13 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         case SearchResultViewControllerSection.recent.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.recentSearch, for: indexPath as IndexPath) as? RecentSearchTableViewCell
             let recentSearch = self.viewModel.recentSearch[indexPath.row]
-            cell?.backgroundColor = UIColor.Asset.darkGray
+            cell?.backgroundColor = UIColor.Asset.cellBackground
             cell?.configCell(display: recentSearch.value)
             return cell ?? RecentSearchTableViewCell()
         case SearchResultViewControllerSection.keyword.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.recentSearch, for: indexPath as IndexPath) as? RecentSearchTableViewCell
             let keyword = self.viewModel.suggestions.keyword[indexPath.row]
-            cell?.backgroundColor = UIColor.Asset.darkGray
+            cell?.backgroundColor = UIColor.Asset.cellBackground
             cell?.configCell(display: keyword.text)
             return cell ?? RecentSearchTableViewCell()
         case SearchResultViewControllerSection.follow.rawValue:
@@ -299,7 +299,7 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         case SearchResultViewControllerSection.hastag.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.recentSearch, for: indexPath as IndexPath) as? RecentSearchTableViewCell
             let hashtag = self.viewModel.suggestions.hashtags[indexPath.row]
-            cell?.backgroundColor = UIColor.Asset.darkGray
+            cell?.backgroundColor = UIColor.Asset.cellBackground
             cell?.configCell(display: hashtag.name)
             return cell ?? RecentSearchTableViewCell()
         default:

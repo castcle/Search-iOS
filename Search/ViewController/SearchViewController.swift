@@ -109,7 +109,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if self.viewModel.loadState == .loading {
             let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.skeletonNormal, for: indexPath as IndexPath) as? SkeletonNormalTableViewCell
-            cell?.backgroundColor = UIColor.Asset.darkGray
+            cell?.backgroundColor = UIColor.Asset.cellBackground
             cell?.configCell()
             return cell ?? SkeletonNormalTableViewCell()
         } else {
@@ -117,7 +117,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             case SearchViewControllerSection.search.rawValue:
                 let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTextField, for: indexPath as IndexPath) as? SearchTextFieldTableViewCell
                 cell?.configCell()
-                cell?.backgroundColor = UIColor.Asset.darkGray
+                cell?.backgroundColor = UIColor.Asset.cellBackground
                 return cell ?? SearchTextFieldTableViewCell()
             case SearchViewControllerSection.trendingHeader.rawValue:
                 let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTitle, for: indexPath as IndexPath) as? SearchHeaderTableViewCell
@@ -126,7 +126,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
                 return cell ?? SearchHeaderTableViewCell()
             case SearchViewControllerSection.trending.rawValue:
                 let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.searchTrend, for: indexPath as IndexPath) as? SearchTrendTableViewCell
-                cell?.backgroundColor = UIColor.Asset.darkGray
+                cell?.backgroundColor = UIColor.Asset.cellBackground
                 cell?.configCell(hastag: self.viewModel.topTrend.hashtags[indexPath.row])
                 return cell ?? SearchTrendTableViewCell()
             default:
