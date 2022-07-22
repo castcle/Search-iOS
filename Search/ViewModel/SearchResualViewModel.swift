@@ -54,7 +54,7 @@ final public class SearchResualViewModel {
         self.state = feedState
         do {
             let realm = try Realm()
-            self.recentSearch = realm.objects(RecentSearch.self)
+            self.recentSearch = realm.objects(RecentSearch.self).sorted(byKeyPath: "updateAt", ascending: false)
         } catch {}
         self.tokenHelper.delegate = self
     }
@@ -83,8 +83,20 @@ final public class SearchResualViewModel {
             try realm.write {
                 let valueSearch = RecentSearch()
                 valueSearch.value = value
+                valueSearch.updateAt = Date()
                 realm.add(valueSearch, update: .modified)
             }
+        } catch {}
+    }
+
+    func clearRecentSearch() {
+        do {
+            let realm = try Realm()
+            let recentSearchRealm = realm.objects(RecentSearch.self)
+            try realm.write {
+                realm.delete(recentSearchRealm)
+            }
+            self.recentSearch = realm.objects(RecentSearch.self).sorted(byKeyPath: "updateAt", ascending: false)
         } catch {}
     }
 }

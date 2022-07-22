@@ -28,11 +28,18 @@
 import UIKit
 import Core
 
+protocol RecentSearchTableViewCellDelegate: AnyObject {
+    func didSelectRecentSearch(_ recentSearchTableViewCell: RecentSearchTableViewCell, indexPath: IndexPath)
+}
+
 class RecentSearchTableViewCell: UITableViewCell {
 
     @IBOutlet var displayLabel: UILabel!
     @IBOutlet var actionButton: UIButton!
     @IBOutlet var lineView: UIView!
+
+    public var delegate: RecentSearchTableViewCellDelegate?
+    private var indexPath: IndexPath = IndexPath()
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -46,11 +53,12 @@ class RecentSearchTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
 
-    func configCell(display: String) {
+    func configCell(display: String, indexPath: IndexPath) {
         self.displayLabel.text = display
+        self.indexPath = indexPath
     }
 
     @IBAction func cellAction(_ sender: Any) {
-        // MARK: - Add action
+        self.delegate?.didSelectRecentSearch(self, indexPath: self.indexPath)
     }
 }

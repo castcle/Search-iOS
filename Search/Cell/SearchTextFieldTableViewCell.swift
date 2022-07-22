@@ -38,7 +38,7 @@ class SearchTextFieldTableViewCell: UITableViewCell {
         super.awakeFromNib()
         self.searchView.custom(color: UIColor.Asset.cellBackground, cornerRadius: 18, borderWidth: 1, borderColor: UIColor.Asset.darkGraphiteBlue)
         self.searchImage.image = UIImage.init(icon: .castcle(.search), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.white)
-        self.searchTextField.font = UIFont.asset(.regular, fontSize: .overline)
+        self.searchTextField.font = UIFont.asset(.contentRegular, fontSize: .overline)
         self.searchTextField.textColor = UIColor.Asset.white
     }
 

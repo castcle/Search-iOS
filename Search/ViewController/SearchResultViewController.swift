@@ -60,14 +60,14 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
     private func setupButtonBar() {
         settings.style.buttonBarBackgroundColor = UIColor.Asset.darkGraphiteBlue
         settings.style.buttonBarItemBackgroundColor = UIColor.Asset.darkGraphiteBlue
-        settings.style.selectedBarBackgroundColor = UIColor.Asset.white
+        settings.style.selectedBarBackgroundColor = UIColor.Asset.lightBlue
         settings.style.buttonBarItemTitleColor = UIColor.Asset.white
         settings.style.selectedBarHeight = 4
-        settings.style.buttonBarItemFont = UIFont.asset(.bold, fontSize: .body)
+        settings.style.buttonBarItemFont = UIFont.asset(.regular, fontSize: .body)
         settings.style.buttonBarHeight = 60.0
         self.changeCurrentIndexProgressive = { (oldCell: ButtonBarViewCell?, newCell: ButtonBarViewCell?, _, _, _) -> Void in
-            oldCell?.label.textColor = UIColor.Asset.lightGray
-            newCell?.label.textColor = UIColor.Asset.white
+            oldCell?.label.textColor = UIColor.Asset.white
+            newCell?.label.textColor = UIColor.Asset.lightBlue
         }
     }
 
@@ -277,18 +277,21 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.recentSearchHeader, for: indexPath as IndexPath) as? RecentHeaderSearchTableViewCell
             cell?.backgroundColor = UIColor.Asset.darkGraphiteBlue
             cell?.configCell(display: Localization.SearchSuggestion.lastest.text)
+            cell?.delegate = self
             return cell ?? RecentHeaderSearchTableViewCell()
         case SearchResultViewControllerSection.recent.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.recentSearch, for: indexPath as IndexPath) as? RecentSearchTableViewCell
             let recentSearch = self.viewModel.recentSearch[indexPath.row]
             cell?.backgroundColor = UIColor.Asset.cellBackground
-            cell?.configCell(display: recentSearch.value)
+            cell?.configCell(display: recentSearch.value, indexPath: indexPath)
+            cell?.delegate = self
             return cell ?? RecentSearchTableViewCell()
         case SearchResultViewControllerSection.keyword.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.recentSearch, for: indexPath as IndexPath) as? RecentSearchTableViewCell
             let keyword = self.viewModel.suggestions.keyword[indexPath.row]
             cell?.backgroundColor = UIColor.Asset.cellBackground
-            cell?.configCell(display: keyword.text)
+            cell?.configCell(display: keyword.text, indexPath: indexPath)
+            cell?.delegate = self
             return cell ?? RecentSearchTableViewCell()
         case SearchResultViewControllerSection.follow.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.suggestionUser, for: indexPath as IndexPath) as? SuggestionUserTableViewCell
@@ -300,7 +303,8 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
             let cell = tableView.dequeueReusableCell(withIdentifier: SearchNibVars.TableViewCell.recentSearch, for: indexPath as IndexPath) as? RecentSearchTableViewCell
             let hashtag = self.viewModel.suggestions.hashtags[indexPath.row]
             cell?.backgroundColor = UIColor.Asset.cellBackground
-            cell?.configCell(display: hashtag.name)
+            cell?.configCell(display: hashtag.name, indexPath: indexPath)
+            cell?.delegate = self
             return cell ?? RecentSearchTableViewCell()
         default:
             return UITableViewCell()
@@ -318,6 +322,31 @@ extension SearchResultViewController: UITableViewDelegate, UITableViewDataSource
         case SearchResultViewControllerSection.follow.rawValue:
             let user = self.viewModel.suggestions.users[indexPath.row]
             ProfileOpener.openProfileDetail(user.castcleId, displayName: user.displayName)
+        case SearchResultViewControllerSection.hastag.rawValue:
+            let hashtag = self.viewModel.suggestions.hashtags[indexPath.row]
+            self.sendSearch(keyword: hashtag.name)
+        default:
+            return
+        }
+    }
+}
+
+extension SearchResultViewController: RecentHeaderSearchTableViewCellDelegate {
+    func didClearAll(_ recentHeaderSearchTableViewCell: RecentHeaderSearchTableViewCell) {
+        self.viewModel.clearRecentSearch()
+        self.tableView.reloadData()
+    }
+}
+
+extension SearchResultViewController: RecentSearchTableViewCellDelegate {
+    func didSelectRecentSearch(_ recentSearchTableViewCell: RecentSearchTableViewCell, indexPath: IndexPath) {
+        switch indexPath.section {
+        case SearchResultViewControllerSection.recent.rawValue:
+            let recentSearch = self.viewModel.recentSearch[indexPath.row]
+            self.sendSearch(keyword: recentSearch.value)
+        case SearchResultViewControllerSection.keyword.rawValue:
+            let keyword = self.viewModel.suggestions.keyword[indexPath.row]
+            self.sendSearch(keyword: keyword.text)
         case SearchResultViewControllerSection.hastag.rawValue:
             let hashtag = self.viewModel.suggestions.hashtags[indexPath.row]
             self.sendSearch(keyword: hashtag.name)

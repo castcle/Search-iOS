@@ -28,11 +28,17 @@
 import UIKit
 import Core
 
+protocol RecentHeaderSearchTableViewCellDelegate: AnyObject {
+    func didClearAll(_ recentHeaderSearchTableViewCell: RecentHeaderSearchTableViewCell)
+}
+
 class RecentHeaderSearchTableViewCell: UITableViewCell {
 
     @IBOutlet var displayLabel: UILabel!
     @IBOutlet var actionButton: UIButton!
     @IBOutlet var lineView: UIView!
+
+    public var delegate: RecentHeaderSearchTableViewCellDelegate?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -51,6 +57,6 @@ class RecentHeaderSearchTableViewCell: UITableViewCell {
     }
 
     @IBAction func cellAction(_ sender: Any) {
-        // MARK: - Add action
+        self.delegate?.didClearAll(self)
     }
 }

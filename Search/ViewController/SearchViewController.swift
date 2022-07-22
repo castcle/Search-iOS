@@ -69,7 +69,7 @@ class SearchViewController: UIViewController {
     }
 
     func setupNavBar() {
-        self.customNavigationBar(.primary, title: Localization.SearchTopTrends.title.text, textColor: UIColor.Asset.lightBlue, leftBarButton: .logo)
+        self.customNavigationBar(.primary, title: "Search", textColor: UIColor.Asset.lightBlue)
     }
 
     func configureTableView() {
