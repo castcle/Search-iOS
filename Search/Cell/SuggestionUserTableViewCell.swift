@@ -51,6 +51,6 @@ class SuggestionUserTableViewCell: UITableViewCell {
         let url = URL(string: user.images.avatar.thumbnail)
         self.avatar.kf.setImage(with: url, placeholder: UIImage.Asset.userPlaceholder, options: [.transition(.fade(0.35))])
         self.displayNameLabel.text = user.displayName
-        self.castcleIdLabel.text = "@\(user.castcleId)"
+        self.castcleIdLabel.text = user.castcleId
     }
 }
