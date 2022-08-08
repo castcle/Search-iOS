@@ -75,6 +75,11 @@ class SearchFeedViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.getSearchFeed(notification:)), name: self.viewModel.notification, object: nil)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tableView.reloadData()
+    }
+
     func configureTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -113,10 +118,20 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
                 return 1
             } else {
                 let content = self.viewModel.searchContents[section]
-                if content.referencedCasts.type == .recasted || content.referencedCasts.type == .quoted {
-                    return 4
+                if content.participate.recasted || ContentHelper.shared.isReportContent(contentId: content.id) {
+                    if content.isShowContentReport && content.referencedCasts.type == .quoted {
+                        return 5
+                    } else if content.isShowContentReport && content.referencedCasts.type != .quoted {
+                        return 4
+                    } else {
+                        return 1
+                    }
                 } else {
-                    return 3
+                    if content.referencedCasts.type == .recasted || content.referencedCasts.type == .quoted {
+                        return 4
+                    } else {
+                        return 3
+                    }
                 }
             }
         } else {
@@ -133,35 +148,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
                 return cell ?? SearchNotFoundTableViewCell()
             } else {
                 let content = self.viewModel.searchContents[indexPath.section]
-                if content.referencedCasts.type == .recasted {
-                    if indexPath.row == 0 {
-                        return self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath)
-                    } else if indexPath.row == 1 {
-                        return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
-                    } else if indexPath.row == 2 {
-                        return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
-                    } else {
-                        return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
-                    }
-                } else if content.referencedCasts.type == .quoted {
-                    if indexPath.row == 0 {
-                        return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
-                    } else if indexPath.row == 1 {
-                        return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
-                    } else if indexPath.row == 2 {
-                        return self.renderFeedCell(content: content, cellType: .quote, tableView: tableView, indexPath: indexPath)
-                    } else {
-                        return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
-                    }
-                } else {
-                    if indexPath.row == 0 {
-                        return self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath)
-                    } else if indexPath.row == 1 {
-                        return self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath)
-                    } else {
-                        return self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
-                    }
-                }
+                return self.getContentCellWithContent(content: content, tableView: tableView, indexPath: indexPath)[indexPath.row]
             }
         } else {
             return FeedCellHelper().renderSkeletonCell(tableView: tableView, indexPath: indexPath)
@@ -187,7 +174,6 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
                     originalContent = tempContent
                 }
             }
-
             if content.referencedCasts.type == .recasted {
                 if originalContent.type == .long && indexPath.row == 2 {
                     self.viewModel.searchContents[indexPath.section].isOriginalExpand.toggle()
@@ -202,6 +188,51 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
 
+    private func getContentCellWithContent(content: Content, tableView: UITableView, indexPath: IndexPath) -> [UITableViewCell] {
+        if content.participate.recasted || ContentHelper.shared.isReportContent(contentId: content.id) {
+            if content.isShowContentReport && content.referencedCasts.type == .quoted {
+                return [
+                    self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath),
+                    self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath),
+                    self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath),
+                    self.renderFeedCell(content: content, cellType: .quote, tableView: tableView, indexPath: indexPath),
+                    self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+                ]
+            } else if content.isShowContentReport && content.referencedCasts.type != .quoted {
+                return [
+                    self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath),
+                    self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath),
+                    self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath),
+                    self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+                ]
+            } else {
+                return [
+                    self.renderFeedCell(content: content, cellType: .report, tableView: tableView, indexPath: indexPath)
+                ]
+            }
+        } else if content.referencedCasts.type == .recasted {
+            return [
+                self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath),
+                self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath),
+                self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath),
+                self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+            ]
+        } else if content.referencedCasts.type == .quoted {
+            return [
+                self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath),
+                self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath),
+                self.renderFeedCell(content: content, cellType: .quote, tableView: tableView, indexPath: indexPath),
+                self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+            ]
+        } else {
+            return [
+                self.renderFeedCell(content: content, cellType: .header, tableView: tableView, indexPath: indexPath),
+                self.renderFeedCell(content: content, cellType: .content, tableView: tableView, indexPath: indexPath),
+                self.renderFeedCell(content: content, cellType: .footer, tableView: tableView, indexPath: indexPath)
+            ]
+        }
+    }
+
     func renderFeedCell(content: Content, cellType: FeedCellType, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         var originalContent = Content()
         if content.referencedCasts.type == .recasted || content.referencedCasts.type == .quoted {
@@ -209,7 +240,6 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
                 originalContent = tempContent
             }
         }
-
         switch cellType {
         case .activity:
             let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.activityHeader, for: indexPath as IndexPath) as? ActivityHeaderTableViewCell
@@ -238,19 +268,28 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
             return cell ?? FooterTableViewCell()
         case .quote:
             return FeedCellHelper().renderQuoteCastCell(content: originalContent, tableView: self.tableView, indexPath: indexPath, isRenderForFeed: true)
+        case .report:
+            let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.report, for: indexPath as IndexPath) as? ReportTableViewCell
+            cell?.backgroundColor = UIColor.Asset.cellBackground
+            cell?.delegate = self
+            return cell ?? ReportTableViewCell()
         default:
-            if content.referencedCasts.type == .recasted {
-                if originalContent.type == .long && !content.isOriginalExpand {
-                    return FeedCellHelper().renderLongCastCell(content: originalContent, tableView: self.tableView, indexPath: indexPath)
-                } else {
-                    return FeedCellHelper().renderFeedCell(content: originalContent, tableView: self.tableView, indexPath: indexPath)
-                }
+            return self.renderContentCell(content: content, originalContent: originalContent, tableView: tableView, indexPath: indexPath)
+        }
+    }
+
+    private func renderContentCell(content: Content, originalContent: Content, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        if content.referencedCasts.type == .recasted {
+            if originalContent.type == .long && !content.isOriginalExpand {
+                return FeedCellHelper().renderLongCastCell(content: originalContent, tableView: tableView, indexPath: indexPath)
             } else {
-                if content.type == .long && !content.isExpand {
-                    return FeedCellHelper().renderLongCastCell(content: content, tableView: self.tableView, indexPath: indexPath)
-                } else {
-                    return FeedCellHelper().renderFeedCell(content: content, tableView: self.tableView, indexPath: indexPath)
-                }
+                return FeedCellHelper().renderFeedCell(content: originalContent, tableView: tableView, indexPath: indexPath)
+            }
+        } else {
+            if content.type == .long && !content.isExpand {
+                return FeedCellHelper().renderLongCastCell(content: content, tableView: tableView, indexPath: indexPath)
+            } else {
+                return FeedCellHelper().renderFeedCell(content: content, tableView: tableView, indexPath: indexPath)
             }
         }
     }
@@ -270,20 +309,13 @@ extension SearchFeedViewController: HeaderTableViewCellDelegate {
         // Remove success
     }
 
-    func didReportSuccess(_ headerTableViewCell: HeaderTableViewCell) {
+    func didReport(_ headerTableViewCell: HeaderTableViewCell, contentId: String) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             let reportDict: [String: Any] = [
                 JsonKey.castcleId.rawValue: "",
-                JsonKey.isReportContent.rawValue: true
+                JsonKey.contentId.rawValue: contentId
             ]
-            NotificationCenter.default.post(name: .openReportSuccessDelegate, object: nil, userInfo: reportDict)
-        }
-
-        if let indexPath = self.tableView.indexPath(for: headerTableViewCell) {
-            UIView.transition(with: self.tableView, duration: 0.35, options: .transitionCrossDissolve, animations: {
-                self.viewModel.searchContents.remove(at: indexPath.section)
-                self.tableView.reloadData()
-            })
+            NotificationCenter.default.post(name: .openReportDelegate, object: nil, userInfo: reportDict)
         }
     }
 }
@@ -301,5 +333,14 @@ extension SearchFeedViewController: FooterTableViewCellDelegate {
 extension SearchFeedViewController: IndicatorInfoProvider {
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
         return IndicatorInfo.init(title: pageTitle ?? "Tab \(pageIndex)")
+    }
+}
+
+extension SearchFeedViewController: ReportTableViewCellDelegate {
+    func didTabView(_ reportTableViewCell: ReportTableViewCell) {
+        if let indexPath = self.tableView.indexPath(for: reportTableViewCell) {
+            self.viewModel.searchContents[indexPath.section].isShowContentReport = true
+            self.tableView.reloadData()
+        }
     }
 }
