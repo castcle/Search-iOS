@@ -279,7 +279,26 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     private func renderContentCell(content: Content, originalContent: Content, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
-        if content.referencedCasts.type == .recasted {
+        if content.reportedStatus == .illegal {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.illegalAction, for: indexPath as IndexPath) as? IllegalActionTableViewCell
+            cell?.backgroundColor = UIColor.Asset.cellBackground
+            if content.referencedCasts.type == .recasted {
+                cell?.configCell(content: originalContent)
+            } else {
+                cell?.configCell(content: content)
+            }
+            cell?.delegate = self
+            return cell ?? IllegalActionTableViewCell()
+        } else if content.reportedStatus == .appeal {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ComponentNibVars.TableViewCell.illegal, for: indexPath as IndexPath) as? IllegalTableViewCell
+            cell?.backgroundColor = UIColor.Asset.cellBackground
+            if content.referencedCasts.type == .recasted {
+                cell?.configCell(content: originalContent)
+            } else {
+                cell?.configCell(content: content)
+            }
+            return cell ?? IllegalTableViewCell()
+        } else if content.referencedCasts.type == .recasted {
             if originalContent.type == .long && !content.isOriginalExpand {
                 return FeedCellHelper().renderLongCastCell(content: originalContent, tableView: tableView, indexPath: indexPath)
             } else {
@@ -328,6 +347,10 @@ extension SearchFeedViewController: FooterTableViewCellDelegate {
             Utility.currentViewController().present(viewController, animated: true, completion: nil)
         }
     }
+
+    func didTabComment(_ footerTableViewCell: FooterTableViewCell) {
+        // Not use
+    }
 }
 
 extension SearchFeedViewController: IndicatorInfoProvider {
@@ -340,6 +363,22 @@ extension SearchFeedViewController: ReportTableViewCellDelegate {
     func didTabView(_ reportTableViewCell: ReportTableViewCell) {
         if let indexPath = self.tableView.indexPath(for: reportTableViewCell) {
             self.viewModel.searchContents[indexPath.section].isShowContentReport = true
+            self.tableView.reloadData()
+        }
+    }
+}
+
+extension SearchFeedViewController: IllegalActionTableViewCellDelegate {
+    func didAppeal(_ illegalActionTableViewCell: IllegalActionTableViewCell) {
+        if let indexPath = self.tableView.indexPath(for: illegalActionTableViewCell) {
+            self.viewModel.searchContents[indexPath.section].reportedStatus = .appeal
+            self.tableView.reloadData()
+        }
+    }
+
+    func didRemove(_ illegalActionTableViewCell: IllegalActionTableViewCell) {
+        if let indexPath = self.tableView.indexPath(for: illegalActionTableViewCell) {
+            self.viewModel.searchContents.remove(at: indexPath.section)
             self.tableView.reloadData()
         }
     }
