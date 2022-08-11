@@ -77,6 +77,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
         self.view.backgroundColor = UIColor.Asset.darkGraphiteBlue
         self.hideKeyboardWhenTapped()
         self.configureTableView()
+        self.clearButton.isHidden = true
         self.searchView.custom(color: UIColor.Asset.cellBackground, cornerRadius: 18, borderWidth: 1, borderColor: UIColor.Asset.darkGraphiteBlue)
         self.searchImage.image = UIImage.init(icon: .castcle(.search), size: CGSize(width: 25, height: 25), textColor: UIColor.Asset.white)
         self.searchTextField.font = UIFont.asset(.regular, fontSize: .overline)
