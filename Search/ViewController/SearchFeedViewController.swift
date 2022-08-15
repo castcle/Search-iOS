@@ -118,7 +118,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
                 return 1
             } else {
                 let content = self.viewModel.searchContents[section]
-                if content.participate.recasted || ContentHelper.shared.isReportContent(contentId: content.id) {
+                if content.participate.reported || ContentHelper.shared.isReportContent(contentId: content.id) {
                     if content.isShowContentReport && content.referencedCasts.type == .quoted {
                         return 5
                     } else if content.isShowContentReport && content.referencedCasts.type != .quoted {
@@ -189,7 +189,7 @@ extension SearchFeedViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     private func getContentCellWithContent(content: Content, tableView: UITableView, indexPath: IndexPath) -> [UITableViewCell] {
-        if content.participate.recasted || ContentHelper.shared.isReportContent(contentId: content.id) {
+        if content.participate.reported || ContentHelper.shared.isReportContent(contentId: content.id) {
             if content.isShowContentReport && content.referencedCasts.type == .quoted {
                 return [
                     self.renderFeedCell(content: content, cellType: .activity, tableView: tableView, indexPath: indexPath),
