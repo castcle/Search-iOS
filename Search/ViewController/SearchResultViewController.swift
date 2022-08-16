@@ -107,6 +107,7 @@ class SearchResultViewController: ButtonBarPagerTabStripViewController, UITextFi
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.view.layoutIfNeeded()
         self.setupNavBar()
         Defaults[.screenId] = ""
     }
